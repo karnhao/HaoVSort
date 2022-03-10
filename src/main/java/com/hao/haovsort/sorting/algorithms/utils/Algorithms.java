@@ -120,9 +120,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
                     .map((t) -> this.pitchCal(t)).toArray();
         }
         for (Float u : pitch) {
-            if (u == 0) {
-                break;
-            }
+            if (u == 0)
+                continue;
             player.forEach((t) -> {
                 t.playSound(t.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.MASTER, 100, u);
             });
