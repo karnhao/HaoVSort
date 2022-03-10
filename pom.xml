@@ -4,6 +4,9 @@
     <groupId>com.hao</groupId>
     <artifactId>HaoVSort</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>HaoVSort</name>
+    <description>Bukkit plugin that visualize sorting algorithm in Minecraft.</description>
+    <url>https://github.com/karnhao/HaoVSort</url>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -12,7 +15,8 @@
     </properties>
     <licenses>
         <license>
-            <name>MIT</name>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
         </license>
     </licenses>
     <build>
@@ -43,4 +47,19 @@
            <scope>provided</scope>
         </dependency>
     </dependencies>
+    <developers>
+        <developer>
+            <email>karn0888422952@gmail.com</email>
+            <name>Mr. Sittipat Tepsutar</name>
+            <organization>Hao.Inc</organization>
+            <timezone>
+                UTC+07:00
+            </timezone>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:git://github.com/karnhao/HaoVSort.git</connection>
+        <developerConnection>scm:git:ssh://github.com/karnhao/HaoVSort.git</developerConnection>
+        <url>http://github.com/karnhao/HaoVSort</url>
+    </scm>
 </project>

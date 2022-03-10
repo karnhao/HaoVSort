@@ -1,3 +1,4 @@
 target
-.vscode
+src/test
 HaoVSort.jar
+.vscode

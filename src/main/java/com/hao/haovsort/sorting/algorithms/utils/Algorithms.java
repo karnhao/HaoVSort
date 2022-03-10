@@ -1,4 +1,4 @@
-package com.hao.haovsort.sorting.algorithms;
+package com.hao.haovsort.sorting.algorithms.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,9 @@ import com.hao.haovsort.sorting.args.ArgsManager;
 
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.awt.Color;
@@ -15,28 +18,39 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
-public abstract class Algorithms implements AlgorithmsFace {
+public abstract class Algorithms<T extends Algorithms<T>> extends Thread implements AlgorithmsFace {
+
     protected ArgsManager args = new ArgsManager();
     protected String name;
-    protected List<Integer> list = new ArrayList<>();
+    protected List<Integer> array;
     protected List<Player> player;
     private ChatColor indexColor;
     private Integer[] selectedIndex;
     private Float[] pitch;
+    private Long delay;
 
-    public abstract void sort(Integer[] a);
+    @Override
+    public abstract void sort(Integer[] a) throws InterruptedException;
 
-    public static <T extends Algorithms> T login(Class<T> clazz) throws InstantiationException, IllegalAccessException {
-        T algorithm = clazz.newInstance();
+    public Long getDelay() {
+        return delay;
+    }
+
+    public void setDelay(Long delay) {
+        this.delay = delay;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T login() {
         AlgorithmsInitialize init = new AlgorithmsInitialize();
-        algorithm.init(init);
-        algorithm.commandArgs(algorithm.args);
-        algorithm.name = init.getName();
-        return algorithm;
+        this.init(init);
+        this.commandArgs(this.args);
+        this.name = init.getName();
+        return (T) this;
     }
 
     protected List<Integer> getArray() {
-        return this.list;
+        return this.array;
     }
 
     protected ArgsManager getArgs() {
@@ -44,10 +58,11 @@ public abstract class Algorithms implements AlgorithmsFace {
     }
 
     /**
-     * ใช้ใน {@link #sort(Integer[])}
-     * ไว้แสดงผล
+     * ใช้ใน {@link #sort(Integer[])} ไว้แสดงผล
+     *
+     * @throws InterruptedException
      */
-    protected void show() {
+    protected void show() throws InterruptedException {
         Color color;
         ComponentBuilder cb = new ComponentBuilder();
         ArrayList<Integer> sI = new ArrayList<>();
@@ -74,9 +89,11 @@ public abstract class Algorithms implements AlgorithmsFace {
             });
         }
         playSortingSound();
+
+        sleep(this.delay);
     }
 
-    public String getName() {
+    public String getAlgorithmName() {
         return this.name;
     }
 
@@ -84,8 +101,9 @@ public abstract class Algorithms implements AlgorithmsFace {
         return this.player;
     }
 
+    @Override
     public void setArray(List<Integer> a) {
-        this.list = new ArrayList<>(a);
+        this.array = new ArrayList<>(a);
     }
 
     public void setPlayer(List<Player> player) {
@@ -97,8 +115,10 @@ public abstract class Algorithms implements AlgorithmsFace {
     public abstract void init(AlgorithmsInitialize init);
 
     private void playSortingSound() {
-        if(this.pitch == null) this.pitch = (Float[]) Arrays.asList(this.selectedIndex).stream().map(Integer::floatValue)
-                .map((t) -> this.pitchCal(t)).toArray();
+        if (this.pitch == null) {
+            this.pitch = (Float[]) Arrays.asList(this.selectedIndex).stream().map(Integer::floatValue)
+                    .map((t) -> this.pitchCal(t)).toArray();
+        }
         for (Float u : pitch) {
             if (u == 0)
                 continue;
@@ -126,5 +146,35 @@ public abstract class Algorithms implements AlgorithmsFace {
 
     protected void setPitch(Float... pitch) {
         this.pitch = pitch;
+    }
+
+    @Override
+    public void run() {
+        try {
+            this.sort((Integer[]) this.array.toArray());
+        } catch (InterruptedException e) {
+            this.interrupt();
+        }
+    }
+
+    @Override
+    public void interrupt() {
+        super.interrupt();
+    }
+
+    /**
+     * รูปแบบจะเป็นแบบนี้ :
+     * <p>
+     * {@code /sort  &lt;player&gt; &lt;type&gt; &lt;delay&gt; &lt;length&gt; args[0] args[1] args[2] ...}
+     *
+     * @param sender ผู้ที่ใช้คำสั่งนี้
+     * @param args args[0] ในที่นี้ จะเริ่มที่ args[3] ของ command หลัก
+     * @return ข้อความที่จะถูกแนะนำมาตอนพิมพ์คำสั่ง
+     */
+    protected abstract List<String> onTabComplete(CommandSender sender, String[] args);
+
+    public TabCompleter getTabCompleter() {
+        return (CommandSender sender, Command command, String alias, String[] args1)
+                -> Algorithms.this.onTabComplete(sender, (String[]) new ArrayList<>(Arrays.asList(args1)).subList(3, args1.length).toArray());
     }
 }

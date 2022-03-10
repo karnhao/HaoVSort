@@ -1,4 +1,4 @@
-package com.hao.haovsort.sorting.algorithms;
+package com.hao.haovsort.sorting.algorithms.utils;
 
 public class AlgorithmsInitialize {
     private String name;
