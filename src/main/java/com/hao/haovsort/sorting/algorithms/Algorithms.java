@@ -101,7 +101,7 @@ public abstract class Algorithms implements AlgorithmsFace {
                 .map((t) -> this.pitchCal(t)).toArray();
         for (Float u : pitch) {
             if (u == 0)
-                break;
+                continue;
             player.forEach((t) -> {
                 t.playSound(t.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.MASTER, 100, u);
             });
