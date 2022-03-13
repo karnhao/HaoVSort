@@ -1,12 +1,11 @@
 package com.hao.haovsort.sorting.algorithms;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.hao.haovsort.sorting.algorithms.utils.Algorithms;
 import com.hao.haovsort.sorting.algorithms.utils.AlgorithmsInitialize;
-import com.hao.haovsort.sorting.args.ArgsManager;
-import com.hao.haovsort.sorting.args.InvalidArgsException;
-import com.hao.haovsort.utils.Util;
+
 import org.bukkit.command.CommandSender;
 
 public class Selection extends Algorithms<Selection> {
@@ -15,6 +14,9 @@ public class Selection extends Algorithms<Selection> {
 
     @Override
     public void sort(Integer[] a) throws InterruptedException {
+        getPlayers().forEach((t) -> {
+            t.sendMessage(this.getArgs()[0]);
+        });
         int n = a.length;
         for (int i = 0; i < n - 1; i++) {
             int min_idx = i;
@@ -36,24 +38,12 @@ public class Selection extends Algorithms<Selection> {
     }
 
     @Override
-    protected void commandArgs(ArgsManager c) {
-        c.setArgs(0, "length", (String input) -> {
-            if (!Util.isInteger(input))
-                throw new InvalidArgsException("Args isn't an integer.");
-            int i = Integer.parseInt(input);
-            if (i <= 0)
-                throw new InvalidArgsException("Length must not less than 1.");
-            return input;
-        });
-    }
-
-    @Override
     public void init(AlgorithmsInitialize init) {
         init.setName(NAME);
     }
 
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
-        return null;
+        return Arrays.asList("Hello", "World");
     }
 }

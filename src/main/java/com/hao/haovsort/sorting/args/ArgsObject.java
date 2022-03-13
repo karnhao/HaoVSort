@@ -2,26 +2,22 @@ package com.hao.haovsort.sorting.args;
 
 public class ArgsObject {
 
-    public enum ArgType {
-        STRING, INTEGER, FLOAT, BOOLEAN
-    }
-
     private int index;
     private String name;
-    private ArgsFilter filter;
+    private String value;
 
-    public ArgsObject(int index, String name, ArgsFilter filter) {
+    public ArgsObject(int index, String name, String value) {
         this.index = index;
         this.name = name;
-        this.filter = filter;
+        this.value = value;
     }
 
-    public ArgsFilter getFilter() {
-        return filter;
+    public String getValue() {
+        return value;
     }
 
-    public void setFilter(ArgsFilter filter) {
-        this.filter = filter;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public int getIndex() {

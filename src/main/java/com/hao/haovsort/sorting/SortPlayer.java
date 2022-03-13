@@ -1,29 +1,35 @@
 package com.hao.haovsort.sorting;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import com.hao.haovsort.sorting.algorithms.Selection;
+import com.hao.haovsort.sorting.algorithms.utils.AlgorithmCommand;
 import com.hao.haovsort.sorting.algorithms.utils.AlgorithmCommandCollecter;
 import com.hao.haovsort.sorting.algorithms.utils.Algorithms;
+import com.hao.haovsort.sorting.algorithms.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.algorithms.utils.NoSuchAlgorithmException;
+import com.hao.haovsort.tabcompleter.SortTab;
 
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 
 /**
  * เครื่องแสดง algorithms
  */
-final public class SortPlayer {
-    private Player players[];
-    private List<Integer> array = new ArrayList<>();
-    private static Map<String, Algorithms<?>> map = new HashMap<>();
-    private AlgorithmCommandCollecter[] commands;
+final public class SortPlayer extends Thread {
 
-    public static void init() throws Exception {
-        SortPlayer.putAlgorithms(new Selection());
-    }
+    private Algorithms<?> algorithm;
+    private String[] args;
+
+    private List<Player> players;
+    private List<Integer> array = new ArrayList<>();
+    private AlgorithmCommandCollecter[] commands;
 
     public void setCommands(AlgorithmCommandCollecter... acc) {
         this.commands = acc;
@@ -33,60 +39,76 @@ final public class SortPlayer {
         return this.commands;
     }
 
-    /**
-     * <p>
-     * เพิ่ม algorithm ใน SortPlayer โดยจะสร้าง object จาก class
-     * ที่ใส่เข้ามาแล้วเรียกใช้งาน putAlgorithms พร้อมให้ object จาก class นี้เป็น
-     * parameter
-     * </p>
-     * 
-     * <p>
-     * จะแตกต่างจาก putAlgorithms คือเป็นการนำเข้า class แทนที่จะเป็น object
-     * </p>
-     */
-    public static void register(Class<? extends Algorithms<?>> algorithm)
-            throws InstantiationException, IllegalAccessException {
-        SortPlayer.putAlgorithms(algorithm.newInstance());
-    }
-
-    /**
-     * <p>
-     * เพิ่ม algorithm ใน SortPlayer
-     * <hr>
-     * <p>
-     * ตัวอย่าง:
-     * 
-     * <pre>
-     * SortPlayer.putAlgorithms(new Selection());
-     * </pre>
-     * 
-     * ตัวอย่าง: {@code SortPlayer.putAlgorithms(new Selection());}
-     */
-    public static void putAlgorithms(Algorithms<?> algorithm) {
-        SortPlayer.map.put(algorithm.getName(), algorithm.login());
-    }
-
-    public void setPlayers(Player... players) {
+    public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
-    public Player[] getPlayers() {
+    public List<Player> getPlayers() {
         return this.players;
     }
 
-    public void start() {
-        getAlgorithm("selection").interrupt();
+    @Override
+    public void run() {
+        Arrays.asList(getAlgorithmCommandCollecter()).forEach((acc) -> {
+            this.array = Arrays.asList(acc.getArray());
+            acc.getCommandList().forEach((command) -> {
+                try {
+                    this.algorithm = runAlgorithm(command, args);
+                } catch (NoSuchAlgorithmException e) {
+                    this.getPlayers().forEach((p) -> {
+                        p.spigot().sendMessage(
+                                ChatMessageType.ACTION_BAR,
+                                new ComponentBuilder("Sort command not found")
+                                        .color(ChatColor.RED)
+                                        .bold(true)
+                                        .create());
+                    });
+                }
+            });
+        });
     }
 
-    public void runAlgorithm(String name, String... args) throws NoSuchAlgorithmException {
-        Algorithms<?> algorithm = SortPlayer.getAlgorithm(name);
+    @Override
+    public void interrupt() {
+        this.algorithm.interrupt();
+    }
+
+    public void setArgs(String[] args){
+        this.args = args;
+    }
+
+    public String[] getArgs(){
+        return this.args;
+    }
+
+    public Algorithms<?> runAlgorithm(AlgorithmCommand command, String... args) throws NoSuchAlgorithmException {
+        Algorithms<?> algorithm = AlgorithmsManager.getAlgorithm(command.getType());
         if (algorithm == null)
-            throw new NoSuchAlgorithmException(name);
+            throw new NoSuchAlgorithmException(command.getType());
         algorithm.setArray(this.array);
+        algorithm.setDelay(command.getDelay());
+        algorithm.setPlayer(Arrays.asList(command.getPlayers()));
+        algorithm.setName(Arrays.toString(command.getPlayers()));
         algorithm.run();
+        return algorithm;
     }
 
-    private static Algorithms<?> getAlgorithm(String name) {
-        return SortPlayer.map.get(name);
+    private static TabCompleter getFinalTabCompleter() {
+        // /sort <player> <type> <delay> <length> args...
+        return (sender, command, alias, args) -> {
+            if (args.length <= 4)
+                return new SortTab().onTabComplete(sender, command, alias, args);
+            else {
+                for (Algorithms<?> algorithm : AlgorithmsManager.getAlgorithms()) {
+                    if (algorithm.getName().equalsIgnoreCase(args[1]))
+                        return algorithm.getTabCompleter().onTabComplete(sender, command, alias, args);
+                }
+                return null;
+            }
+        };
+    }
+
+    public static void setTabCompleterToCommand(PluginCommand command) {
+        command.setTabCompleter(SortPlayer.getFinalTabCompleter());
     }
 }

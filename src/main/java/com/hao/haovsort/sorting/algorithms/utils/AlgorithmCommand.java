@@ -3,22 +3,22 @@ package com.hao.haovsort.sorting.algorithms.utils;
 import org.bukkit.entity.Player;
 
 public class AlgorithmCommand {
-    private String command = null;
+    private String type = null;
     private Long delay = 1l;
-    private Player player = null;
+    private Player[] players = null;
 
-    public AlgorithmCommand(String command, Long delay, Player player) {
-        this.command = command;
+    public AlgorithmCommand(String type, Long delay, Player[] players) {
+        this.type = type;
         this.delay = delay;
-        this.player = player;
+        this.players = players;
     }
 
-    public String getCommand() {
-        return command;
+    public String getType() {
+        return type;
     }
 
-    public void setCommand(String command) {
-        this.command = command;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Long getDelay() {
@@ -29,11 +29,11 @@ public class AlgorithmCommand {
         this.delay = delay;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Player[] getPlayers() {
+        return players;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setPlayers(Player[] players) {
+        this.players = players;
     }
 }

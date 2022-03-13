@@ -3,8 +3,9 @@ package com.hao.haovsort.sorting.algorithms.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.hao.haovsort.sorting.args.ArgsManager;
+import com.hao.haovsort.sorting.args.InvalidArgsException;
 
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -20,13 +21,13 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 
 public abstract class Algorithms<T extends Algorithms<T>> extends Thread implements AlgorithmsFace {
 
-    protected ArgsManager args = new ArgsManager();
-    protected String name;
+    protected static String name;
     protected List<Integer> array;
     protected List<Player> player;
-    private ChatColor indexColor;
-    private Integer[] selectedIndex;
-    private Float[] pitch;
+    private String[] args;
+    private ChatColor indexColor = ChatColor.BLACK;
+    private List<Integer> selectedIndex;
+    private List<Float> pitch;
     private Long delay;
 
     @Override
@@ -40,12 +41,19 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         this.delay = delay;
     }
 
+    protected void setIndexColor(ChatColor color){
+        this.indexColor = color;
+    }
+
+    protected ChatColor getIndexColor() {
+        return this.indexColor;
+    }
+
     @SuppressWarnings("unchecked")
     public T login() {
         AlgorithmsInitialize init = new AlgorithmsInitialize();
         this.init(init);
-        this.commandArgs(this.args);
-        this.name = init.getName();
+        T.name = init.getName();
         return (T) this;
     }
 
@@ -53,7 +61,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         return this.array;
     }
 
-    protected ArgsManager getArgs() {
+    protected String[] getArgs() {
         return this.args;
     }
 
@@ -65,12 +73,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
     protected void show() throws InterruptedException {
         Color color;
         ComponentBuilder cb = new ComponentBuilder();
-        ArrayList<Integer> sI = new ArrayList<>();
-        for (int j = 0; j <= selectedIndex.length - 1; j++) {
-            sI.add(selectedIndex[j]);
-        }
         for (int i = 0; i < this.getArray().size(); i++) {
-            if (sI.contains(i)) {
+            if (this.getIndex().contains(i)) {
                 cb.append("|").color(indexColor).bold(true);
             } else {
                 color = Color.getHSBColor(this.colorCal(this.getArray().get(i)), 1.0f, 1.0f);
@@ -89,12 +93,11 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
             });
         }
         playSortingSound();
-
         sleep(this.delay);
     }
 
-    public String getAlgorithmName() {
-        return this.name;
+    public static <T extends Algorithms<T>> String getAlgorithmName() {
+        return T.name;
     }
 
     public List<Player> getPlayers() {
@@ -110,14 +113,11 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         this.player = player;
     }
 
-    protected abstract void commandArgs(ArgsManager c);
-
     public abstract void init(AlgorithmsInitialize init);
 
     private void playSortingSound() {
         if (this.pitch == null) {
-            this.pitch = (Float[]) Arrays.asList(this.selectedIndex).stream().map(Integer::floatValue)
-                    .map((t) -> this.pitchCal(t)).toArray();
+            this.pitch = this.selectedIndex.stream().map((t) -> this.pitchCal(t)).collect(Collectors.toList());
         }
         for (Float u : pitch) {
             if (u == 0)
@@ -132,20 +132,24 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         return new Integer(value).floatValue() / new Integer(this.getArray().size()).floatValue();
     }
 
-    private float pitchCal(Float min, Float max, Float n) {
+    protected float pitchCal(Float min, Float max, int n) {
         return min + (((max - min) / this.getArray().size()) * n);
     }
 
-    private float pitchCal(Float n) {
+    protected float pitchCal(int n) {
         return pitchCal(0.5f, 2.0f, n);
     }
 
     protected void setIndex(Integer... index) {
-        this.selectedIndex = index;
+        this.selectedIndex = (index == null) ? new ArrayList<Integer>() : Arrays.asList(index);
+    }
+
+    protected List<Integer> getIndex(){
+        return this.selectedIndex;
     }
 
     protected void setPitch(Float... pitch) {
-        this.pitch = pitch;
+        this.pitch = Arrays.asList(pitch);
     }
 
     @Override
@@ -169,9 +173,13 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
      *
      * @param sender ผู้ที่ใช้คำสั่งนี้
      * @param args args[0] ในที่นี้ จะเริ่มที่ args[3] ของ command หลัก
-     * @return ข้อความที่จะถูกแนะนำมาตอนพิมพ์คำสั่ง
+     * @return List ข้อความที่จะถูกแนะนำมาตอนพิมพ์คำสั่ง
      */
     protected abstract List<String> onTabComplete(CommandSender sender, String[] args);
+
+    protected void argsFilter(String[] args) throws InvalidArgsException {
+        // NO Filter.
+    };
 
     public TabCompleter getTabCompleter() {
         return (CommandSender sender, Command command, String alias, String[] args1)
