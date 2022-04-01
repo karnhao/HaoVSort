@@ -22,12 +22,12 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 public abstract class Algorithms<T extends Algorithms<T>> extends Thread implements AlgorithmsFace {
 
     protected static String name;
-    protected List<Integer> array;
+    protected Integer[] array;
     protected List<Player> player;
-    private String[] args;
+    private String[] args = {};
     private ChatColor indexColor = ChatColor.BLACK;
-    private List<Integer> selectedIndex;
-    private List<Float> pitch;
+    private List<Integer> selectedIndex = new ArrayList<>();
+    private List<Float> pitch = new ArrayList<>();
     private Long delay;
 
     @Override
@@ -41,7 +41,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         this.delay = delay;
     }
 
-    protected void setIndexColor(ChatColor color){
+    protected void setIndexColor(ChatColor color) {
         this.indexColor = color;
     }
 
@@ -51,18 +51,22 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
 
     @SuppressWarnings("unchecked")
     public T login() {
-        AlgorithmsInitialize init = new AlgorithmsInitialize();
-        this.init(init);
-        T.name = init.getName();
+        this.init();
         return (T) this;
     }
 
-    protected List<Integer> getArray() {
+    protected Integer[] getArray() {
         return this.array;
     }
 
     protected String[] getArgs() {
         return this.args;
+    }
+
+    public void setArgs(String... args) throws InvalidArgsException {
+        if(args == null) return;
+        this.argsFilter(args);
+        this.args = args;
     }
 
     /**
@@ -71,17 +75,19 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
      * @throws InterruptedException
      */
     protected void show() throws InterruptedException {
+        if (this.isInterrupted())
+            throw new InterruptedException();
         Color color;
         ComponentBuilder cb = new ComponentBuilder();
-        for (int i = 0; i < this.getArray().size(); i++) {
+        for (int i = 0; i < this.getArray().length; i++) {
             if (this.getIndex().contains(i)) {
                 cb.append("|").color(indexColor).bold(true);
             } else {
-                color = Color.getHSBColor(this.colorCal(this.getArray().get(i)), 1.0f, 1.0f);
+                color = Color.getHSBColor(this.colorCal(this.getArray()[i]), 1.0f, 1.0f);
                 cb.append("|").color(ChatColor.of(color)).bold(true);
             }
         }
-        if (this.getArray().size() >= 300) {
+        if (this.getArray().length >= 300) {
             player.forEach((t) -> {
                 t.sendMessage("");
 
@@ -96,8 +102,12 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         sleep(this.delay);
     }
 
-    public static <T extends Algorithms<T>> String getAlgorithmName() {
-        return T.name;
+    public static String getAlgorithmName(Class<? extends Algorithms<?>> algorithm) {
+        try {
+            return (String) algorithm.getField("NAME").get(null);
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+            return null;
+        }
     }
 
     public List<Player> getPlayers() {
@@ -105,15 +115,15 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
     }
 
     @Override
-    public void setArray(List<Integer> a) {
-        this.array = new ArrayList<>(a);
+    public void setArray(Integer[] a) {
+        this.array = a;
     }
 
     public void setPlayer(List<Player> player) {
         this.player = player;
     }
 
-    public abstract void init(AlgorithmsInitialize init);
+    public abstract void init();
 
     private void playSortingSound() {
         if (this.pitch == null) {
@@ -123,17 +133,17 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
             if (u == 0)
                 continue;
             player.forEach((t) -> {
-                t.playSound(t.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.MASTER, 100, u);
+                t.playSound(t.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.MASTER, 0.2f, u);
             });
         }
     }
 
     private float colorCal(int value) {
-        return new Integer(value).floatValue() / new Integer(this.getArray().size()).floatValue();
+        return new Integer(value).floatValue() / new Integer(this.getArray().length).floatValue();
     }
 
     protected float pitchCal(Float min, Float max, int n) {
-        return min + (((max - min) / this.getArray().size()) * n);
+        return min + (((max - min) / this.getArray().length) * n);
     }
 
     protected float pitchCal(int n) {
@@ -144,7 +154,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         this.selectedIndex = (index == null) ? new ArrayList<Integer>() : Arrays.asList(index);
     }
 
-    protected List<Integer> getIndex(){
+    protected List<Integer> getIndex() {
         return this.selectedIndex;
     }
 
@@ -155,9 +165,9 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
     @Override
     public void run() {
         try {
-            this.sort((Integer[]) this.array.toArray());
+            this.sort(this.array);
         } catch (InterruptedException e) {
-            this.interrupt();
+            throw new StopSortException();
         }
     }
 
@@ -172,7 +182,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
      * {@code /sort  &lt;player&gt; &lt;type&gt; &lt;delay&gt; &lt;length&gt; args[0] args[1] args[2] ...}
      *
      * @param sender ผู้ที่ใช้คำสั่งนี้
-     * @param args args[0] ในที่นี้ จะเริ่มที่ args[3] ของ command หลัก
+     * @param args   args[0] ในที่นี้ จะเริ่มที่ args[3] ของ command หลัก
      * @return List ข้อความที่จะถูกแนะนำมาตอนพิมพ์คำสั่ง
      */
     protected abstract List<String> onTabComplete(CommandSender sender, String[] args);
@@ -182,7 +192,9 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
     };
 
     public TabCompleter getTabCompleter() {
-        return (CommandSender sender, Command command, String alias, String[] args1)
-                -> Algorithms.this.onTabComplete(sender, (String[]) new ArrayList<>(Arrays.asList(args1)).subList(3, args1.length).toArray());
+        return (CommandSender sender, Command command, String alias, String[] args1) -> Algorithms.this.onTabComplete(
+                sender,
+                new ArrayList<>(Arrays.asList(args1)).subList(4, args1.length).toArray(new String[args1.length - 4]));
     }
+
 }

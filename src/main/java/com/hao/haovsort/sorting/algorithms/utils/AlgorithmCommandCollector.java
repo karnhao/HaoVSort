@@ -3,14 +3,14 @@ package com.hao.haovsort.sorting.algorithms.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AlgorithmCommandCollecter {
+public class AlgorithmCommandCollector {
     private ArrayList<AlgorithmCommand> commandList = new ArrayList<>();
 
     private Integer[] array;
 
-    public AlgorithmCommandCollecter(Integer[] array, AlgorithmCommand... acs) {
+    public AlgorithmCommandCollector(Integer[] array, AlgorithmCommand... acs) {
         this.array = array;
-        this.commandList = (ArrayList<AlgorithmCommand>) Arrays.asList(acs);
+        this.commandList = new ArrayList<>(Arrays.asList(acs));
     }
 
     public void setCommandList(ArrayList<AlgorithmCommand> commandList) {

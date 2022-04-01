@@ -1,14 +1,15 @@
 package com.hao.haovsort.sorting;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.hao.haovsort.sorting.algorithms.utils.AlgorithmCommand;
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmCommandCollecter;
+import com.hao.haovsort.sorting.algorithms.utils.AlgorithmCommandCollector;
 import com.hao.haovsort.sorting.algorithms.utils.Algorithms;
 import com.hao.haovsort.sorting.algorithms.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.algorithms.utils.NoSuchAlgorithmException;
+import com.hao.haovsort.sorting.algorithms.utils.StopSortException;
+import com.hao.haovsort.sorting.args.InvalidArgsException;
 import com.hao.haovsort.tabcompleter.SortTab;
 
 import org.bukkit.command.PluginCommand;
@@ -25,17 +26,17 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 final public class SortPlayer extends Thread {
 
     private Algorithms<?> algorithm;
-    private String[] args;
 
     private List<Player> players;
-    private List<Integer> array = new ArrayList<>();
-    private AlgorithmCommandCollecter[] commands;
+    private Integer[] array;
+    private AlgorithmCommandCollector[] commands;
+    private Player owner;
 
-    public void setCommands(AlgorithmCommandCollecter... acc) {
+    public void setCommands(AlgorithmCommandCollector... acc) {
         this.commands = acc;
     }
 
-    public AlgorithmCommandCollecter[] getAlgorithmCommandCollecter() {
+    public AlgorithmCommandCollector[] getAlgorithmCommandCollectors() {
         return this.commands;
     }
 
@@ -47,52 +48,68 @@ final public class SortPlayer extends Thread {
         return this.players;
     }
 
+    public Player getOwner() {
+        return this.owner;
+    }
+
+    public void setOwner(Player player) {
+        this.owner = player;
+    }
+
     @Override
     public void run() {
-        Arrays.asList(getAlgorithmCommandCollecter()).forEach((acc) -> {
-            this.array = Arrays.asList(acc.getArray());
-            acc.getCommandList().forEach((command) -> {
-                try {
-                    this.algorithm = runAlgorithm(command, args);
-                } catch (NoSuchAlgorithmException e) {
-                    this.getPlayers().forEach((p) -> {
-                        p.spigot().sendMessage(
-                                ChatMessageType.ACTION_BAR,
-                                new ComponentBuilder("Sort command not found")
-                                        .color(ChatColor.RED)
-                                        .bold(true)
-                                        .create());
+        this.players.forEach(AlgorithmsManager::cleanPlayer);
+        AlgorithmsManager.addPlayer(this.getOwner(), this);
+        try {
+            Arrays.asList(getAlgorithmCommandCollectors()).forEach((acc) -> {
+                if (!this.isInterrupted()) {
+                    this.array = acc.getArray();
+                    acc.getCommandList().forEach((command) -> {
+                        if (!this.isInterrupted()) {
+                            try {
+                                runAlgorithm(command, command.getArgs());
+                            } catch (NoSuchAlgorithmException e) {
+                                this.alert("Sort command not found");
+                                throw new RuntimeException();
+                            } catch (StopSortException stop) {
+                                this.alert("Stop visualize");
+                                throw new RuntimeException();
+                            } catch (Exception ex) {
+                                this.alert(ex.getMessage());
+                                ex.printStackTrace();
+                                throw new RuntimeException();
+                            }
+                        }
                     });
                 }
             });
-        });
+        } catch (RuntimeException stop) {
+        }
+
+        this.players.forEach(AlgorithmsManager::cleanPlayer);
     }
 
-    @Override
-    public void interrupt() {
+    public void stopPlayer() {
+        this.interrupt();
         this.algorithm.interrupt();
     }
 
-    public void setArgs(String[] args){
-        this.args = args;
-    }
-
-    public String[] getArgs(){
-        return this.args;
-    }
-
-    public Algorithms<?> runAlgorithm(AlgorithmCommand command, String... args) throws NoSuchAlgorithmException {
+    public void runAlgorithm(AlgorithmCommand command, String... args)
+            throws NoSuchAlgorithmException, InvalidArgsException, InstantiationException, IllegalAccessException,
+            StopSortException {
         Algorithms<?> algorithm = AlgorithmsManager.getAlgorithm(command.getType());
         if (algorithm == null)
             throw new NoSuchAlgorithmException(command.getType());
+        this.algorithm = algorithm;
         algorithm.setArray(this.array);
         algorithm.setDelay(command.getDelay());
         algorithm.setPlayer(Arrays.asList(command.getPlayers()));
         algorithm.setName(Arrays.toString(command.getPlayers()));
+        algorithm.setArgs(args);
         algorithm.run();
-        return algorithm;
     }
 
+    @SuppressWarnings("unchecked")
     private static TabCompleter getFinalTabCompleter() {
         // /sort <player> <type> <delay> <length> args...
         return (sender, command, alias, args) -> {
@@ -100,8 +117,13 @@ final public class SortPlayer extends Thread {
                 return new SortTab().onTabComplete(sender, command, alias, args);
             else {
                 for (Algorithms<?> algorithm : AlgorithmsManager.getAlgorithms()) {
-                    if (algorithm.getName().equalsIgnoreCase(args[1]))
-                        return algorithm.getTabCompleter().onTabComplete(sender, command, alias, args);
+                    try {
+                        if (Algorithms.getAlgorithmName((Class<? extends Algorithms<?>>) algorithm.getClass())
+                                .equalsIgnoreCase(args[1]))
+                            return algorithm.getTabCompleter().onTabComplete(sender, command, alias, args);
+                    } catch (IllegalArgumentException | SecurityException e) {
+                        e.printStackTrace();
+                    }
                 }
                 return null;
             }
@@ -110,5 +132,21 @@ final public class SortPlayer extends Thread {
 
     public static void setTabCompleterToCommand(PluginCommand command) {
         command.setTabCompleter(SortPlayer.getFinalTabCompleter());
+    }
+
+    private void alert(String message, ChatColor color) {
+        this.getPlayers().forEach((p) -> {
+            p.spigot().sendMessage(
+                    ChatMessageType.ACTION_BAR,
+                    new ComponentBuilder(message)
+                            .color(color)
+                            .bold(true)
+                            .create());
+        });
+        return;
+    }
+
+    private void alert(String message) {
+        alert(message, ChatColor.RED);
     }
 }

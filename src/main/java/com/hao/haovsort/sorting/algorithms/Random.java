@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.hao.haovsort.sorting.algorithms.utils.Algorithms;
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmsInitialize;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
 
 import org.bukkit.command.CommandSender;
@@ -12,6 +11,8 @@ import org.bukkit.command.CommandSender;
 import net.md_5.bungee.api.ChatColor;
 
 public class Random extends Algorithms<Random> {
+
+    public final static String NAME = "random";
 
     @Override
     public void sort(Integer[] a) throws InterruptedException {
@@ -45,13 +46,12 @@ public class Random extends Algorithms<Random> {
     }
 
     @Override
-    public void init(AlgorithmsInitialize init) {
-        init.setName("random");
+    public void init() {
     }
 
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
-        return Arrays.asList("[<percentage>[0,1]]");
+        return (args.length == 1) ? Arrays.asList("[<percentage>[0,1]]") : null;
     }
 
     @Override
@@ -61,6 +61,8 @@ public class Random extends Algorithms<Random> {
             f = Float.parseFloat(args[0]);
         } catch (NumberFormatException e) {
             throw new InvalidArgsException("Cannot format number.");
+        } catch (IndexOutOfBoundsException ex){
+            throw new InvalidArgsException("Args not found");
         }
         if (f < 0 || f > 1)
             throw new InvalidArgsException("Value out of range.");

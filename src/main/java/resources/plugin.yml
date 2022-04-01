@@ -10,3 +10,6 @@ commands:
       description: Main plugin commands.
       usage: /<command>
       permission: haovsort.commands.sort
+    stopsort:
+      description: Stop visualize
+      permission: haovsort.commands.stopsort
