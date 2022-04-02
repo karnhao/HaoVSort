@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import com.hao.haovsort.sorting.SortPlayer;
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmCommand;
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmCommandCollector;
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmsManager;
+import com.hao.haovsort.sorting.utils.AlgorithmCommand;
+import com.hao.haovsort.sorting.utils.AlgorithmCommandCollector;
+import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -52,20 +52,21 @@ public class Sort implements CommandExecutor {
                         throw new Exception("Player not found.");
                     AlgorithmsManager.cleanPlayer(target);
                     Player[] targets = Arrays.asList(target).toArray(new Player[1]);
+                    Long delay = Long.parseLong(args[2]);
+                    if(delay < 1) throw new Exception("Delay cannot lower than 1");
                     player.setPlayers(Arrays.asList(targets));
                     player.setOwner(target);
                     player.setCommands(new AlgorithmCommandCollector(Sort.createArray(Sort.getLength(args[3])),
                             new AlgorithmCommand("random", 10l, targets, "1"),
-                            new AlgorithmCommand(args[1], Long.parseLong(args[2]), targets,
+                            new AlgorithmCommand(args[1], delay, targets,
                                     Arrays.copyOfRange(args, 4, args.length)),
                             new AlgorithmCommand("finish", 10l, targets)));
                     player.start();
                 } catch (Exception e) {
                     cs.sendMessage(ChatColor.RED + e.toString());
-                    e.printStackTrace();
                 }
             }
-        }.runTaskLater(plugin, 1l);
+        }.runTaskLater(plugin, 0l);
         return true;
     }
 

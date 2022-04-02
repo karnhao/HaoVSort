@@ -1,18 +1,16 @@
-package com.hao.haovsort.sorting.algorithms;
+package resources.algorithms;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.hao.haovsort.sorting.algorithms.utils.Algorithms;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
+import com.hao.haovsort.sorting.utils.Algorithms;
 
 import org.bukkit.command.CommandSender;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class Random extends Algorithms<Random> {
-
-    public final static String NAME = "random";
 
     @Override
     public void sort(Integer[] a) throws InterruptedException {
@@ -43,10 +41,6 @@ public class Random extends Algorithms<Random> {
                 loop = false;
             }
         }
-    }
-
-    @Override
-    public void init() {
     }
 
     @Override

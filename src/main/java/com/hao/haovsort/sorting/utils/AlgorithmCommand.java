@@ -1,4 +1,4 @@
-package com.hao.haovsort.sorting.algorithms.utils;
+package com.hao.haovsort.sorting.utils;
 
 import org.bukkit.entity.Player;
 

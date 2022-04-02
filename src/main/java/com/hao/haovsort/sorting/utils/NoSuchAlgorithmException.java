@@ -1,4 +1,4 @@
-package com.hao.haovsort.sorting.algorithms.utils;
+package com.hao.haovsort.sorting.utils;
 
 public class NoSuchAlgorithmException extends Exception {
     private static String text_null = "Cannot find algorithm from the given name.";

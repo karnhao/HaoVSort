@@ -1,6 +1,6 @@
 package com.hao.haovsort.commands;
 
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmsManager;
+import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

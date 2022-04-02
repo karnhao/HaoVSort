@@ -1,7 +1,8 @@
-package com.hao.haovsort.sorting.algorithms.utils;
+package com.hao.haovsort.sorting.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,8 +27,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
     protected List<Player> player;
     private String[] args = {};
     private ChatColor indexColor = ChatColor.BLACK;
-    private List<Integer> selectedIndex = new ArrayList<>();
-    private List<Float> pitch = new ArrayList<>();
+    private List<Integer> selectedIndex = new LinkedList<>();
+    private List<Float> pitch = new LinkedList<>();
     private Long delay;
 
     @Override
@@ -102,11 +103,11 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         sleep(this.delay);
     }
 
-    public static String getAlgorithmName(Class<? extends Algorithms<?>> algorithm) {
+    public static String getAlgorithmName(Class<? extends Algorithms<?>> clazz) {
         try {
-            return (String) algorithm.getField("NAME").get(null);
+            return (String) clazz.getField("NAME").get(null);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            return null;
+            return clazz.getSimpleName();
         }
     }
 
@@ -123,7 +124,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         this.player = player;
     }
 
-    public abstract void init();
+    public void init() {
+    };
 
     private void playSortingSound() {
         if (this.pitch == null) {
@@ -151,7 +153,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
     }
 
     protected void setIndex(Integer... index) {
-        this.selectedIndex = (index == null) ? new ArrayList<Integer>() : Arrays.asList(index);
+        this.selectedIndex = (index == null) ? new LinkedList<Integer>() : new LinkedList<Integer>(Arrays.asList(index));
     }
 
     protected List<Integer> getIndex() {
@@ -185,7 +187,9 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
      * @param args   args[0] ในที่นี้ จะเริ่มที่ args[3] ของ command หลัก
      * @return List ข้อความที่จะถูกแนะนำมาตอนพิมพ์คำสั่ง
      */
-    protected abstract List<String> onTabComplete(CommandSender sender, String[] args);
+    protected List<String> onTabComplete(CommandSender sender, String[] args) {
+        return null;
+    };
 
     protected void argsFilter(String[] args) throws InvalidArgsException {
         // NO Filter.
@@ -195,6 +199,11 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         return (CommandSender sender, Command command, String alias, String[] args1) -> Algorithms.this.onTabComplete(
                 sender,
                 new ArrayList<>(Arrays.asList(args1)).subList(4, args1.length).toArray(new String[args1.length - 4]));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Algorithms<T> newAlgorithm() throws InstantiationException, IllegalAccessException {
+        return this.getClass().newInstance();
     }
 
 }

@@ -1,9 +1,10 @@
 package com.hao.haovsort;
 
 import com.hao.haovsort.commands.Sort;
+import com.hao.haovsort.commands.SortDebug;
 import com.hao.haovsort.commands.StopSort;
 import com.hao.haovsort.sorting.SortPlayer;
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmsManager;
+import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 
 import java.util.logging.Level;
 import org.bukkit.command.PluginCommand;
@@ -15,27 +16,25 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         prefix = String.format("[%s]", getName());
-
-        PluginCommand sort = getCommand("sort");
-        PluginCommand stopSort = getCommand("stopsort");
-        if (sort == null || stopSort == null) {
-            getLogger().log(Level.WARNING, "{0} NOT FOUND SORT COMMAND!", prefix);
-            getLogger().log(Level.WARNING, "{0} Plugin is disable.", prefix);
-            return;
-        }
         try {
             AlgorithmsManager.init();
         } catch (Exception e) {
+            e.printStackTrace();
             getLogger().log(Level.WARNING, e.toString());
             getLogger().log(Level.WARNING, "{0} AlgorithmsManager cannot initialize!", prefix);
             getLogger().log(Level.WARNING, "{0} Plugin is disable.", prefix);
             return;
         }
-
+        PluginCommand sort = getCommand("sort");
+        PluginCommand stopSort = getCommand("sortstop");
+        PluginCommand sortdebug = getCommand("sortdebug");
+        if (sort == null || stopSort == null || sortdebug == null) {
+            getLogger().log(Level.WARNING, "{0} NOT FOUND SOME HAOVSORT COMMAND!", prefix);
+        }
         sort.setExecutor(new Sort(this));
-        SortPlayer.setTabCompleterToCommand(sort);
-
         stopSort.setExecutor(new StopSort());
+        sortdebug.setExecutor(new SortDebug());
+        SortPlayer.setTabCompleterToCommand(sort);
 
         getLogger().log(Level.INFO, "{0} plugin is enable.", prefix);
     }
@@ -44,5 +43,9 @@ public class Main extends JavaPlugin {
     public void onDisable() {
         AlgorithmsManager.stopAll();
         getLogger().log(Level.INFO, "{0} Bye bye~", prefix);
+    }
+
+    public static String getPrefix() {
+        return Main.prefix;
     }
 }

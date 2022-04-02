@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hao.haovsort.sorting.algorithms.utils.Algorithms;
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmsManager;
+import com.hao.haovsort.sorting.utils.Algorithms;
+import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,14 +22,12 @@ public class SortTab implements TabCompleter {
         // /sort <player> <type> <delay> <length> args...
         switch (args.length) {
             case 1:
-                // return Bukkit.getOnlinePlayers().stream().map((p) ->
-                // p.getName()).collect(Collectors.toList());
                 return null;
             case 2:
                 return AlgorithmsManager.getAlgorithms().stream().map(t -> {
                     try {
                         Class<? extends Algorithms<?>> clazz = (Class<? extends Algorithms<?>>) t.getClass();
-                        return Algorithms.getAlgorithmName(clazz);
+                        return Algorithms.getAlgorithmName(clazz).toLowerCase();
                     } catch (IllegalArgumentException | SecurityException e) {
                         return null;
                     }

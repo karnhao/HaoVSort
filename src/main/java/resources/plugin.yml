@@ -2,14 +2,44 @@
 ---
 main: com.hao.haovsort.Main
 name: HaoVSort
-version: 1.0.0-SNAPSHOT
+version: 1.0.0
 description: This plugin can visualize an sorting algorithm with a color scale. -Made in Thailand.
 author: Sittipat Tepsutar
+api-version: 1.13
 commands:
     sort:
       description: Main plugin commands.
       usage: /<command>
       permission: haovsort.commands.sort
-    stopsort:
+      permission-message: You do not have permission to use this command.
+    sortstop:
       description: Stop visualize
-      permission: haovsort.commands.stopsort
+      usage: /<command> <player>
+      permission: haovsort.commands.sortstop
+      permission-message: You do not have permission to use this command.
+    sortdebug:
+      description: Debug
+      usage: /<command> [test|stop]
+      permission: haovsort.debug
+      permission-message: You do not have permission to use this command.
+permissions:
+  haovsort.*:
+    description: Give access to HaoVSort whole.
+    children:
+      haovsort.command.sort: true
+      haovsort.command.sortstop: true
+      haovsort.debug: true
+  haovsort.command.*:
+    description: Allows player to use all command in HaoVSort plugin.
+    children:
+      haovsort.command.sort: true
+      haovsort.command.sortstop: true
+  haovsort.command.sort:
+    description: Allows player to use /sort command.
+    default: op
+  haovsort.command.sortstop:
+    description: Allows player to use /sortstop command.
+    default: op
+  haovsort.debug:
+    description: Allows player to debug HaoVSort plugin.
+    default: op

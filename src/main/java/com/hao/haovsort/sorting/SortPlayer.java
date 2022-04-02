@@ -3,13 +3,13 @@ package com.hao.haovsort.sorting;
 import java.util.Arrays;
 import java.util.List;
 
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmCommand;
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmCommandCollector;
-import com.hao.haovsort.sorting.algorithms.utils.Algorithms;
-import com.hao.haovsort.sorting.algorithms.utils.AlgorithmsManager;
-import com.hao.haovsort.sorting.algorithms.utils.NoSuchAlgorithmException;
-import com.hao.haovsort.sorting.algorithms.utils.StopSortException;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
+import com.hao.haovsort.sorting.utils.AlgorithmCommand;
+import com.hao.haovsort.sorting.utils.AlgorithmCommandCollector;
+import com.hao.haovsort.sorting.utils.Algorithms;
+import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.sorting.utils.NoSuchAlgorithmException;
+import com.hao.haovsort.sorting.utils.StopSortException;
 import com.hao.haovsort.tabcompleter.SortTab;
 
 import org.bukkit.command.PluginCommand;
@@ -59,6 +59,12 @@ final public class SortPlayer extends Thread {
     @Override
     public void run() {
         this.players.forEach(AlgorithmsManager::cleanPlayer);
+        this.alert("Preparing...", ChatColor.AQUA);
+        try {
+            sleep(100l);
+        } catch (InterruptedException e1) {
+            throw new StopSortException();
+        }
         AlgorithmsManager.addPlayer(this.getOwner(), this);
         try {
             Arrays.asList(getAlgorithmCommandCollectors()).forEach((acc) -> {
@@ -90,8 +96,8 @@ final public class SortPlayer extends Thread {
     }
 
     public void stopPlayer() {
-        this.interrupt();
         this.algorithm.interrupt();
+        this.interrupt();
     }
 
     public void runAlgorithm(AlgorithmCommand command, String... args)
@@ -117,9 +123,9 @@ final public class SortPlayer extends Thread {
                 return new SortTab().onTabComplete(sender, command, alias, args);
             else {
                 for (Algorithms<?> algorithm : AlgorithmsManager.getAlgorithms()) {
+                    String name = Algorithms.getAlgorithmName((Class<? extends Algorithms<?>>) algorithm.getClass());
                     try {
-                        if (Algorithms.getAlgorithmName((Class<? extends Algorithms<?>>) algorithm.getClass())
-                                .equalsIgnoreCase(args[1]))
+                        if (name.equalsIgnoreCase(args[1]))
                             return algorithm.getTabCompleter().onTabComplete(sender, command, alias, args);
                     } catch (IllegalArgumentException | SecurityException e) {
                         e.printStackTrace();

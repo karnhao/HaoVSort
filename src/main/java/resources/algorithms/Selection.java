@@ -1,11 +1,6 @@
-package com.hao.haovsort.sorting.algorithms;
+package resources.algorithms;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.hao.haovsort.sorting.algorithms.utils.Algorithms;
-
-import org.bukkit.command.CommandSender;
+import com.hao.haovsort.sorting.utils.Algorithms;
 
 public class Selection extends Algorithms<Selection> {
 
@@ -31,14 +26,5 @@ public class Selection extends Algorithms<Selection> {
             a[i] = temp;
         }
         show();
-    }
-
-    @Override
-    public void init() {
-    }
-
-    @Override
-    protected List<String> onTabComplete(CommandSender sender, String[] args) {
-        return (args.length == 1) ? Arrays.asList("Hello", "World") : null;
     }
 }

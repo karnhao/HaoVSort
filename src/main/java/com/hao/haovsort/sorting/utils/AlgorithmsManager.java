@@ -1,31 +1,41 @@
-package com.hao.haovsort.sorting.algorithms.utils;
+package com.hao.haovsort.sorting.utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import com.hao.haovsort.Main;
 import com.hao.haovsort.sorting.SortPlayer;
-import com.hao.haovsort.sorting.algorithms.Finish;
-import com.hao.haovsort.sorting.algorithms.Random;
-import com.hao.haovsort.sorting.algorithms.Selection;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class AlgorithmsManager {
 
     private static Map<String, Algorithms<?>> map = new HashMap<>();
-    private static Map<String, Class<? extends Algorithms<?>>> mapClazz = new HashMap<>();
     private static Map<Player, SortPlayer> players = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     public static void init() throws Exception {
-        putAlgorithms(Selection.class);
-        putAlgorithms(Random.class);
-        putAlgorithms(Finish.class);
+        AlgorithmsLoader loader = new AlgorithmsLoader();
+        List<Class<?>> classes = loader.getAllAlgorithmsClasses();
+        System.out.println(Arrays.toString(classes.toArray()));
+        classes.forEach((t) -> {
+            try {
+                putAlgorithms((Class<? extends Algorithms<?>>) t);
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
+        AlgorithmsManager.stopAll();
     }
 
-    public static Algorithms<?> getAlgorithm(String name) throws InstantiationException, IllegalAccessException {
-        return mapClazz.get(name).newInstance().login();
+    public static Algorithms<? extends Algorithms<?>> getAlgorithm(String name)
+            throws InstantiationException, IllegalAccessException {
+        return map.get(name).newAlgorithm();
     }
 
     /**
@@ -48,9 +58,9 @@ public class AlgorithmsManager {
      */
     private static void putAlgorithms(Class<? extends Algorithms<?>> algorithm)
             throws InstantiationException, IllegalAccessException {
-        String name = Algorithms.getAlgorithmName(algorithm);
+        String name = Algorithms.getAlgorithmName(algorithm).toLowerCase();
+        Bukkit.getLogger().log(Level.INFO, "{0} Loaded {1}", new Object[] { Main.getPrefix(), name });
         map.put(name, algorithm.newInstance());
-        mapClazz.put(name, algorithm);
     }
 
     public static List<? extends Algorithms<?>> getAlgorithms() {
@@ -59,6 +69,10 @@ public class AlgorithmsManager {
 
     public static void addPlayer(Player owner, SortPlayer player) {
         players.put(owner, player);
+    }
+
+    public static Map<Player, SortPlayer> getPlayers() {
+        return players;
     }
 
     public static SortPlayer getPlayer(Player owner) {

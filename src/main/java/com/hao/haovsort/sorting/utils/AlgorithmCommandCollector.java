@@ -1,4 +1,4 @@
-package com.hao.haovsort.sorting.algorithms.utils;
+package com.hao.haovsort.sorting.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

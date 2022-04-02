@@ -1,24 +1,23 @@
-package com.hao.haovsort.sorting.algorithms;
+package resources.algorithms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hao.haovsort.sorting.algorithms.utils.Algorithms;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
+import com.hao.haovsort.sorting.utils.Algorithms;
 
 import org.bukkit.command.CommandSender;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class Finish extends Algorithms<Finish> {
-    public final static String NAME = "finish";
-    private final static List<String> SUGGESTION_COLOR = Arrays.asList("#", "#00FF00");
+    private final static List<String> SUGGESTION_COLOR = Arrays.asList("#", "#00AA00");
 
     @Override
     public void sort(Integer[] a) throws InterruptedException {
-        setIndexColor(ChatColor.of(this.getArgs().length == 1 ? this.getArgs()[0] : "#00AA00"));
+        setIndexColor(ChatColor.of(this.getArgs().length > 0 ? this.getArgs()[0] : "#00AA00"));
         List<Integer> intf = new ArrayList<>();
         for (int i = 0; i < a.length; i++) {
             setPitch(pitchCal(a[i]));
@@ -30,10 +29,6 @@ public class Finish extends Algorithms<Finish> {
         setIndex();
         setPitch();
         show();
-    }
-
-    @Override
-    public void init() {
     }
 
     @Override
