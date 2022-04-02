@@ -184,7 +184,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
      * {@code /sort  &lt;player&gt; &lt;type&gt; &lt;delay&gt; &lt;length&gt; args[0] args[1] args[2] ...}
      *
      * @param sender ผู้ที่ใช้คำสั่งนี้
-     * @param args   args[0] ในที่นี้ จะเริ่มที่ args[3] ของ command หลัก
+     * @param args   args[0] ในที่นี้ จะเริ่มที่ args[4] ของ command หลัก
      * @return List ข้อความที่จะถูกแนะนำมาตอนพิมพ์คำสั่ง
      */
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
