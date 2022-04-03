@@ -60,11 +60,11 @@ final public class SortPlayer extends Thread {
     public void run() {
         this.players.forEach(AlgorithmsManager::cleanPlayer);
         this.alert("Preparing...", ChatColor.AQUA);
-        try {
-            sleep(100l);
-        } catch (InterruptedException e1) {
-            throw new StopSortException();
-        }
+        // try {
+        //     sleep(100l);
+        // } catch (InterruptedException e1) {
+        //     throw new StopSortException();
+        // }
         AlgorithmsManager.addPlayer(this.getOwner(), this);
         try {
             Arrays.asList(getAlgorithmCommandCollectors()).forEach((acc) -> {
@@ -98,6 +98,11 @@ final public class SortPlayer extends Thread {
     public void stopPlayer() {
         this.algorithm.interrupt();
         this.interrupt();
+        try {
+            this.algorithm.join();
+            this.join();
+        } catch (InterruptedException e) {
+        }
     }
 
     public void runAlgorithm(AlgorithmCommand command, String... args)

@@ -4,15 +4,16 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 
 public class InsertionMerge extends Algorithms<InsertionMerge> {
 
+    public static final String NAME = "insert_merge";
+
     private void inplaceMergeSort(Integer arr[], int l, int r) throws InterruptedException {
         if (l < r) {
             int m = (l + r) / 2;
             inplaceMergeSort(arr, l, m);
             inplaceMergeSort(arr, m + 1, r);
             inplaceMerge(arr, l, m, r);
-            setPitch();
-            setIndex();
-            // displaySort(arr);
+            setPitchs();
+            setIndexes();
         }
     }
 
@@ -29,8 +30,8 @@ public class InsertionMerge extends Algorithms<InsertionMerge> {
         while (start <= mid && start2 <= end) {
             // If element 1 is in right place
             if (arr[start] <= arr[start2]) {
-                setPitch(pitchCal(arr[start]), pitchCal(arr[start2]));
-                setIndex(start, start2);
+                setPitchs(pitchCal(arr[start]), pitchCal(arr[start2]));
+                setIndexes(start, start2);
                 show();
                 start++;
             } else {
@@ -40,8 +41,8 @@ public class InsertionMerge extends Algorithms<InsertionMerge> {
                 // Shift all the elements between element 1
                 // element 2, right by 1.
                 while (iindex != start) {
-                    setPitch(pitchCal(arr[iindex]));
-                    setIndex(start, start2, iindex);
+                    setPitchs(pitchCal(arr[iindex]));
+                    setIndexes(start, start2, iindex);
                     show();
                     arr[iindex] = arr[iindex - 1];
                     iindex--;

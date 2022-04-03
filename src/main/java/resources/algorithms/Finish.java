@@ -20,14 +20,14 @@ public class Finish extends Algorithms<Finish> {
         setIndexColor(ChatColor.of(this.getArgs().length > 0 ? this.getArgs()[0] : "#00AA00"));
         List<Integer> intf = new ArrayList<>();
         for (int i = 0; i < a.length; i++) {
-            setPitch(pitchCal(a[i]));
+            setPitchs(pitchCal(a[i]));
             intf.add(i);
             Integer[] b = intf.toArray(new Integer[intf.size()]);
-            setIndex(b);
+            setIndexes(b);
             show();
         }
-        setIndex();
-        setPitch();
+        setIndexes();
+        setPitchs();
         show();
     }
 

@@ -23,8 +23,8 @@ public class Random extends Algorithms<Random> {
             java.util.Random r = new java.util.Random();
             if (i > 0) {
                 if (Math.random() >= Float.parseFloat(this.getArgs()[0])) {
-                    setPitch(this.pitchCal(i - 1));
-                    setIndex(i);
+                    setPitchs(this.pitchCal(i - 1));
+                    setIndexes(i);
                     show();
                     i--;
                     continue;
@@ -33,9 +33,9 @@ public class Random extends Algorithms<Random> {
                 int temp = a[i];
                 a[i] = a[j];
                 a[j] = temp;
-                setPitch(pitchCal(i - 1), pitchCal(j - 1));
+                setPitchs(pitchCal(i - 1), pitchCal(j - 1));
                 i--;
-                setIndex(i);
+                setIndexes(i);
                 show();
             } else {
                 loop = false;

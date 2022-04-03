@@ -31,16 +31,16 @@ public class Merge extends Algorithms<Merge> {
             if (L[i] <= R[j]) {
                 arr[k] = L[i];
                 i++;
-                setPitch(pitchCal(L[i - 1]));
-                setIndex(j + m + 1);
+                setPitchs(pitchCal(L[i - 1]));
+                setIndexes(j + m + 1);
             } else {
                 arr[k] = R[j];
                 j++;
-                setPitch(pitchCal(R[j - 1]));
-                setIndex(j + m + 1);
+                setPitchs(pitchCal(R[j - 1]));
+                setIndexes(j + m + 1);
             }
             k++;
-            getIndex().add(k);
+            getIndexes().add(k);
             show();
         }
 
@@ -49,8 +49,8 @@ public class Merge extends Algorithms<Merge> {
             arr[k] = L[i];
             i++;
             k++;
-            setPitch(pitchCal(arr[k - 1]));
-            setIndex(k);
+            setPitchs(pitchCal(arr[k - 1]));
+            setIndexes(k);
             show();
         }
 
@@ -59,8 +59,8 @@ public class Merge extends Algorithms<Merge> {
             arr[k] = R[j];
             j++;
             k++;
-            setPitch(pitchCal(arr[k - 1]));
-            setIndex(k);
+            setPitchs(pitchCal(arr[k - 1]));
+            setIndexes(k);
             show();
         }
     }
@@ -71,8 +71,8 @@ public class Merge extends Algorithms<Merge> {
             mergesort(arr, l, m);
             mergesort(arr, m + 1, r);
             merge(arr, l, m, r);
-            setPitch();
-            setIndex();
+            setPitchs();
+            setIndexes();
         }
     }
 

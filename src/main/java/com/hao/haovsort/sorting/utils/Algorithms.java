@@ -27,8 +27,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
     protected List<Player> player;
     private String[] args = {};
     private ChatColor indexColor = ChatColor.BLACK;
-    private List<Integer> selectedIndex = new LinkedList<>();
-    private List<Float> pitch = new LinkedList<>();
+    private List<Integer> selectedIndexes = new LinkedList<>();
+    private List<Float> pitchs = new LinkedList<>();
     private Long delay;
 
     @Override
@@ -65,7 +65,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
     }
 
     public void setArgs(String... args) throws InvalidArgsException {
-        if(args == null) return;
+        if (args == null)
+            return;
         this.argsFilter(args);
         this.args = args;
     }
@@ -81,7 +82,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         Color color;
         ComponentBuilder cb = new ComponentBuilder();
         for (int i = 0; i < this.getArray().length; i++) {
-            if (this.getIndex().contains(i)) {
+            if (this.getIndexes().contains(i)) {
                 cb.append("|").color(indexColor).bold(true);
             } else {
                 color = Color.getHSBColor(this.colorCal(this.getArray()[i]), 1.0f, 1.0f);
@@ -128,10 +129,10 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
     };
 
     private void playSortingSound() {
-        if (this.pitch == null) {
-            this.pitch = this.selectedIndex.stream().map((t) -> this.pitchCal(t)).collect(Collectors.toList());
+        if (this.pitchs.isEmpty()) {
+            this.pitchs = this.selectedIndexes.stream().map((t) -> this.pitchCal(t)).collect(Collectors.toList());
         }
-        for (Float u : pitch) {
+        for (Float u : pitchs) {
             if (u == 0)
                 continue;
             player.forEach((t) -> {
@@ -152,16 +153,25 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         return pitchCal(0.5f, 2.0f, n);
     }
 
-    protected void setIndex(Integer... index) {
-        this.selectedIndex = (index == null) ? new LinkedList<Integer>() : new LinkedList<Integer>(Arrays.asList(index));
+    protected void setIndexes(Integer... index) {
+        this.selectedIndexes = (index == null) ? new LinkedList<Integer>()
+                : new LinkedList<Integer>(Arrays.asList(index));
     }
 
-    protected List<Integer> getIndex() {
-        return this.selectedIndex;
+    protected List<Integer> getIndexes() {
+        return this.selectedIndexes;
     }
 
-    protected void setPitch(Float... pitch) {
-        this.pitch = Arrays.asList(pitch);
+    protected void setPitchs(Float... pitch) {
+        this.pitchs = Arrays.asList(pitch);
+    }
+
+    /**
+     * Scale ความถี่ของคลื่นเสียงที่จะเล่นเมื่อใช้ <pre> this.show()
+     * @return List<Float> pitchs
+     */
+    protected List<Float> getPitchs() {
+        return this.pitchs;
     }
 
     @Override
@@ -191,19 +201,32 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread impleme
         return null;
     };
 
+    /** 
+     * ให้ throw InvalidArgsException เมื่อ Args ไม่ถูกต้อง
+     * ข้อความที่แนบมาด้วยจะแจ้งเป็น error กับผู้เล่นที่ใช้คำสั่งนี้
+     */
     protected void argsFilter(String[] args) throws InvalidArgsException {
         // NO Filter.
     };
 
+    /**
+     * TabCompleter ของ Algorithm นั้นๆ
+     */
     public TabCompleter getTabCompleter() {
         return (CommandSender sender, Command command, String alias, String[] args1) -> Algorithms.this.onTabComplete(
                 sender,
                 new ArrayList<>(Arrays.asList(args1)).subList(4, args1.length).toArray(new String[args1.length - 4]));
     }
 
+    /**
+     * สร้าง Thread ของ Algorithm ที่พร้อมใช้งาน
+     * @return Algorithm Thread object
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     @SuppressWarnings("unchecked")
     protected Algorithms<T> newAlgorithm() throws InstantiationException, IllegalAccessException {
-        return this.getClass().newInstance();
+        return this.getClass().newInstance().login();
     }
 
 }

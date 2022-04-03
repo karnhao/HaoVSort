@@ -13,8 +13,8 @@ public class Selection extends Algorithms<Selection> {
             int min_idx = i;
             for (int j = i + 1; j < n; j++) {
                 if (j < n) {
-                    setPitch(this.pitchCal(a[j]));
-                    setIndex(i, j, min_idx);
+                    setPitchs(this.pitchCal(a[j]));
+                    setIndexes(i, j, min_idx);
                     show();
                     if (a[j] < a[min_idx]) {
                         min_idx = j;

@@ -17,8 +17,8 @@ public class Insertion extends Algorithms<Insertion> {
              * of their current position
              */
             while (j >= 0 && a[j] > key) {
-                setPitch(pitchCal(a[j]));
-                setIndex(i, j);
+                setPitchs(pitchCal(a[j]));
+                setIndexes(i, j);
                 show();
                 a[j + 1] = a[j];
                 j = j - 1;

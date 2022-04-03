@@ -17,8 +17,8 @@ public class Quick extends Algorithms<Quick> {
         int pivot = arr[high];
         int i = (low - 1); // index of smaller element
         for (int j = low; j < high; j++) {
-            setPitch(pitchCal(arr[j]), pitchCal(arr[i + 1]));
-            setIndex(i, j);
+            setPitchs(pitchCal(arr[j]), pitchCal(arr[i + 1]));
+            setIndexes(i, j);
             show();
             if (arr[j] < pivot) {
                 i++;
@@ -29,7 +29,7 @@ public class Quick extends Algorithms<Quick> {
                 arr[j] = temp;
             }
         }
-        setIndex(i);
+        setIndexes(i);
         show();
 
         // swap arr[i+1] and arr[high] (or pivot)
