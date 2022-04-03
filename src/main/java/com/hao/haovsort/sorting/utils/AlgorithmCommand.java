@@ -1,21 +1,23 @@
 package com.hao.haovsort.sorting.utils;
 
+import java.util.List;
+
 import org.bukkit.entity.Player;
 
 public class AlgorithmCommand {
     private String type = null;
     private Long delay = 1l;
-    private Player[] players = null;
+    private List<Player> players = null;
     private String[] args = null;
 
-    public AlgorithmCommand(String type, Long delay, Player[] players, String... args) {
+    public AlgorithmCommand(String type, Long delay, List<Player> players, String... args) {
         this.type = type;
         this.delay = delay;
         this.players = players;
         this.setArgs(args);
     }
 
-    public AlgorithmCommand(String type, Long delay, Player[] players) {
+    public AlgorithmCommand(String type, Long delay, List<Player> players) {
         this(type, delay, players, (String[]) null);
     }
 
@@ -44,11 +46,11 @@ public class AlgorithmCommand {
         this.delay = delay;
     }
 
-    public Player[] getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(Player[] players) {
+    public void setPlayers(List<Player> players) {
         this.players = players;
     }
 }

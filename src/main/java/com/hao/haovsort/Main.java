@@ -3,8 +3,8 @@ package com.hao.haovsort;
 import com.hao.haovsort.commands.Sort;
 import com.hao.haovsort.commands.SortDebug;
 import com.hao.haovsort.commands.StopSort;
-import com.hao.haovsort.sorting.SortPlayer;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.sorting.utils.SortPlayer;
 
 import java.util.logging.Level;
 import org.bukkit.command.PluginCommand;
@@ -31,7 +31,7 @@ public class Main extends JavaPlugin {
         if (sort == null || stopSort == null || sortdebug == null) {
             getLogger().log(Level.WARNING, "{0} NOT FOUND SOME HAOVSORT COMMAND!", prefix);
         }
-        sort.setExecutor(new Sort(this));
+        sort.setExecutor(new Sort());
         stopSort.setExecutor(new StopSort());
         sortdebug.setExecutor(new SortDebug());
         SortPlayer.setTabCompleterToCommand(sort);

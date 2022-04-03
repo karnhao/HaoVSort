@@ -30,7 +30,7 @@ public class InsertionMerge extends Algorithms<InsertionMerge> {
         while (start <= mid && start2 <= end) {
             // If element 1 is in right place
             if (arr[start] <= arr[start2]) {
-                setPitchs(pitchCal(arr[start]), pitchCal(arr[start2]));
+                setPitchs(pitchCal(arr[start], arr[start2]));
                 setIndexes(start, start2);
                 show();
                 start++;
@@ -61,5 +61,4 @@ public class InsertionMerge extends Algorithms<InsertionMerge> {
     public void sort(Integer[] a) throws InterruptedException {
         inplaceMergeSort(a, 0, a.length - 1);
     }
-
 }

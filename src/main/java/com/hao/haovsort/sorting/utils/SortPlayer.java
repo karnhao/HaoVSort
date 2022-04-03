@@ -1,15 +1,9 @@
-package com.hao.haovsort.sorting;
+package com.hao.haovsort.sorting.utils;
 
 import java.util.Arrays;
 import java.util.List;
 
 import com.hao.haovsort.sorting.args.InvalidArgsException;
-import com.hao.haovsort.sorting.utils.AlgorithmCommand;
-import com.hao.haovsort.sorting.utils.AlgorithmCommandCollector;
-import com.hao.haovsort.sorting.utils.Algorithms;
-import com.hao.haovsort.sorting.utils.AlgorithmsManager;
-import com.hao.haovsort.sorting.utils.NoSuchAlgorithmException;
-import com.hao.haovsort.sorting.utils.StopSortException;
 import com.hao.haovsort.tabcompleter.SortTab;
 
 import org.bukkit.command.PluginCommand;
@@ -58,14 +52,6 @@ final public class SortPlayer extends Thread {
 
     @Override
     public void run() {
-        this.players.forEach(AlgorithmsManager::cleanPlayer);
-        this.alert("Preparing...", ChatColor.AQUA);
-        // try {
-        //     sleep(100l);
-        // } catch (InterruptedException e1) {
-        //     throw new StopSortException();
-        // }
-        AlgorithmsManager.addPlayer(this.getOwner(), this);
         try {
             Arrays.asList(getAlgorithmCommandCollectors()).forEach((acc) -> {
                 if (!this.isInterrupted()) {
@@ -76,14 +62,17 @@ final public class SortPlayer extends Thread {
                                 runAlgorithm(command, command.getArgs());
                             } catch (NoSuchAlgorithmException e) {
                                 this.alert("Sort command not found");
-                                throw new RuntimeException();
+                                throw new StopSortException();
                             } catch (StopSortException stop) {
                                 this.alert("Stop visualize");
-                                throw new RuntimeException();
+                                throw new StopSortException();
+                            } catch (InvalidArgsException arg) {
+                                this.alert(arg.getMessage());
+                                throw new StopSortException();
                             } catch (Exception ex) {
                                 this.alert(ex.getMessage());
                                 ex.printStackTrace();
-                                throw new RuntimeException();
+                                throw new StopSortException();
                             }
                         }
                     });
@@ -91,15 +80,16 @@ final public class SortPlayer extends Thread {
             });
         } catch (RuntimeException stop) {
         }
-
         this.players.forEach(AlgorithmsManager::cleanPlayer);
     }
 
     public void stopPlayer() {
-        this.algorithm.interrupt();
-        this.interrupt();
         try {
-            this.algorithm.join();
+            if (this.algorithm != null) {
+                this.algorithm.interrupt();
+                this.algorithm.join();
+            }
+            this.interrupt();
             this.join();
         } catch (InterruptedException e) {
         }
@@ -114,8 +104,8 @@ final public class SortPlayer extends Thread {
         this.algorithm = algorithm;
         algorithm.setArray(this.array);
         algorithm.setDelay(command.getDelay());
-        algorithm.setPlayer(Arrays.asList(command.getPlayers()));
-        algorithm.setName(Arrays.toString(command.getPlayers()));
+        algorithm.setPlayers(command.getPlayers());
+        algorithm.setName(Arrays.toString(command.getPlayers().toArray()));
         algorithm.setArgs(args);
         algorithm.run();
     }

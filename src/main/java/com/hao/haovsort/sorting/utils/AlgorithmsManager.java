@@ -1,28 +1,26 @@
 package com.hao.haovsort.sorting.utils;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import com.hao.haovsort.Main;
-import com.hao.haovsort.sorting.SortPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class AlgorithmsManager {
 
-    private static Map<String, Algorithms<?>> map = new HashMap<>();
-    private static Map<Player, SortPlayer> players = new HashMap<>();
+    private static HashMap<String, Algorithms<?>> map = new HashMap<>();
+    private static ConcurrentHashMap<Player, SortPlayer> players = new ConcurrentHashMap<>();
 
     @SuppressWarnings("unchecked")
     public static void init() throws Exception {
         AlgorithmsLoader loader = new AlgorithmsLoader();
         List<Class<?>> classes = loader.getAllAlgorithmsClasses();
-        System.out.println(Arrays.toString(classes.toArray()));
         classes.forEach((t) -> {
             try {
                 putAlgorithms((Class<? extends Algorithms<?>>) t);
@@ -80,8 +78,9 @@ public class AlgorithmsManager {
     }
 
     public static void stopPlayer(Player owner) throws Exception {
-        if (!players.containsKey(owner))
+        if (!players.containsKey(owner)) {
             throw new Exception("No sorting player was found");
+        }
         players.get(owner).stopPlayer();
         players.remove(owner);
     }

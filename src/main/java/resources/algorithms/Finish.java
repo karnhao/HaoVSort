@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import net.md_5.bungee.api.ChatColor;
 
 public class Finish extends Algorithms<Finish> {
-    private final static List<String> SUGGESTION_COLOR = Arrays.asList("#", "#00AA00");
+    private final static List<String> SUGGESTION_COLOR = Arrays.asList("#", "#00AA00", "#FF0000");
 
     @Override
     public void sort(Integer[] a) throws InterruptedException {
@@ -40,11 +40,12 @@ public class Finish extends Algorithms<Finish> {
 
     @Override
     protected void argsFilter(String[] args) throws InvalidArgsException {
-        if (args.length == 1)
-            try {
-                ChatColor.of(args[0]);
-            } catch (Exception e) {
-                throw new InvalidArgsException("Cannot format " + args[0] + " to Color");
-            }
+        if (args.length == 0)
+            return;
+        try {
+            ChatColor.of(args[0]);
+        } catch (Exception e) {
+            throw new InvalidArgsException("Cannot format " + args[0] + " to Color");
+        }
     }
 }

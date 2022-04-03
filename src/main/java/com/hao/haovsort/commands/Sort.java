@@ -2,20 +2,19 @@
 package com.hao.haovsort.commands;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
 
-import com.hao.haovsort.sorting.SortPlayer;
 import com.hao.haovsort.sorting.utils.AlgorithmCommand;
 import com.hao.haovsort.sorting.utils.AlgorithmCommandCollector;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.sorting.utils.SortPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -29,44 +28,31 @@ import net.md_5.bungee.api.ChatColor;
  */
 public class Sort implements CommandExecutor {
 
-    private static Plugin plugin = null;
-
-    public Sort(Plugin plugin) {
-        Sort.plugin = plugin;
-    }
-
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] args) {
-        // args[0] = <player>
-        // args[1] = <algorithm>
-        // args[2] = <delay>
-        // args[3] = <length>
-        // args[4]... = args...
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                try {
-                    Player target = Bukkit.getPlayer(args[0]);
-                    SortPlayer player = new SortPlayer();
-                    if (target == null)
-                        throw new Exception("Player not found.");
-                    AlgorithmsManager.cleanPlayer(target);
-                    Player[] targets = Arrays.asList(target).toArray(new Player[1]);
-                    Long delay = Long.parseLong(args[2]);
-                    if(delay < 1) throw new Exception("Delay cannot lower than 1");
-                    player.setPlayers(Arrays.asList(targets));
-                    player.setOwner(target);
-                    player.setCommands(new AlgorithmCommandCollector(Sort.createArray(Sort.getLength(args[3])),
-                            new AlgorithmCommand("random", 10l, targets, "1"),
-                            new AlgorithmCommand(args[1], delay, targets,
-                                    Arrays.copyOfRange(args, 4, args.length)),
-                            new AlgorithmCommand("finish", 10l, targets)));
-                    player.start();
-                } catch (Exception e) {
-                    cs.sendMessage(ChatColor.RED + e.toString());
-                }
+        try {
+            Player target = Bukkit.getPlayer(args[0]);
+            if (target == null) {
+                throw new Exception("Player not found.");
             }
-        }.runTaskLater(plugin, 0l);
+            AlgorithmsManager.cleanPlayer(target);
+            SortPlayer player = new SortPlayer();
+            List<Player> targets = Arrays.asList(target);
+            Long delay = Long.parseLong(args[2]);
+            if (delay < 1)
+                throw new Exception("Delay cannot lower than 1");
+            player.setPlayers(targets);
+            player.setOwner(target);
+            player.setCommands(new AlgorithmCommandCollector(Sort.createArray(Sort.getLength(args[3])),
+                    new AlgorithmCommand("random", 10l, targets, "1"),
+                    new AlgorithmCommand(args[1], delay, targets,
+                            Arrays.copyOfRange(args, 4, args.length)),
+                    new AlgorithmCommand("finish", 10l, targets)));
+            player.start();
+            AlgorithmsManager.addPlayer(target, player);
+        } catch (Exception e) {
+            alert(cs, e.toString());
+        }
         return true;
     }
 
@@ -78,5 +64,9 @@ public class Sort implements CommandExecutor {
 
     private static Integer[] createArray(int length) {
         return IntStream.range(1, length + 1).boxed().toArray(Integer[]::new);
+    }
+
+    private static void alert(CommandSender cs, String e) {
+        cs.sendMessage(ChatColor.RED + e);
     }
 }

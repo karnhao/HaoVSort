@@ -33,7 +33,7 @@ public class Random extends Algorithms<Random> {
                 int temp = a[i];
                 a[i] = a[j];
                 a[j] = temp;
-                setPitchs(pitchCal(i - 1), pitchCal(j - 1));
+                setPitchs(pitchCal(i - 1, j - 1));
                 i--;
                 setIndexes(i);
                 show();
