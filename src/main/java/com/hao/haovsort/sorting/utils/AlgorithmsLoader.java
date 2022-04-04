@@ -17,7 +17,6 @@ public class AlgorithmsLoader {
         CodeSource src = AlgorithmsLoader.class.getProtectionDomain().getCodeSource();
         List<String> algorithm_paths = new ArrayList<>();
         if (src != null) {
-            System.out.println("src-" + src.getLocation().toString());
             URL jar = src.getLocation();
             ZipInputStream zip = new ZipInputStream(jar.openStream());
             while (true) {
