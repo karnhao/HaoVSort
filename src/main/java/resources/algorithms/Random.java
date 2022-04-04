@@ -8,13 +8,10 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 
 import org.bukkit.command.CommandSender;
 
-import net.md_5.bungee.api.ChatColor;
-
 public class Random extends Algorithms<Random> {
 
     @Override
     public void sort(Integer[] a) throws InterruptedException {
-        this.setIndexColor(ChatColor.RED);
         show();
         int i = a.length - 1;
         boolean loop = true;

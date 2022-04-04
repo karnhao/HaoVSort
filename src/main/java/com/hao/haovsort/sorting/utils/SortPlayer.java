@@ -4,10 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.hao.haovsort.sorting.args.InvalidArgsException;
-import com.hao.haovsort.tabcompleter.SortTab;
 
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
@@ -95,7 +92,7 @@ final public class SortPlayer extends Thread {
         }
     }
 
-    public void runAlgorithm(AlgorithmCommand command, String... args)
+    protected void runAlgorithm(AlgorithmCommand command, String... args)
             throws NoSuchAlgorithmException, InvalidArgsException, InstantiationException, IllegalAccessException,
             StopSortException {
         Algorithms<?> algorithm = AlgorithmsManager.getAlgorithm(command.getType());
@@ -108,31 +105,6 @@ final public class SortPlayer extends Thread {
         algorithm.setName(Arrays.toString(command.getPlayers().toArray()));
         algorithm.setArgs(args);
         algorithm.run();
-    }
-
-    @SuppressWarnings("unchecked")
-    private static TabCompleter getFinalTabCompleter() {
-        // /sort <player> <type> <delay> <length> args...
-        return (sender, command, alias, args) -> {
-            if (args.length <= 4)
-                return new SortTab().onTabComplete(sender, command, alias, args);
-            else {
-                for (Algorithms<?> algorithm : AlgorithmsManager.getAlgorithms()) {
-                    String name = Algorithms.getAlgorithmName((Class<? extends Algorithms<?>>) algorithm.getClass());
-                    try {
-                        if (name.equalsIgnoreCase(args[1]))
-                            return algorithm.getTabCompleter().onTabComplete(sender, command, alias, args);
-                    } catch (IllegalArgumentException | SecurityException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return null;
-            }
-        };
-    }
-
-    public static void setTabCompleterToCommand(PluginCommand command) {
-        command.setTabCompleter(SortPlayer.getFinalTabCompleter());
     }
 
     private void alert(String message, ChatColor color) {

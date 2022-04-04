@@ -10,7 +10,6 @@ public class Heap extends Algorithms<Heap> {
 
         // Build heap (rearrange array)
         for (int i = n / 2 - 1; i >= 0; i--) {
-
             setPitchs(pitchCal(i, a[i]));
             setIndexes(i, n);
             show();
@@ -66,5 +65,4 @@ public class Heap extends Algorithms<Heap> {
         setIndexes(i, largest, n);
         show();
     }
-
 }

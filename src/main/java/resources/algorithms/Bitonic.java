@@ -41,9 +41,6 @@ public class Bitonic extends Algorithms<Bitonic> {
             }
             bitonicMerge(a, low, k, dir);
             bitonicMerge(a, low + k, k, dir);
-            // setPitch(soundPCal(0.5f, (float) a.length, a[i - 1]));
-            // setIndex(i);
-            // displaySort(a);
         }
     }
 

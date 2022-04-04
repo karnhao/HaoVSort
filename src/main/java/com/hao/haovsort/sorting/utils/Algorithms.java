@@ -1,6 +1,5 @@
 package com.hao.haovsort.sorting.utils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,8 +29,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     protected List<Player> players;
     private String[] args = {};
     private ChatColor indexColor = ChatColor.BLACK;
-    private List<Integer> selectedIndexes = new LinkedList<>();
-    private List<Float> pitchs = new LinkedList<>();
+    private LinkedList<Integer> selectedIndexes = new LinkedList<>();
+    private LinkedList<Float> pitchs = new LinkedList<>();
     private Long delay;
 
     public abstract void sort(Integer[] a) throws InterruptedException;
@@ -120,22 +119,21 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     /**
-     * Method นี้จะถูกเรียกใช้งานหลังจาก {@code argsFilter()} และก่อนที่จะเริ่มการจัดเรียง {@code sort()}
+     * Method นี้จะถูกเรียกใช้งานหลังจาก {@code argsFilter()}
+     * และก่อนที่จะเริ่มการจัดเรียง {@code sort()}
      */
     public void init() {
     };
 
     private void playSortingSound() {
         if (this.pitchs.isEmpty()) {
-            this.pitchs = this.selectedIndexes.stream().map((t) -> this.pitchCal(t)).collect(Collectors.toList());
+            this.pitchs = new LinkedList<>(
+                    this.selectedIndexes.stream().map(this::pitchCal).collect(Collectors.toList()));
         }
-        for (Float u : pitchs) {
-            if (u == 0)
-                continue;
-            players.forEach((t) -> {
-                t.playSound(t.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.MASTER, 0.2f, u);
-            });
-        }
+        pitchs.stream().filter((t) -> t != 0).forEach((p) -> {
+            players.forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING,
+                    SoundCategory.MASTER, 0.2f, p));
+        });
     }
 
     private float colorCal(int value) {
@@ -150,8 +148,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         return pitchCal(0.5f, 2.0f, n);
     }
 
-    protected List<Float> pitchCal(int... n) {
-        return Arrays.stream(n).boxed().map(this::pitchCal).collect(Collectors.toList());
+    protected LinkedList<Float> pitchCal(int... n) {
+        return new LinkedList<>(Arrays.stream(n).boxed().map(this::pitchCal).collect(Collectors.toList()));
     }
 
     protected void setIndexes(Integer... indexes) {
@@ -159,7 +157,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
                 : new LinkedList<Integer>(Arrays.asList(indexes));
     }
 
-    protected void setIndexes(List<Integer> indexes) {
+    protected void setIndexes(LinkedList<Integer> indexes) {
         this.selectedIndexes = indexes;
     }
 
@@ -171,7 +169,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         this.pitchs = (pitchs == null) ? new LinkedList<Float>() : new LinkedList<Float>(Arrays.asList(pitchs));
     }
 
-    protected void setPitchs(List<Float> pitchs) {
+    protected void setPitchs(LinkedList<Float> pitchs) {
         this.pitchs = pitchs;
     }
 
@@ -181,6 +179,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
      * <pre>
      * this.show()
      * </pre>
+     * 
      * @return List<Float> pitchs
      */
     protected List<Float> getPitchs() {
@@ -227,13 +226,13 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
      * TabCompleter ของ Algorithm นั้นๆ
      */
     public TabCompleter getTabCompleter() {
-        return (CommandSender sender, Command command, String alias, String[] args1) -> Algorithms.this.onTabComplete(
-                sender,
-                new ArrayList<>(Arrays.asList(args1)).subList(4, args1.length).toArray(new String[args1.length - 4]));
+        return (CommandSender sender, Command command, String alias, String[] args) -> Algorithms.this.onTabComplete(
+                sender, args);
     }
 
     /**
      * สร้าง Thread ของ Algorithm ที่พร้อมใช้งาน
+     * 
      * @return Algorithm Thread object
      * @throws InstantiationException
      * @throws IllegalAccessException

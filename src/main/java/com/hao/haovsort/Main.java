@@ -1,10 +1,11 @@
 package com.hao.haovsort;
 
 import com.hao.haovsort.commands.Sort;
+import com.hao.haovsort.commands.SortCustom;
 import com.hao.haovsort.commands.SortDebug;
 import com.hao.haovsort.commands.StopSort;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
-import com.hao.haovsort.sorting.utils.SortPlayer;
+import com.hao.haovsort.tabcompleter.CustomSortTab;
 
 import java.util.logging.Level;
 import org.bukkit.command.PluginCommand;
@@ -28,13 +29,17 @@ public class Main extends JavaPlugin {
         PluginCommand sort = getCommand("sort");
         PluginCommand stopSort = getCommand("sortstop");
         PluginCommand sortdebug = getCommand("sortdebug");
-        if (sort == null || stopSort == null || sortdebug == null) {
+        PluginCommand sortcustom = getCommand("sortcustom");
+        if (sort == null || stopSort == null || sortdebug == null || sortcustom == null) {
             getLogger().log(Level.WARNING, "{0} NOT FOUND SOME HAOVSORT COMMAND!", prefix);
         }
         sort.setExecutor(new Sort());
         stopSort.setExecutor(new StopSort());
         sortdebug.setExecutor(new SortDebug());
-        SortPlayer.setTabCompleterToCommand(sort);
+        sortcustom.setExecutor(new SortCustom());
+
+        AlgorithmsManager.setTabCompleterToCommand(sort);
+        sortcustom.setTabCompleter(new CustomSortTab());
 
         getLogger().log(Level.INFO, "{0} plugin is enable.", prefix);
     }

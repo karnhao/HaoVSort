@@ -1,28 +1,16 @@
 package resources.algorithms;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
 
-import org.bukkit.command.CommandSender;
-
 public class JavaSort extends Algorithms<JavaSort> {
 
     public static String NAME = "Java";
-    private static List<String> SUGGESTION = Arrays.asList("True", "False");
 
     @Override
     public void sort(Integer[] a) throws InterruptedException {
         javasort(a, 0, a.length - 1, true);
-    }
-
-    @Override
-    protected List<String> onTabComplete(CommandSender sender, String[] args) {
-        if (args.length == 1)
-            return SUGGESTION;
-        return null;
     }
 
     private void javasort(Integer[] a, int left, int right, boolean leftmost) throws InterruptedException {

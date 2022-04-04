@@ -1,8 +1,8 @@
-
 package com.hao.haovsort.commands;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.hao.haovsort.sorting.utils.AlgorithmCommand;
 import com.hao.haovsort.sorting.utils.AlgorithmCommandCollector;
@@ -16,41 +16,39 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * /sort command
- * <p>
- * syntax :
- * {@code /sort <player> <type> <delay> <length> ...(แล้วแต่ละ Algorithms จะกำหนด)[algorithm's args]}
- * <p>
- * example : {@code /sort karnhao selection 10 100 args...}
- */
-public class Sort implements CommandExecutor {
+public class SortCustom implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] args) {
+    public boolean onCommand(CommandSender cs, Command cmnd, String alias, String[] args) {
+        // /sortcustom <player> <delay> <length> random 1 ; radix 4 ; finish #00AA00
         try {
             Player target = Bukkit.getPlayer(args[0]);
-            if (target == null) {
+            if (target == null)
                 throw new NullPointerException("Player not found.");
-            }
             AlgorithmsManager.cleanPlayer(target);
             SortPlayer player = new SortPlayer();
             List<Player> targets = Arrays.asList(target);
-            Long delay = Long.parseLong(args[2]);
+            Long delay = Long.parseLong(args[1]);
             if (delay < 1)
                 throw new Exception("Delay cannot lower than 1");
             player.setPlayers(targets);
             player.setOwner(target);
-            player.setCommands(new AlgorithmCommandCollector(Util.createArray(Util.getLength(args[3])),
-                    new AlgorithmCommand("random", 10l, targets, "1"),
-                    new AlgorithmCommand(args[1], delay, targets,
-                            Arrays.copyOfRange(args, 4, args.length)),
-                    new AlgorithmCommand("finish", 10l, targets)));
+            player.setCommands(new AlgorithmCommandCollector(Util.createArray(Util.getLength(args[2])),
+                    getAlgorithmCommands(Arrays.copyOfRange(args, 3, args.length), targets, delay)));
             player.start();
             AlgorithmsManager.addPlayer(target, player);
         } catch (Exception e) {
             Util.alert(cs, e.toString());
         }
-        return true;
+        return false;
+    }
+
+    private static AlgorithmCommand[] getAlgorithmCommands(String[] args, List<Player> players, Long delay) {
+        String str = Util.argsToString(args);
+        return Arrays.asList(str.split(";")).stream().map((t) -> t.trim())
+                .map((t) -> new AlgorithmCommand(t.split(" ")[0], delay, players,
+                        Arrays.copyOfRange(t.split(" "), 1, t.split(" ").length)))
+                .collect(Collectors.toList())
+                .toArray(new AlgorithmCommand[str.split(";").length]);
     }
 }

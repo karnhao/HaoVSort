@@ -1,5 +1,6 @@
 package com.hao.haovsort.sorting.utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,8 +9,11 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import com.hao.haovsort.Main;
+import com.hao.haovsort.tabcompleter.SortTab;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 public class AlgorithmsManager {
@@ -96,5 +100,32 @@ public class AlgorithmsManager {
         AlgorithmsManager.players.values().forEach((t) -> {
             t.stopPlayer();
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    static TabCompleter getFinalTabCompleter() {
+        // /sort <player> <type> <delay> <length> args...
+        return (sender, command, alias, args) -> {
+            if (args.length <= 4)
+                return new SortTab().onTabComplete(sender, command, alias, args);
+            else {
+                for (Algorithms<?> algorithm : getAlgorithms()) {
+                    String name = Algorithms.getAlgorithmName((Class<? extends Algorithms<?>>) algorithm.getClass());
+                    try {
+                        if (name.equalsIgnoreCase(args[1])) {
+                            return algorithm.getTabCompleter().onTabComplete(sender, command, alias,
+                                    Arrays.copyOfRange(args, 4, args.length));
+                        }
+                    } catch (IllegalArgumentException | SecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        };
+    }
+
+    public static void setTabCompleterToCommand(PluginCommand command) {
+        command.setTabCompleter(getFinalTabCompleter());
     }
 }
