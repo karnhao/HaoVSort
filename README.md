@@ -21,6 +21,8 @@ _โดย Mr. Sittipat Tepsutar_
 ### Example
 ```
 /sort karnhao quick 10 100
+```
+```
 /sort karnhao radix 10 100 4
 ```
 
@@ -39,6 +41,8 @@ _โดย Mr. Sittipat Tepsutar_
 ### Example
 ```
 /sortstop
+```
+```
 /sortstop karnhao
 ```
 
@@ -53,14 +57,14 @@ _โดย Mr. Sittipat Tepsutar_
 ### Example
 ```
 /sortcustom karnhao 10 100 random 1 ; insertion ; finish #00AA00
+```
+```
 /sortcustom karnhao 10 100 invert ; shell; finish #FF0000 ; random 0.1
 ```
 
 คำสั่ง `/sortcustom karnhao 10 100 random 1 ; insertion ; finish #00AA00` นั้นจะแสดงออกคล้ายกับคำสั่ง `/sort karnhao insertion 10 100`
 
-<br>
 <hr>
-<br>
 
 
 ## วัตถุประสงค์ในการสร้าง
