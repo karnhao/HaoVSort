@@ -231,7 +231,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     /**
-     * สร้าง Thread ของ Algorithm ที่พร้อมใช้งาน
+     * สร้าง Thread ของ Algorithm อันใหม่ที่พร้อมใช้งาน
      * 
      * @return Algorithm Thread object
      * @throws InstantiationException

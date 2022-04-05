@@ -35,9 +35,17 @@ public class AlgorithmsManager {
         AlgorithmsManager.stopAll();
     }
 
+    /**
+     * เมื่อไม่เจอจะส่งกลับ null
+     * @param name
+     * @return Algorithms
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     public static Algorithms<? extends Algorithms<?>> getAlgorithm(String name)
             throws InstantiationException, IllegalAccessException {
-        return map.get(name).newAlgorithm();
+        Algorithms<? extends Algorithms<?>> algorithm = map.get(name);
+        return algorithm == null ? null : algorithm.newAlgorithm();
     }
 
     /**
