@@ -39,23 +39,23 @@ public class Configuration {
         return maxActionBarArrayLength;
     }
 
-    private static void setDebug(Boolean debug) {
-        debug = debug == null ? false : debug;
+    private static void setDebug(Boolean bool) {
+        debug = bool == null ? false : bool;
     }
 
-    private static void setSortingSoundName(String sound_name) {
-        sound_name = sound_name == null ? "minecraft:block.note_block.pling" : sound_name;
+    private static void setSortingSoundName(String soundName) {
+        sound_name = soundName == null ? "minecraft:block.note_block.pling" : soundName;
     }
 
     private static void setSoundValue(Float soundValue) {
-        sound_value = soundValue == null ? 0.1f : sound_value;
+        sound_value = soundValue == null ? 0.1f : soundValue;
     }
 
     private static void setLimitLength(Boolean limitLength) {
-        limit_length = limitLength == null ? false : limit_length;
+        limit_length = limitLength == null ? false : limitLength;
     }
 
-    private static void setMaxActionBarArrayLength(Integer maxActionBarArrayLength) {
-        maxActionBarArrayLength = maxActionBarArrayLength == null ? 332 : maxActionBarArrayLength;
+    private static void setMaxActionBarArrayLength(Integer length) {
+        maxActionBarArrayLength = length == null ? 332 : length;
     }
 }

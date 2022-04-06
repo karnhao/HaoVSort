@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.hao.haovsort.sorting.args.InvalidArgsException;
+import com.hao.haovsort.utils.Configuration;
 
-import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -83,7 +83,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
                 cb.append("|").color(ChatColor.of(color)).bold(true);
             }
         }
-        if (this.getArray().length >= 300) {
+        if (this.getArray().length > Configuration.getMaxActionBarArrayLength()) {
             players.forEach((t) -> {
                 t.sendMessage("");
 
@@ -131,8 +131,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
                     this.selectedIndexes.stream().map(this::pitchCal).collect(Collectors.toList()));
         }
         pitchs.stream().filter((t) -> t != 0).forEach((p) -> {
-            players.forEach(player -> player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING,
-                    SoundCategory.MASTER, 0.2f, p));
+            players.forEach(player -> player.playSound(player.getLocation(), Configuration.getSortingSoundName(),
+                    SoundCategory.MASTER, Configuration.getSoundValue(), p));
         });
     }
 
