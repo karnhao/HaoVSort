@@ -1,0 +1,11 @@
+# Debug config.
+Debug : false
+
+# Sound config. Set the volume to 0 to mute the sound.
+SortingSound :
+  Name : minecraft:block.note_block.pling
+  Value : 0.1
+
+# Other config
+LimitLength : false
+MaxActionBarArrayLength : 332

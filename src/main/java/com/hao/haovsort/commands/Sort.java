@@ -8,6 +8,7 @@ import com.hao.haovsort.sorting.utils.AlgorithmCommand;
 import com.hao.haovsort.sorting.utils.AlgorithmCommandCollector;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.utils.SortPlayer;
+import com.hao.haovsort.utils.Configuration;
 import com.hao.haovsort.utils.Util;
 
 import org.bukkit.Bukkit;
@@ -37,11 +38,15 @@ public class Sort implements CommandExecutor {
             SortPlayer player = new SortPlayer();
             List<Player> targets = Arrays.asList(target);
             Long delay = Long.parseLong(args[2]);
+            Integer length = Util.getLength(args[3]);
             if (delay < 1)
                 throw new Exception("Delay cannot lower than 1");
+            if (length > 1024
+                    || (length > Configuration.getMaxActionBarArrayLength() && Configuration.getLimitLength()))
+                throw new Exception("Data too large");
             player.setPlayers(targets);
             player.setOwner(target);
-            player.setCommands(new AlgorithmCommandCollector(Util.createArray(Util.getLength(args[3])),
+            player.setCommands(new AlgorithmCommandCollector(Util.createArray(length),
                     new AlgorithmCommand("random", 10l, targets, "1"),
                     new AlgorithmCommand(args[1], delay, targets,
                             Arrays.copyOfRange(args, 4, args.length)),

@@ -19,13 +19,18 @@ commands:
       permission-message: You do not have permission to use this command.
     sortdebug:
       description: Debug
-      usage: /<command> [test|stop]
+      usage: /<command>
       permission: haovsort.debug
       permission-message: You do not have permission to use this command.
     sortcustom:
       description: Custom command.
       usage: /<command>
       permission: haovsort.commands.sortcustom
+      permission-message: You do not have permission to use this command.
+    sortreload:
+      description: Reload the plugin
+      usage: /<command>
+      permission: haovsort.reload
       permission-message: You do not have permission to use this command.
 permissions:
   haovsort.*:
@@ -35,6 +40,7 @@ permissions:
       haovsort.command.sortstop: true
       haovsort.command.sortcustom: true
       haovsort.debug: true
+      haovsort.reload: true
   haovsort.command.*:
     description: Allows player to use all command in HaoVSort plugin.
     children:
@@ -49,4 +55,7 @@ permissions:
     default: op
   haovsort.debug:
     description: Allows player to debug HaoVSort plugin.
+    default: op
+  haovsort.reload:
+    description: Allows player to reload the plugin.
     default: op
