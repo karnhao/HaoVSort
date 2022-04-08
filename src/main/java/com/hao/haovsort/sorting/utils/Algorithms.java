@@ -24,9 +24,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
  */
 public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
 
-    protected static String name;
     protected Integer[] array;
-    protected List<Player> players;
+    private List<Player> players;
     private String[] args = {};
     private ChatColor indexColor = ChatColor.BLACK;
     private LinkedList<Integer> selectedIndexes = new LinkedList<>();
@@ -35,31 +34,31 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
 
     public abstract void sort(Integer[] a) throws InterruptedException;
 
-    public Long getDelay() {
+    final public Long getDelay() {
         return delay;
     }
 
-    public void setDelay(Long delay) {
+    final public void setDelay(Long delay) {
         this.delay = delay;
     }
 
-    protected void setIndexColor(ChatColor color) {
+    final protected void setIndexColor(ChatColor color) {
         this.indexColor = color;
     }
 
-    protected ChatColor getIndexColor() {
+    final protected ChatColor getIndexColor() {
         return this.indexColor;
     }
 
-    protected Integer[] getArray() {
+    final protected Integer[] getArray() {
         return this.array;
     }
 
-    protected String[] getArgs() {
+    final protected String[] getArgs() {
         return this.args;
     }
 
-    public void setArgs(String... args) throws InvalidArgsException {
+    final public void setArgs(String... args) throws InvalidArgsException {
         if (args == null)
             return;
         this.args = args;
@@ -70,7 +69,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
      *
      * @throws InterruptedException
      */
-    protected void show() throws InterruptedException {
+    final protected void show() throws InterruptedException {
         if (this.isInterrupted())
             throw new InterruptedException();
         Color color;
@@ -98,7 +97,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         sleep(this.delay);
     }
 
-    public static String getAlgorithmName(Class<? extends Algorithms<?>> clazz) {
+    final public static String getAlgorithmName(Class<? extends Algorithms<?>> clazz) {
         try {
             return (String) clazz.getField("NAME").get(null);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
@@ -106,15 +105,15 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         }
     }
 
-    public List<Player> getPlayers() {
+    final public List<Player> getPlayers() {
         return this.players;
     }
 
-    public void setArray(Integer[] a) {
+    final public void setArray(Integer[] a) {
         this.array = a;
     }
 
-    public void setPlayers(List<Player> player) {
+    final public void setPlayers(List<Player> player) {
         this.players = player;
     }
 
@@ -125,7 +124,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     public void init() {
     };
 
-    private void playSortingSound() {
+    final private void playSortingSound() {
         if (this.pitchs.isEmpty()) {
             this.pitchs = new LinkedList<>(
                     this.selectedIndexes.stream().map(this::pitchCal).collect(Collectors.toList()));
@@ -136,40 +135,40 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         });
     }
 
-    private float colorCal(int value) {
+    final private float colorCal(int value) {
         return new Integer(value).floatValue() / new Integer(this.getArray().length).floatValue();
     }
 
-    protected float pitchCal(Float min, Float max, int n) {
+    final protected float pitchCal(Float min, Float max, int n) {
         return min + (((max - min) / this.getArray().length) * n);
     }
 
-    protected float pitchCal(int n) {
+    final protected float pitchCal(int n) {
         return pitchCal(0.5f, 2.0f, n);
     }
 
-    protected LinkedList<Float> pitchCal(int... n) {
+    final protected LinkedList<Float> pitchCal(int... n) {
         return new LinkedList<>(Arrays.stream(n).boxed().map(this::pitchCal).collect(Collectors.toList()));
     }
 
-    protected void setIndexes(Integer... indexes) {
+    final protected void setIndexes(Integer... indexes) {
         this.selectedIndexes = (indexes == null) ? new LinkedList<Integer>()
                 : new LinkedList<Integer>(Arrays.asList(indexes));
     }
 
-    protected void setIndexes(LinkedList<Integer> indexes) {
+    final protected void setIndexes(LinkedList<Integer> indexes) {
         this.selectedIndexes = indexes;
     }
 
-    protected List<Integer> getIndexes() {
+    final protected List<Integer> getIndexes() {
         return this.selectedIndexes;
     }
 
-    protected void setPitchs(Float... pitchs) {
+    final protected void setPitchs(Float... pitchs) {
         this.pitchs = (pitchs == null) ? new LinkedList<Float>() : new LinkedList<Float>(Arrays.asList(pitchs));
     }
 
-    protected void setPitchs(LinkedList<Float> pitchs) {
+    final protected void setPitchs(LinkedList<Float> pitchs) {
         this.pitchs = pitchs;
     }
 
@@ -182,12 +181,12 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
      * 
      * @return List<Float> pitchs
      */
-    protected List<Float> getPitchs() {
+    final protected List<Float> getPitchs() {
         return this.pitchs;
     }
 
     @Override
-    public void run() {
+    final public void run() {
         try {
             this.argsFilter(args);
             this.init();
@@ -198,7 +197,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     @Override
-    public void interrupt() {
+    final public void interrupt() {
         super.interrupt();
     }
 
@@ -238,7 +237,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
      * @throws IllegalAccessException
      */
     @SuppressWarnings("unchecked")
-    protected Algorithms<T> newAlgorithm() throws InstantiationException, IllegalAccessException {
+    final protected Algorithms<T> newAlgorithm() throws InstantiationException, IllegalAccessException {
         return this.getClass().newInstance();
     }
 
