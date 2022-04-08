@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.utils.PlayerSelector;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -22,7 +23,7 @@ public class SortTab implements TabCompleter {
         // /sort <player> <type> <delay> <length> args...
         switch (args.length) {
             case 1:
-                return null;
+                return PlayerSelector.getSuggestion(args[0]);
             case 2:
                 return AlgorithmsManager.getAlgorithms().stream().map(t -> {
                     try {

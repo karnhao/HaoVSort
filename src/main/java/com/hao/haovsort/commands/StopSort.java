@@ -1,8 +1,11 @@
 package com.hao.haovsort.commands;
 
-import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import java.util.List;
 
-import org.bukkit.Bukkit;
+import com.hao.haovsort.sorting.args.InvalidArgsException;
+import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.utils.PlayerSelector;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,18 +23,20 @@ public class StopSort implements CommandExecutor {
                     if (cs instanceof Player)
                         AlgorithmsManager.stopPlayer((Player) cs);
                     else
-                        throw new Exception("Cannot stop.");
+                        // sender is not a player.
+                        throw new InvalidArgsException("Cannot stop.");
                     break;
                 case 1:
-                    Player target = Bukkit.getPlayer(args[0]);
-                    if (target == null)
-                        throw new NullPointerException();
-                    AlgorithmsManager.stopPlayer(target);
+                    List<Player> targets = PlayerSelector.getPlayers(cs, args[0]);
+                    if (targets == null || targets.isEmpty()) {
+                        throw new NullPointerException("Player not found.");
+                    }
+                    targets.forEach(AlgorithmsManager::cleanPlayer);
                     break;
                 default:
-                    throw new Exception("Syntax error : /stopsort <player>");
+                    throw new InvalidArgsException("Syntax error : /stopsort <player>");
             }
-        } catch (Exception e) {
+        } catch (NullPointerException | InvalidArgsException e) {
             cs.sendMessage(ChatColor.RED + e.getMessage());
         }
         return true;

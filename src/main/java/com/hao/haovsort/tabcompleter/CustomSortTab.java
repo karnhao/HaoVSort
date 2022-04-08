@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.utils.PlayerSelector;
 import com.hao.haovsort.utils.Util;
 
 import org.bukkit.command.Command;
@@ -51,7 +52,7 @@ public class CustomSortTab implements TabCompleter {
         // .....................................;
         switch (args.length) {
             case 1:
-                return null;
+                return PlayerSelector.getSuggestion(args[0]);
             case 2:
                 if (args[1].isEmpty())
                     return Arrays.asList("<delay>");
