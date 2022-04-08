@@ -89,9 +89,9 @@ public class AlgorithmsManager {
         return players.get(owner);
     }
 
-    public static void stopPlayer(Player owner) throws Exception {
+    public static void stopPlayer(Player owner) throws NullPointerException {
         if (!players.containsKey(owner)) {
-            throw new Exception("No sorting player was found");
+            throw new NullPointerException("No sorting player was found");
         }
         players.get(owner).stopPlayer();
         players.remove(owner);
