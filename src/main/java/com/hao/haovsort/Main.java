@@ -49,7 +49,7 @@ public class Main extends JavaPlugin {
         AlgorithmsManager.setTabCompleterToCommand(sort);
         sortcustom.setTabCompleter(new CustomSortTab(BREAKER));
 
-        getLogger().log(Level.INFO, "{0} plugin is enable.", prefix);
+        getLogger().log(Level.INFO, "plugin is enable.");
     }
 
     @Override
