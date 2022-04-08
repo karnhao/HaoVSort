@@ -38,7 +38,7 @@ public class Sort implements CommandExecutor {
             if (targets == null || targets.isEmpty()) {
                 throw new NullPointerException("Player not found.");
             }
-            targets.forEach((p) -> Sort.invoke(p, type, delay, length, args));
+            targets.forEach((p) -> Sort.invoke(p, type, delay, length, Arrays.copyOfRange(args, 4, args.length)));
         } catch (NullPointerException | InvalidArgsException e) {
             Util.alert(cs, e.toString());
         } catch (IndexOutOfBoundsException e) {
