@@ -19,6 +19,8 @@ import org.bukkit.entity.Player;
 
 public class SortCustom implements CommandExecutor {
 
+    private static String BREAKER = ";";
+
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String alias, String[] args) {
         // /sortcustom <player> <delay> <length> random 1 ; radix 4 ; finish #00AA00
@@ -43,11 +45,11 @@ public class SortCustom implements CommandExecutor {
 
     private static AlgorithmCommand[] getAlgorithmCommands(String[] args, List<Player> players, Long delay) {
         String str = Util.argsToString(args);
-        return Arrays.asList(str.split(";")).stream().map((t) -> t.trim())
+        return Arrays.asList(str.split(BREAKER)).stream().map((t) -> t.trim())
                 .map((t) -> new AlgorithmCommand(t.split(" ")[0], delay, players,
                         Arrays.copyOfRange(t.split(" "), 1, t.split(" ").length)))
                 .collect(Collectors.toList())
-                .toArray(new AlgorithmCommand[str.split(";").length]);
+                .toArray(new AlgorithmCommand[str.split(BREAKER).length]);
     }
 
     private static void invoke(Player target, Long delay, Integer length, String[] args)
@@ -63,5 +65,9 @@ public class SortCustom implements CommandExecutor {
                 getAlgorithmCommands(args, targets, delay)));
         player.start();
         AlgorithmsManager.addPlayer(target, player);
+    }
+
+    public SortCustom(String breaker){
+        SortCustom.BREAKER = breaker;
     }
 }

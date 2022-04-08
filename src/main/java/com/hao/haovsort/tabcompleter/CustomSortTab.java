@@ -16,7 +16,7 @@ import org.bukkit.command.TabCompleter;
 
 public class CustomSortTab implements TabCompleter {
 
-    private static final CharSequence BREAKER = ";";
+    private static String BREAKER = ";";
 
     @SuppressWarnings("unchecked")
     @Override
@@ -70,7 +70,7 @@ public class CustomSortTab implements TabCompleter {
                     try {
                         List<String> r = getAlgorithmTabCompleter(name).onTabComplete(cs, cmnd, string, algorithm_args);
                         if (r == null || r.isEmpty()) {
-                            return Arrays.asList(BREAKER.toString());
+                            return Arrays.asList(BREAKER);
                         }
                         return r;
                     } catch (NullPointerException e) {
@@ -116,7 +116,7 @@ public class CustomSortTab implements TabCompleter {
 
     private static String getCurrentAlgorithmName(String[] args) {
         for (int i = args.length - 1; i >= 0; i--) {
-            if (args[i].equalsIgnoreCase(BREAKER.toString())) {
+            if (args[i].equalsIgnoreCase(BREAKER)) {
                 return i == args.length - 1 ? "" : args[i + 1];
             }
         }
@@ -125,7 +125,7 @@ public class CustomSortTab implements TabCompleter {
 
     private static String[] getCurrentAlgorithmArgs(String[] args) {
         for (int i = args.length - 1; i >= 0; i--) {
-            if (args[i].equalsIgnoreCase(BREAKER.toString())) {
+            if (args[i].equalsIgnoreCase(BREAKER)) {
                 String[] r = i == args.length - 1 ? new String[] { "" } : Arrays.copyOfRange(args, i + 2, args.length);
                 return r.length == 0 ? new String[] { "" } : r;
             }
@@ -135,5 +135,9 @@ public class CustomSortTab implements TabCompleter {
 
     private static String[] format(String[] args) {
         return split(Util.argsToString(args));
+    }
+
+    public CustomSortTab(String breaker){
+        CustomSortTab.BREAKER = breaker;
     }
 }

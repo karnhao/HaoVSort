@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
     private static String prefix;
+    private static final String BREAKER = ";";
 
     @Override
     public void onEnable() {
@@ -42,11 +43,11 @@ public class Main extends JavaPlugin {
         stopSort.setExecutor(new StopSort());
         if (Configuration.getDebug())
             sortdebug.setExecutor(new SortDebug());
-        sortcustom.setExecutor(new SortCustom());
+        sortcustom.setExecutor(new SortCustom(BREAKER));
         sortreload.setExecutor(new Reload(this));
 
         AlgorithmsManager.setTabCompleterToCommand(sort);
-        sortcustom.setTabCompleter(new CustomSortTab());
+        sortcustom.setTabCompleter(new CustomSortTab(BREAKER));
 
         getLogger().log(Level.INFO, "{0} plugin is enable.", prefix);
     }
