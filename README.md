@@ -1,11 +1,13 @@
 # HaoVSort
 
+> *Change languages to : Thai(currently) , [English](README.en.md)*
+>
 > Sorting Algorithms Visualizer Minecraft's plugin
-
-_โดย Mr. Sittipat Tepsutar_
+>
+> _โดย Mr. Sittipat Tepsutar_
 
 ## [Commands](src/main/java/com/hao/haovsort/commands/Sort.java)
-> ## Sort Command
+### Sort Command
 ```
 /sort <player> <algorithm> <delay> <length> args...
 ```
@@ -28,8 +30,8 @@ _โดย Mr. Sittipat Tepsutar_
 
 <hr>
 
-> ## Sort Stop Command
-> เมื่อต้องการใช้การแสดง sorting algorithm หยุด ให้ใช้คำสั่งนี้
+### Sort Stop Command
+เมื่อต้องการใช้การแสดง sorting algorithm หยุด ให้ใช้คำสั่งนี้
 ```
 /sortstop <player>
 ```
@@ -46,8 +48,8 @@ _โดย Mr. Sittipat Tepsutar_
 /sortstop karnhao
 ```
 
-> ## Custom Sort Command
-> อยากลองเห็นอะไรใหม่ๆและแปลกไปจากนี้ใช่หรือไม่ ถ้าใช่ลองใช้คำสั่งนี้เลย!
+### Custom Sort Command
+อยากลองเห็นอะไรใหม่ๆและแปลกไปจากนี้ใช่หรือไม่ ถ้าใช่ลองใช้คำสั่งนี้เลย!
 
 ```
 /sortcustom <player> <delay> <length> <type> args... ; <type> args... ; ..........
