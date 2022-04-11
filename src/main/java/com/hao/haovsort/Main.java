@@ -28,8 +28,8 @@ public class Main extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
             getLogger().log(Level.WARNING, e.toString());
-            getLogger().log(Level.WARNING, "{0} AlgorithmsManager cannot initialize!", prefix);
-            getLogger().log(Level.WARNING, "{0} Plugin is disable.", prefix);
+            getLogger().log(Level.WARNING, "AlgorithmsManager cannot initialize!", prefix);
+            getLogger().log(Level.WARNING, "Plugin is disable.", prefix);
             return;
         }
 
@@ -55,7 +55,7 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         AlgorithmsManager.stopAll();
-        getLogger().log(Level.INFO, "{0} Bye bye~", prefix);
+        getLogger().log(Level.INFO, "Bye bye~", prefix);
     }
 
     public static String getPrefix() {
