@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import com.hao.haovsort.Main;
 import com.hao.haovsort.tabcompleter.SortTab;
 
 import org.bukkit.Bukkit;
@@ -69,7 +68,7 @@ public class AlgorithmsManager {
     private static void putAlgorithms(Class<? extends Algorithms<?>> algorithm)
             throws InstantiationException, IllegalAccessException {
         String name = Algorithms.getAlgorithmName(algorithm).toLowerCase();
-        Bukkit.getLogger().log(Level.INFO, "{0} Loaded {1}", new Object[] { Main.getPrefix(), name });
+        Bukkit.getLogger().log(Level.INFO, "Algorithm loaded : {0}", name);
         map.put(name, algorithm.newInstance());
     }
 

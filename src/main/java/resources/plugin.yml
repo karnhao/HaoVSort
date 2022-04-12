@@ -2,10 +2,11 @@
 ---
 main: com.hao.haovsort.Main
 name: HaoVSort
-version: 1.0.0
+version: 1.1.0
 description: This plugin can visualize an sorting algorithm with a color scale. -Made in Thailand.
 author: Sittipat Tepsutar
 api-version: 1.13
+softdepend: [NoteBlockAPI]
 commands:
     sort:
       description: Main plugin commands.

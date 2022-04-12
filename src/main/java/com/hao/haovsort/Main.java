@@ -6,30 +6,41 @@ import com.hao.haovsort.commands.SortCustom;
 import com.hao.haovsort.commands.SortDebug;
 import com.hao.haovsort.commands.StopSort;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.sorting.utils.SongCollector;
 import com.hao.haovsort.tabcompleter.CustomSortTab;
 import com.hao.haovsort.utils.Configuration;
 
 import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
-    private static String prefix;
     private static final String BREAKER = ";";
+    private static boolean noteBlockAPI = true;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
         Configuration.setFinal(this);
-        prefix = String.format("[%s]", getName());
+
+        if (!Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI")) {
+            getLogger().severe("*** NoteBlockAPI is not installed or not enabled. ***");
+            noteBlockAPI = false;
+        }
+
+        if (noteBlockAPI)
+            SongCollector.init(this);
 
         try {
             AlgorithmsManager.init();
         } catch (Exception e) {
+            // something wrong...
             e.printStackTrace();
-            getLogger().log(Level.WARNING, e.toString());
-            getLogger().log(Level.WARNING, "AlgorithmsManager cannot initialize!", prefix);
-            getLogger().log(Level.WARNING, "Plugin is disable.", prefix);
+
+            getLogger().log(Level.WARNING, "AlgorithmsManager cannot initialize!");
+            getLogger().log(Level.WARNING, "Plugin is disable.");
             return;
         }
 
@@ -55,10 +66,10 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         AlgorithmsManager.stopAll();
-        getLogger().log(Level.INFO, "Bye bye~", prefix);
+        getLogger().log(Level.INFO, "Bye bye~");
     }
 
-    public static String getPrefix() {
-        return Main.prefix;
+    public static boolean getNoteBlockAPI() {
+        return Main.noteBlockAPI;
     }
 }

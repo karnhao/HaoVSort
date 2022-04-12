@@ -52,6 +52,7 @@ public class PlayerSelector {
                     return Arrays.asList(((Player) sender));
                 break;
             case "@r":
+                if (Bukkit.getOnlinePlayers().isEmpty()) return null;
                 List<Player> a = Bukkit.getOnlinePlayers().stream().collect(Collectors.toList());
                 return Arrays.asList(a.get((int) (Math.random() * a.size())));
             default:

@@ -24,12 +24,12 @@ public class Sus extends Algorithms<Sus> {
         this.setDelay(100l);
         this.old_array = this.getArray();
         this.setArray(new Integer[] {
-                0, 0, 0, 15,
-                0, 18, 0, 22,
-                0, 24, 0, 22,
-                0, 18, 0, 15,
-                0, 0, 0, 0,
-                0, 12, 17, 15
+                -1, -1, -1, 15,
+                -1, 18, -1, 22,
+                -1, 24, -1, 22,
+                -1, 18, -1, 15,
+                -1, -1, -1, -1,
+                -1, 12, 17, 15
         });
         // https://minecraft.fandom.com/wiki/Note_Block#:~:text=the%20particle%27s%20texture.-,Pitch,-(Octave%201)
         this.fake_pitch = Arrays.asList(new Integer[] {
