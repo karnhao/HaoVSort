@@ -78,7 +78,7 @@ public class Music extends Algorithms<Music> {
             }
             float pitch = keyToPitch(fixKey(note.getKey()));
             list.add(new com.hao.haovsort.sorting.utils.Sound(
-                    getSoundName(note.getInstrument()), SoundCategory.MASTER, pitch, ((float) t.getVolume()) / 2));
+                    getSoundName(note.getInstrument()), SoundCategory.MASTER, pitch, ((float) t.getVolume()) / 100));
         });
         this.setPitchs(Arrays.asList(0f).stream().toArray(Float[]::new));
         this.sound = list;
