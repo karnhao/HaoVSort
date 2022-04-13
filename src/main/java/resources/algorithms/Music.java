@@ -15,6 +15,8 @@ import com.xxmicloxx.NoteBlockAPI.utils.InstrumentUtils;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.CommandSender;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class Music extends Algorithms<Music> {
 
     private Song song;
@@ -27,6 +29,9 @@ public class Music extends Algorithms<Music> {
 
     @Override
     public void sort(Integer[] a) throws InterruptedException {
+        getPlayers().forEach((t) -> t
+                .sendMessage(ChatColor.GREEN
+                        + String.format("Sorting playing music : %s, %s", getSongName(), song.getAuthor())));
         long old_delay = getDelay();
         for (int tick = 0; tick <= song.getLength(); tick++) {
             setNoteSoundsAtTick(tick);
@@ -144,5 +149,9 @@ public class Music extends Algorithms<Music> {
         while (temp < 33)
             temp += 12;
         return temp;
+    }
+
+    private String getSongName() {
+        return getArgs()[0];
     }
 }
