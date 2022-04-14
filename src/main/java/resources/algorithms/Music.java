@@ -3,6 +3,7 @@ package resources.algorithms;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.hao.haovsort.Main;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
@@ -28,6 +29,7 @@ public class Music extends Algorithms<Music> {
     private Integer[] old_array;
     private long tick_delay;
     private List<com.hao.haovsort.sorting.utils.Sound> sound;
+    private boolean smooth = false;
 
     @Override
     public void sort(Integer[] a) throws InterruptedException {
@@ -37,7 +39,7 @@ public class Music extends Algorithms<Music> {
         long old_delay = getDelay();
         for (int tick = 0; tick <= song.getLength(); tick++) {
             setNoteSoundsAtTick(tick);
-            setArrayAtSection(tickToSection(tick));
+            setArrayAtTick(tick);
             setSelectedIndexesAtTick(tick);
             setDelay(tick_delay);
             show();
@@ -51,19 +53,28 @@ public class Music extends Algorithms<Music> {
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         if (args.length == 1)
             return SongCollector.getAllSongsName(args[0]);
+        if (args.length == 2)
+            return Arrays.asList("true", "false").stream().filter((t) -> t.startsWith(args[1].toLowerCase()))
+                    .collect(Collectors.toList());
         return null;
     }
 
     @Override
     protected void argsFilter(String[] args) throws InvalidArgsException {
-        if (args.length != 1)
-            throw new InvalidArgsException("Expected 1 argument");
+        if (args.length <= 0 || args.length >= 3)
+            throw new InvalidArgsException("Syntax error : /... <song> <smooth>");
+        if (args.length >= 2) {
+            if (!(args[1].equals("true") || args[1].equals("false")))
+                throw new InvalidArgsException("Syntax error : smooth must be true or false but not " + args[1]);
+        }
     }
 
     @Override
     public void init() {
         this.old_array = this.getArray();
         this.length = this.old_array.length;
+        if (getArgs().length >= 2 && getArgs()[1].equalsIgnoreCase("true"))
+            this.smooth = true;
         if (!Main.getNoteBlockAPI())
             throw new InvalidArgsException("NoteBlock API is not available");
         song = SongCollector.getSong(getArgs()[0]);
@@ -101,13 +112,15 @@ public class Music extends Algorithms<Music> {
         setIndexes(r);
     }
 
-    private void setArrayAtSection(int section) {
+    private void setArrayAtTick(int tick) {
+        int section = tickToSection(tick);
         LinkedList<Integer> list = new LinkedList<>();
         int start = layerWidth * section;
         int end = start + layerWidth;
         song.getLayerHashMap().values().forEach((t) -> {
-            for (int tick = start; tick < end; tick++) {
-                Note note = t.getNote(tick);
+            for (int i = start; i < end; i++) {
+                int j = i < tick && smooth ? i + layerWidth : i;
+                Note note = t.getNote(j);
                 if (note == null)
                     list.add(-1);
                 else {
