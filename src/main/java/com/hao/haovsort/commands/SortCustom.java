@@ -9,6 +9,7 @@ import com.hao.haovsort.sorting.utils.AlgorithmCommand;
 import com.hao.haovsort.sorting.utils.AlgorithmCommandCollector;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.utils.SortPlayer;
+import com.hao.haovsort.utils.Configuration;
 import com.hao.haovsort.utils.PlayerSelector;
 import com.hao.haovsort.utils.Util;
 
@@ -59,6 +60,9 @@ public class SortCustom implements CommandExecutor {
         List<Player> targets = Arrays.asList(target);
         if (delay < 1)
             throw new InvalidArgsException("Delay cannot lower than 1");
+        if (length > 761
+                || (length > Configuration.getMaxActionBarArrayLength() && Configuration.getLimitLength()))
+            throw new InvalidArgsException("Data too big");
         player.setPlayers(targets);
         player.setOwner(target);
         player.setCommands(new AlgorithmCommandCollector(Util.createArray(length),
@@ -67,7 +71,7 @@ public class SortCustom implements CommandExecutor {
         AlgorithmsManager.addPlayer(target, player);
     }
 
-    public SortCustom(String breaker){
+    public SortCustom(String breaker) {
         SortCustom.BREAKER = breaker;
     }
 }
