@@ -11,6 +11,7 @@ import com.hao.haovsort.sorting.utils.SongCollector;
 import com.xxmicloxx.NoteBlockAPI.model.Note;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.utils.InstrumentUtils;
+import com.xxmicloxx.NoteBlockAPI.utils.NoteUtils;
 
 import org.bukkit.SoundCategory;
 import org.bukkit.command.CommandSender;
@@ -81,9 +82,9 @@ public class Music extends Algorithms<Music> {
             if (note == null) {
                 return;
             }
-            float pitch = keyToPitch(fixKey(note.getKey()));
             list.add(new com.hao.haovsort.sorting.utils.Sound(
-                    getSoundName(note.getInstrument()), SoundCategory.MASTER, pitch, ((float) t.getVolume()) / 100));
+                    getSoundName(note), SoundCategory.MASTER, NoteUtils.getPitchTransposed(note),
+                    ((float) t.getVolume()) / 100));
         });
         this.setPitchs(Arrays.asList(0f).stream().toArray(Float[]::new));
         this.sound = list;
@@ -109,7 +110,7 @@ public class Music extends Algorithms<Music> {
                 if (note == null)
                     list.add(-1);
                 else {
-                    list.add(pitchToValue(keyToPitch(note.getKey())));
+                    list.add(pitchToValue(keyToPitch(fixKey(note.getKey()))));
                 }
             }
         });
@@ -138,8 +139,13 @@ public class Music extends Algorithms<Music> {
         });
     }
 
-    private String getSoundName(byte data) {
-        return InstrumentUtils.getSoundNameByInstrument(data);
+    private String getSoundName(Note note) {
+        if (InstrumentUtils.isCustomInstrument(note.getInstrument())) {
+
+            return song.getCustomInstruments()[note.getInstrument()
+                    - InstrumentUtils.getCustomInstrumentFirstIndex()].getSoundFileName();
+        }
+        return InstrumentUtils.getSoundNameByInstrument(note.getInstrument());
     }
 
     private byte fixKey(byte key) {
