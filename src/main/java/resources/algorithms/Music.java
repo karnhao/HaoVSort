@@ -8,6 +8,7 @@ import com.hao.haovsort.Main;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
 import com.hao.haovsort.sorting.utils.Algorithms;
 import com.hao.haovsort.sorting.utils.SongCollector;
+import com.hao.haovsort.sorting.utils.Sound;
 import com.xxmicloxx.NoteBlockAPI.model.Note;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.utils.InstrumentUtils;
@@ -76,13 +77,13 @@ public class Music extends Algorithms<Music> {
     }
 
     private void setNoteSoundsAtTick(int tick) {
-        LinkedList<com.hao.haovsort.sorting.utils.Sound> list = new LinkedList<>();
+        LinkedList<Sound> list = new LinkedList<>();
         song.getLayerHashMap().values().forEach((t) -> {
             Note note = t.getNote(tick);
             if (note == null) {
                 return;
             }
-            list.add(new com.hao.haovsort.sorting.utils.Sound(
+            list.add(new Sound(
                     getSoundName(note), SoundCategory.MASTER, NoteUtils.getPitchTransposed(note),
                     ((float) t.getVolume()) / 100));
         });
@@ -131,7 +132,7 @@ public class Music extends Algorithms<Music> {
     }
 
     private void playSortingSound() {
-        sound.stream().filter((t) -> t.getPitch() != 0).forEach((p) -> {
+        sound.stream().filter(Music::isValidSound).forEach((p) -> {
             getPlayers().forEach(player -> {
                 player.playSound(player.getLocation(), p.getName(),
                         p.getSoundCategory(), p.getVolume(), p.getPitch());
@@ -140,15 +141,13 @@ public class Music extends Algorithms<Music> {
     }
 
     private String getSoundName(Note note) {
-        if (InstrumentUtils.isCustomInstrument(note.getInstrument())) {
-
+        if (InstrumentUtils.isCustomInstrument(note.getInstrument()))
             return song.getCustomInstruments()[note.getInstrument()
                     - InstrumentUtils.getCustomInstrumentFirstIndex()].getSoundFileName();
-        }
         return InstrumentUtils.getSoundNameByInstrument(note.getInstrument());
     }
 
-    private byte fixKey(byte key) {
+    private static byte fixKey(byte key) {
         byte temp = key;
         while (temp > 57)
             temp -= 12;
@@ -159,5 +158,14 @@ public class Music extends Algorithms<Music> {
 
     private String getSongName() {
         return getArgs()[0];
+    }
+
+    private static boolean isValidSoundName(String name) {
+        String temp = name.replaceAll("minecraft:", "");
+        return temp.matches("^[a-z0-9/._-]+$");
+    }
+
+    private static boolean isValidSound(Sound sound) {
+        return sound.getPitch() != 0 && isValidSoundName(sound.getName());
     }
 }
