@@ -91,9 +91,8 @@ public class Music extends Algorithms<Music> {
         LinkedList<Sound> list = new LinkedList<>();
         song.getLayerHashMap().values().forEach((t) -> {
             Note note = t.getNote(tick);
-            if (note == null) {
+            if (note == null)
                 return;
-            }
             list.add(new Sound(
                     getSoundName(note), SoundCategory.MASTER, NoteUtils.getPitchTransposed(note),
                     ((float) t.getVolume()) / 100));
@@ -123,9 +122,8 @@ public class Music extends Algorithms<Music> {
                 Note note = t.getNote(j);
                 if (note == null)
                     list.add(-1);
-                else {
+                else
                     list.add(pitchToValue(keyToPitch(fixKey(note.getKey()))));
-                }
             }
         });
 
@@ -174,7 +172,7 @@ public class Music extends Algorithms<Music> {
     }
 
     private static boolean isValidSoundName(String name) {
-        String temp = name.replaceAll("minecraft:", "");
+        String temp = name.substring(name.indexOf(":") + 1);
         return temp.matches("^[a-z0-9/._-]+$");
     }
 
