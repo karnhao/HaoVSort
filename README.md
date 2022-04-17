@@ -31,7 +31,7 @@
 <hr>
 
 ### Sort Stop Command
-เมื่อต้องการใช้การแสดง sorting algorithm หยุด ให้ใช้คำสั่งนี้
+เมื่อต้องการให้การแสดง sorting algorithm หยุด ให้ใช้คำสั่งนี้
 ```
 /sortstop <player>
 ```
