@@ -8,6 +8,7 @@ import com.hao.haovsort.commands.StopSort;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.utils.SongCollector;
 import com.hao.haovsort.tabcompleter.CustomSortTab;
+import com.hao.haovsort.tabcompleter.StopSortTab;
 import com.hao.haovsort.utils.Configuration;
 
 import java.util.logging.Level;
@@ -59,6 +60,7 @@ public class Main extends JavaPlugin {
 
         AlgorithmsManager.setTabCompleterToCommand(sort);
         sortcustom.setTabCompleter(new CustomSortTab(BREAKER));
+        stopSort.setTabCompleter(new StopSortTab());
 
         getLogger().log(Level.INFO, "plugin is enable.");
     }
