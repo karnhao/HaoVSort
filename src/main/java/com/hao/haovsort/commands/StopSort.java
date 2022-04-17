@@ -20,11 +20,10 @@ public class StopSort implements CommandExecutor {
         try {
             switch (args.length) {
                 case 0:
-                    if (cs instanceof Player)
-                        AlgorithmsManager.stopPlayer((Player) cs);
-                    else
+                    if (!(cs instanceof Player))
                         // sender is not a player.
                         throw new InvalidArgsException("Cannot stop.");
+                    AlgorithmsManager.stopPlayer((Player) cs);
                     break;
                 case 1:
                     List<Player> targets = PlayerSelector.getPlayers(cs, args[0]);

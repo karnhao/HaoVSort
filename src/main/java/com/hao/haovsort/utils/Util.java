@@ -19,8 +19,7 @@ public class Util {
             if (i == 0 && s.charAt(i) == '-') {
                 if (s.length() == 1)
                     return false;
-                else
-                    continue;
+                continue;
             }
             if (Character.digit(s.charAt(i), radix) < 0)
                 return false;

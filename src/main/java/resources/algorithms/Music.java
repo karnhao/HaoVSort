@@ -120,10 +120,11 @@ public class Music extends Algorithms<Music> {
             for (int i = start; i < end; i++) {
                 int j = i < tick && smooth ? i + layerWidth : i;
                 Note note = t.getNote(j);
-                if (note == null)
+                if (note == null) {
                     list.add(-1);
-                else
-                    list.add(pitchToValue(keyToPitch(fixKey(note.getKey()))));
+                    continue;
+                }
+                list.add(pitchToValue(keyToPitch(fixKey(note.getKey()))));
             }
         });
 

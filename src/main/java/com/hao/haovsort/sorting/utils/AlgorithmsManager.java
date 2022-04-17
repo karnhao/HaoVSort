@@ -36,6 +36,7 @@ public class AlgorithmsManager {
 
     /**
      * เมื่อไม่เจอจะส่งกลับ null
+     * 
      * @param name
      * @return Algorithms
      * @throws InstantiationException
@@ -113,9 +114,7 @@ public class AlgorithmsManager {
     static TabCompleter getFinalTabCompleter() {
         // /sort <player> <type> <delay> <length> args...
         return (sender, command, alias, args) -> {
-            if (args.length <= 4)
-                return new SortTab().onTabComplete(sender, command, alias, args);
-            else {
+            if (args.length > 4) {
                 for (Algorithms<?> algorithm : getAlgorithms()) {
                     String name = Algorithms.getAlgorithmName((Class<? extends Algorithms<?>>) algorithm.getClass());
                     try {
@@ -129,6 +128,7 @@ public class AlgorithmsManager {
                 }
                 return null;
             }
+            return new SortTab().onTabComplete(sender, command, alias, args);
         };
     }
 
