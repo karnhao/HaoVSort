@@ -57,15 +57,15 @@ public class Sort implements CommandExecutor {
         List<Player> targets = Arrays.asList(target);
         if (delay < 1)
             throw new InvalidArgsException("Delay cannot lower than 1");
-        if (length > 1024
+        if (length > 761
                 || (length > Configuration.getMaxActionBarArrayLength() && Configuration.getLimitLength()))
-            throw new InvalidArgsException("Data too large");
+            throw new InvalidArgsException("Data too big");
         player.setPlayers(targets);
         player.setOwner(target);
         player.setCommands(new AlgorithmCommandCollector(Util.createArray(length),
-                new AlgorithmCommand("random", 10l, targets, "1"),
+                new AlgorithmCommand("random", 8l, targets, "1"),
                 new AlgorithmCommand(type, delay, targets, args),
-                new AlgorithmCommand("finish", 10l, targets)));
+                new AlgorithmCommand("finish", 8l, targets)));
         player.start();
         AlgorithmsManager.addPlayer(target, player);
     }

@@ -78,7 +78,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
             if (this.getIndexes().contains(i)) {
                 cb.append("|").color(indexColor).bold(true);
             } else {
-                color = Color.getHSBColor(this.colorCal(this.getArray()[i]), 1.0f, 1.0f);
+                color = this.getArray()[i] != -1 ? Color.getHSBColor(this.colorCal(this.getArray()[i]), 1.0f, 1.0f)
+                        : Color.WHITE;
                 cb.append("|").color(ChatColor.of(color)).bold(true);
             }
         }

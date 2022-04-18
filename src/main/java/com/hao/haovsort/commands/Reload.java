@@ -3,8 +3,8 @@ package com.hao.haovsort.commands;
 import java.io.File;
 import java.util.logging.Level;
 
-import com.hao.haovsort.Main;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.sorting.utils.SongCollector;
 import com.hao.haovsort.utils.Configuration;
 
 import org.bukkit.Bukkit;
@@ -22,13 +22,15 @@ public class Reload implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String alias, String[] args) {
         AlgorithmsManager.stopAll();
-        Bukkit.getLogger().log(Level.INFO, "{0} Reloading config...", Main.getPrefix());
+        Bukkit.getLogger().log(Level.INFO, "Reloading config...");
         if (!new File(String.format("plugin/%s/config.yml", plugin.getName())).exists()) {
             plugin.saveDefaultConfig();
         }
         plugin.reloadConfig();
         Configuration.setFinal(plugin);
-        Bukkit.getLogger().log(Level.INFO, "{0} Finish", Main.getPrefix());
+        Bukkit.getLogger().log(Level.INFO, "Reloading songs...");
+        SongCollector.init(plugin);
+        Bukkit.getLogger().log(Level.INFO, "Finish");
         cs.sendMessage(ChatColor.GREEN + "Reload finish");
         return true;
     }

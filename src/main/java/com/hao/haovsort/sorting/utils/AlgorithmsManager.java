@@ -8,7 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import com.hao.haovsort.Main;
 import com.hao.haovsort.tabcompleter.SortTab;
 
 import org.bukkit.Bukkit;
@@ -37,6 +36,7 @@ public class AlgorithmsManager {
 
     /**
      * เมื่อไม่เจอจะส่งกลับ null
+     * 
      * @param name
      * @return Algorithms
      * @throws InstantiationException
@@ -69,7 +69,7 @@ public class AlgorithmsManager {
     private static void putAlgorithms(Class<? extends Algorithms<?>> algorithm)
             throws InstantiationException, IllegalAccessException {
         String name = Algorithms.getAlgorithmName(algorithm).toLowerCase();
-        Bukkit.getLogger().log(Level.INFO, "{0} Loaded {1}", new Object[] { Main.getPrefix(), name });
+        Bukkit.getLogger().log(Level.INFO, "Algorithm loaded : {0}", name);
         map.put(name, algorithm.newInstance());
     }
 
@@ -114,9 +114,7 @@ public class AlgorithmsManager {
     static TabCompleter getFinalTabCompleter() {
         // /sort <player> <type> <delay> <length> args...
         return (sender, command, alias, args) -> {
-            if (args.length <= 4)
-                return new SortTab().onTabComplete(sender, command, alias, args);
-            else {
+            if (args.length > 4) {
                 for (Algorithms<?> algorithm : getAlgorithms()) {
                     String name = Algorithms.getAlgorithmName((Class<? extends Algorithms<?>>) algorithm.getClass());
                     try {
@@ -130,6 +128,7 @@ public class AlgorithmsManager {
                 }
                 return null;
             }
+            return new SortTab().onTabComplete(sender, command, alias, args);
         };
     }
 
