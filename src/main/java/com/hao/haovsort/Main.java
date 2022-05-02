@@ -31,17 +31,16 @@ public class Main extends JavaPlugin {
             noteBlockAPI = false;
         }
 
-        if (noteBlockAPI)
-            SongCollector.init(this);
-
         try {
+            if (noteBlockAPI)
+                SongCollector.init(this);
             AlgorithmsManager.init();
         } catch (Exception e) {
             // something wrong...
             e.printStackTrace();
 
             getLogger().log(Level.WARNING, "AlgorithmsManager cannot initialize!");
-            getLogger().log(Level.WARNING, "Plugin is disable.");
+            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 

@@ -1,6 +1,8 @@
 package com.hao.haovsort.commands;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
@@ -29,7 +31,11 @@ public class Reload implements CommandExecutor {
         plugin.reloadConfig();
         Configuration.setFinal(plugin);
         Bukkit.getLogger().log(Level.INFO, "Reloading songs...");
-        SongCollector.init(plugin);
+        try {
+            SongCollector.init(plugin);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
         Bukkit.getLogger().log(Level.INFO, "Finish");
         cs.sendMessage(ChatColor.GREEN + "Reload finish");
         return true;
