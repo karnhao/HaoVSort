@@ -30,7 +30,7 @@
                 </includes>
             </resource>
             <resource>
-                <filtering>true</filtering>
+                <filtering>false</filtering>
                 <targetPath>./resources/songs</targetPath>
                 <directory>${basedir}/src/main/java/resources/songs</directory>
             </resource>

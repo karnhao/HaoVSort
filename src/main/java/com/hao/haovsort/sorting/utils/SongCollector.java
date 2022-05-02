@@ -27,9 +27,10 @@ final public class SongCollector {
         map.clear();
         String path = String.format("plugins/%s/songs", plugin.getName());
         File songs = new File(path);
-        if (!songs.exists())
+        if (!songs.exists()) {
             songs.mkdirs();
             DefaultSong.save(songs);
+        }
         try (Stream<Path> paths = Files.walk(Paths.get(path))) {
             paths
                     .filter(Files::isRegularFile)
