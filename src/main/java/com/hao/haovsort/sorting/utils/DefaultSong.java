@@ -2,30 +2,31 @@ package com.hao.haovsort.sorting.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import org.bukkit.util.FileUtil;
+import java.util.logging.Level;
+
+import com.hao.haovsort.utils.Util;
+
+import org.bukkit.Bukkit;
 
 public class DefaultSong {
-    private static final String FOLDERPATH = "resources/default_songs";
+    private static final String FOLDERPATH = "resources/songs";
 
-    public static final void save(File toPath) throws IOException, URISyntaxException {
-        listFilesForFolder(new File(FOLDERPATH)).stream().filter((t) -> t.getName().endsWith(".nbs")).forEach((u) -> {
-            FileUtil.copy(u, Paths.get(toPath.getPath(), u.getName()).toFile());
+    public static final void save(File toPath) throws IOException {
+        Util.listFilesForFolder(FOLDERPATH).stream().filter((t) -> t.endsWith(".nbs")).forEach((u) -> {
+            Path target = Paths.get(toPath.getPath(), u);
+            String path = FOLDERPATH + "/" + u;
+            Bukkit.getLogger().log(Level.INFO, "Adding {0} to {1}", new Object[] { path, target });
+            InputStream in = DefaultSong.class.getClassLoader().getResourceAsStream(path);
+            if (in != null)
+                try {
+                    Files.copy(in, target);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
         });
-    }
-
-    public static final List<File> listFilesForFolder(File folder) throws URISyntaxException {
-        List<File> files = new ArrayList<>();
-        for (final File fileEntry : new File(DefaultSong.class.getResource("default_songs").toURI()).listFiles()) {
-            if (fileEntry.isDirectory()) {
-                listFilesForFolder(fileEntry);
-            } else {
-                files.add(fileEntry);
-            }
-        }
-        return files;
     }
 }

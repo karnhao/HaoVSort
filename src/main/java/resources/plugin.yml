@@ -37,7 +37,7 @@ permissions:
   haovsort.*:
     description: Give access to HaoVSort whole.
     children:
-      haovsort.command.sort: true
+      
       haovsort.command.sortstop: true
       haovsort.command.sortcustom: true
       haovsort.debug: true

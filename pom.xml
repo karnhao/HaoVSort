@@ -29,6 +29,11 @@
                     <include>**/*.yml</include>
                 </includes>
             </resource>
+            <resource>
+                <filtering>true</filtering>
+                <targetPath>./resources/songs</targetPath>
+                <directory>${basedir}/src/main/java/resources/songs</directory>
+            </resource>
         </resources>
     </build>
     <repositories>
