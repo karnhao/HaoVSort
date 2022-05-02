@@ -2,6 +2,7 @@ package com.hao.haovsort.sorting.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,12 +23,13 @@ final public class SongCollector {
 
     private static HashMap<String, Song> map = new HashMap<String, Song>();
 
-    public static void init(Plugin plugin) {
+    public static void init(Plugin plugin) throws IOException, URISyntaxException {
         map.clear();
         String path = String.format("plugins/%s/songs", plugin.getName());
         File songs = new File(path);
         if (!songs.exists())
             songs.mkdirs();
+            DefaultSong.save(songs);
         try (Stream<Path> paths = Files.walk(Paths.get(path))) {
             paths
                     .filter(Files::isRegularFile)
