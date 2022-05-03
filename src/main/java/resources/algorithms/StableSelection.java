@@ -18,8 +18,8 @@ public class StableSelection extends Algorithms<StableSelection> {
             for (int j = i + 1; j < n; j++)
                 if (a[min] > a[j]) {
                     min = j;
-                    setIndexes(i, j);
-                    setPitchs(pitchCal(j));
+                    setIndexes(j);
+                    setPitchs(pitchCal(a[j]));
                     show();
                 }
 
@@ -27,10 +27,10 @@ public class StableSelection extends Algorithms<StableSelection> {
             int key = a[min];
             while (min > i) {
                 a[min] = a[min - 1];
-                min--;
-                setIndexes(i, min);
-                setPitchs(pitchCal(min));
+                setIndexes(min - 1, key - 1);
+                setPitchs(pitchCal(a[min]));
                 show();
+                min--;
             }
 
             a[i] = key;
