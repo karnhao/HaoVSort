@@ -69,10 +69,10 @@ public class CustomSortTab implements TabCompleter {
                     String[] algorithm_args = getCurrentAlgorithmArgs(format(Arrays.copyOfRange(args, 3, args.length)));
                     try {
                         List<String> r = getAlgorithmTabCompleter(name).onTabComplete(cs, cmnd, string, algorithm_args);
-                        if (r == null || r.isEmpty()) {
+                        if ((r == null || r.isEmpty()) && args[args.length - 1].isEmpty()) {
                             return Arrays.asList(BREAKER);
                         }
-                        return r;
+                        return args[args.length - 1].isEmpty() || !algorithm_args[0].isEmpty() ? r : null;
                     } catch (NullPointerException e) {
                         return AlgorithmsManager.getAlgorithms().stream().map(t -> {
                             try {
@@ -137,7 +137,7 @@ public class CustomSortTab implements TabCompleter {
         return split(Util.argsToString(args));
     }
 
-    public CustomSortTab(String breaker){
+    public CustomSortTab(String breaker) {
         CustomSortTab.BREAKER = breaker;
     }
 }
