@@ -19,7 +19,7 @@ public class DefaultSong {
         Util.listFilesForFolder(FOLDERPATH).stream().filter((t) -> t.endsWith(".nbs")).forEach((u) -> {
             Path target = Paths.get(toPath.getPath(), u);
             String path = FOLDERPATH + "/" + u;
-            Bukkit.getLogger().log(Level.INFO, "Adding {0} to {1}", new Object[] { path, target });
+            Bukkit.getLogger().log(Level.INFO, "Create file : {0}", new Object[] { target });
             InputStream in = DefaultSong.class.getClassLoader().getResourceAsStream(path);
             if (in != null)
                 try {

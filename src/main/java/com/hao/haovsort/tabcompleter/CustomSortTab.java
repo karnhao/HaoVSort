@@ -72,7 +72,8 @@ public class CustomSortTab implements TabCompleter {
                         if ((r == null || r.isEmpty()) && args[args.length - 1].isEmpty()) {
                             return Arrays.asList(BREAKER);
                         }
-                        return args[args.length - 1].isEmpty() || !algorithm_args[0].isEmpty() ? r : null;
+                        return algorithm_args.length == 0 || args[args.length - 1].isEmpty()
+                                || !algorithm_args[0].isEmpty() ? r : null;
                     } catch (NullPointerException e) {
                         return AlgorithmsManager.getAlgorithms().stream().map(t -> {
                             try {
