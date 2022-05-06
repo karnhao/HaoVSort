@@ -1,10 +1,10 @@
 # HaoVSort
 
-> *Change languages to : English(currently) , [Thai](README.th.md)*
+> *Change languages to : Thai(currently) , [English](README.md)*
 >
 > Sorting Algorithms Visualizer Minecraft's plugin
 >
-> _By Mr. Sittipat Tepsutar_
+> _โดย Mr. Sittipat Tepsutar_
 
 ## [Commands](src/main/java/com/hao/haovsort/commands/Sort.java)
 ### Sort Command
@@ -14,11 +14,11 @@
 ### Parameters
 |Parameter|Infomation|ความจำเป็น|
 |:-:|:-|:-:|
-|\<player\>|Player who will see this visualization|Required|
-|\<algorithm\>|Algorithm's name|Required|
-|\<delay\>|Delay in algorithm|Required|
-|\<length\>|Array size|Required|
-|args...|Other parameter for some algorithm|Various
+|\<player\>|ผู้เล่นที่จะเห็นการแสดงนี้|ต้องใส่ข้อมูล|
+|\<algorithm\>|ชื่อ algorithm ที่จะถูกแสดง|ต้องใส่ข้อมูล|
+|\<delay\>|ความล่าช้าในแต่ละ comparison|ต้องใส่ข้อมูล|
+|\<length\>|ความยาวของข้อมูลที่จะถูกจัดเรียง|ต้องใส่ข้อมูล|
+|args...|ข้อมูลเพิ่มเติมที่บาง algorithm ต้องใช้|แล้วแต่ความต้องการของแต่ละ algorithm
 
 ### Example
 ```
