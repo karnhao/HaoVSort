@@ -12,12 +12,12 @@
 /sort <player> <algorithm> <delay> <length> args...
 ```
 ### Parameters
-|Parameter|Infomation|ความจำเป็น|
+|Parameter|Infomation|Require|
 |:-:|:-|:-:|
-|\<player\>|Player who will see this visualization|Required|
-|\<algorithm\>|Algorithm's name|Required|
-|\<delay\>|Delay in algorithm|Required|
-|\<length\>|Array size|Required|
+|\<player\>|Player who will see this visualization|Yes|
+|\<algorithm\>|Algorithm's name|Yes|
+|\<delay\>|Delay in algorithm|Yes|
+|\<length\>|Array size|Yes|
 |args...|Other parameter for some algorithm|Various
 
 ### Example
@@ -31,14 +31,15 @@
 <hr>
 
 ### Sort Stop Command
-เมื่อต้องการให้การแสดง sorting algorithm หยุด ให้ใช้คำสั่งนี้
+To stop visualizing the sorting algorithm
+use this command :
 ```
 /sortstop <player>
 ```
 ### Parameters
-|Parameter|Infomation|ความจำเป็น|
+|Parameter|Infomation|Require|
 |:-:|:-|:-:|
-|\<player\>|ผู้เล่นที่จะถูกหยุดเห็นการแสดง|Opinion|
+|\<player\>|Target player. (command's sender is default)|Opinion|
 
 ### Example
 ```
@@ -49,12 +50,12 @@
 ```
 
 ### Custom Sort Command
-อยากลองเห็นอะไรใหม่ๆและแปลกไปจากนี้ใช่หรือไม่ ถ้าใช่ลองใช้คำสั่งนี้เลย!
+Want to try something new and different from now on? If yes, try this command!
 
 ```
 /sortcustom <player> <delay> <length> <type> args... ; <type> args... ; ..........
 ```
-โดยปกติแล้วเมื่อคุณใช้คำสั่ง [/sort](#sort-command) ธรรมดา จะมีการจัดเรียงอยู่ 3 แบบ คือ random, สิ่งที่ถูกใส่เข้ามาใน \<type\> และ finish
+Usually when you use the command [/sort](#sort-command) normally there has three sorts: random, \<type\> and finish.
 
 ### Example
 ```
@@ -64,15 +65,11 @@
 /sortcustom karnhao 10 100 invert ; shell; finish #FF0000 ; random 0.1
 ```
 
-คำสั่ง `/sortcustom karnhao 10 100 random 1 ; insertion ; finish #00AA00` นั้นจะแสดงออกคล้ายกับคำสั่ง `/sort karnhao insertion 10 100`
+command `/sortcustom @s 10 100 random 1 ; insertion ; finish #00AA00` will display similar to the command `/sort @s insertion 10 100`
 
 <hr>
 
 
-## วัตถุประสงค์ในการสร้าง
-เนื่องจากผมชอบฟังเสียงตอน algorithm จัดเรียง เพราะมันทำให้ผมรู้สึกผ่อนคลาย และผมก็ได้รับแรงบรรดาลใจจากคลิปแนว Sorting algorithm หลายๆคลิปใน [Youtube](https://www.youtube.com/) อีกด้วย
-
-<br>
-
-## ประวัติความเป็นมา
-โปรเจคนี้ถูกพัฒนาเสร็จสิ้นโดยผมตั้งแต่ตอนอายุ 17 ปี และถูกพัฒนาอีกครั้งในช่วงอายุ 18 ปี ซึ่งการพัฒนาโปรเจคนี้จะเป็นไปอย่างช้าๆ เนื่องจากมีการบ้านที่โรงเรียนที่ต้องทำเยอะมาก
+## Playing music
+There are music algorithm in this plugin. This algorithm also need [NoteblockAPI](https://www.spigotmc.org/resources/noteblockapi.19287/) to read .nbs file.
+Add you need to put music file in plugins/HaoVSort/songs. (file's type must be .nbs).
