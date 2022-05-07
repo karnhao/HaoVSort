@@ -23,7 +23,7 @@ public class Wait extends Algorithms<Wait> {
 
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
-        if (args.length == 1)
+        if (args.length == 1 && args[0].length() == 0)
             return Arrays.asList("<miliseconds>");
         return null;
     }

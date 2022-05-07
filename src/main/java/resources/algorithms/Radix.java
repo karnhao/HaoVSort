@@ -75,10 +75,7 @@ public class Radix extends Algorithms<Radix> {
 
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
-        if (args.length == 1) {
-            return Arrays.asList("[<radix>]");
-        }
-        return null;
+        return (args.length == 1 && args[0].length() == 0) ? Arrays.asList("[<radix>]") : null;
     }
 
     @Override
