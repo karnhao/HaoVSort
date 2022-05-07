@@ -7,6 +7,9 @@
 > _By Mr. Sittipat Tepsutar_
 
 ## [Commands](src/main/java/com/hao/haovsort/commands/Sort.java)
+
+This plugin has TabCompleter in all commands.
+
 ### Sort Command
 ```
 /sort <player> <algorithm> <delay> <length> args...
@@ -46,7 +49,7 @@ use this command :
 /sortstop
 ```
 ```
-/sortstop karnhao
+/sortstop @s
 ```
 
 ### Custom Sort Command
@@ -55,14 +58,14 @@ Want to try something new and different from now on? If yes, try this command!
 ```
 /sortcustom <player> <delay> <length> <type> args... ; <type> args... ; ..........
 ```
-Usually when you use the command [/sort](#sort-command) normally there has three sorts: random, \<type\> and finish.
+Usually when you use the command [/sort](#sort-command), there has three sorts: random, \<type\> and finish.
 
 ### Example
 ```
-/sortcustom karnhao 10 100 random 1 ; insertion ; finish #00AA00
+/sortcustom @s 10 100 random 1 ; insertion ; finish #00AA00
 ```
 ```
-/sortcustom karnhao 10 100 invert ; shell; finish #FF0000 ; random 0.1
+/sortcustom @s 10 100 invert ; shell; finish #FF0000 ; random 0.1
 ```
 
 command `/sortcustom @s 10 100 random 1 ; insertion ; finish #00AA00` will display similar to the command `/sort @s insertion 10 100`
@@ -72,7 +75,7 @@ command `/sortcustom @s 10 100 random 1 ; insertion ; finish #00AA00` will displ
 
 ## Playing music
 There are music algorithm in this plugin. This algorithm also need [NoteblockAPI](https://www.spigotmc.org/resources/noteblockapi.19287/) to read .nbs file.
-Add you need to put music file in plugins/HaoVSort/songs. (file's type must be .nbs).
+And you need to put music file in plugins/HaoVSort/songs. (file's type must be .nbs).
 
 ### Example
 ```
