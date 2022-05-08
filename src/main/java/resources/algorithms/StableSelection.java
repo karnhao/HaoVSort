@@ -1,10 +1,10 @@
 package resources.algorithms;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
+import com.hao.haovsort.sorting.utils.SortingAlgorithm;
 
+@SortingAlgorithm(name = "stable_selection")
 public class StableSelection extends Algorithms<StableSelection> {
-    public static final String NAME = "stable_selection";
-
     private void stableSelectionSort(Integer[] a, int n) throws InterruptedException {
         // Iterate through array elements
         for (int i = 0; i < n - 1; i++) {

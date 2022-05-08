@@ -22,6 +22,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 /**
  * Thread ที่จะแสดง Algorithm
  */
+@SortingAlgorithm(name = "")
 public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
 
     protected Integer[] array;
@@ -99,11 +100,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     final public static String getAlgorithmName(Class<? extends Algorithms<?>> clazz) {
-        try {
-            return (String) clazz.getField("NAME").get(null);
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            return clazz.getSimpleName();
-        }
+        String name = clazz.getAnnotation(SortingAlgorithm.class).name();
+        return name.isEmpty() ? clazz.getSimpleName() : name;
     }
 
     final public List<Player> getPlayers() {

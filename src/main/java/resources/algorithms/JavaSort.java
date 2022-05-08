@@ -3,10 +3,10 @@ package resources.algorithms;
 import java.util.Objects;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
+import com.hao.haovsort.sorting.utils.SortingAlgorithm;
 
+@SortingAlgorithm(name = "java")
 public class JavaSort extends Algorithms<JavaSort> {
-
-    public static String NAME = "Java";
 
     @Override
     public void sort(Integer[] a) throws InterruptedException {
