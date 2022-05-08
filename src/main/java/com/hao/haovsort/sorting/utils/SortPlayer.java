@@ -122,4 +122,8 @@ final public class SortPlayer extends Thread {
     private void alert(String message) {
         alert(message, ChatColor.RED);
     }
+
+    public Algorithms<?> getAlgorithms() {
+        return this.algorithm;
+    }
 }

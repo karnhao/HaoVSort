@@ -4,10 +4,12 @@ import com.hao.haovsort.commands.Reload;
 import com.hao.haovsort.commands.Sort;
 import com.hao.haovsort.commands.SortCustom;
 import com.hao.haovsort.commands.SortDebug;
+import com.hao.haovsort.commands.SortDelay;
 import com.hao.haovsort.commands.StopSort;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.utils.SongCollector;
 import com.hao.haovsort.tabcompleter.CustomSortTab;
+import com.hao.haovsort.tabcompleter.SortDelayTab;
 import com.hao.haovsort.tabcompleter.StopSortTab;
 import com.hao.haovsort.utils.Configuration;
 
@@ -49,6 +51,7 @@ public class Main extends JavaPlugin {
         PluginCommand sortdebug = Configuration.getDebug() ? getCommand("sortdebug") : null;
         PluginCommand sortcustom = getCommand("sortcustom");
         PluginCommand sortreload = getCommand("sortreload");
+        PluginCommand sortdelay = getCommand("sortdelay");
 
         sort.setExecutor(new Sort());
         stopSort.setExecutor(new StopSort());
@@ -56,10 +59,12 @@ public class Main extends JavaPlugin {
             sortdebug.setExecutor(new SortDebug());
         sortcustom.setExecutor(new SortCustom(BREAKER));
         sortreload.setExecutor(new Reload(this));
+        sortdelay.setExecutor(new SortDelay());
 
         AlgorithmsManager.setTabCompleterToCommand(sort);
         sortcustom.setTabCompleter(new CustomSortTab(BREAKER));
         stopSort.setTabCompleter(new StopSortTab());
+        sortdelay.setTabCompleter(new SortDelayTab());
 
         getLogger().log(Level.INFO, "plugin is enable.");
     }
