@@ -37,11 +37,11 @@ public class Music extends Algorithms<Music> {
                 .sendMessage(ChatColor.GREEN
                         + String.format("Sorting playing music : %s, %s", getSongName(), song.getAuthor())));
         long old_delay = getDelay();
+        setDelay(tick_delay);
         for (int tick = 0; tick <= song.getLength(); tick++) {
             setNoteSoundsAtTick(tick);
             setArrayAtTick(tick);
             setSelectedIndexesAtTick(tick);
-            setDelay(tick_delay);
             show();
             playSortingSound();
         }
@@ -133,7 +133,7 @@ public class Music extends Algorithms<Music> {
 
     // *** Unused Method ***
     // private static float keyToPitch(float key) {
-    //     return (float) Math.pow(2, (float) ((key - 45) / 12));
+    // return (float) Math.pow(2, (float) ((key - 45) / 12));
     // }
 
     private int pitchToValue(float pitch) {
@@ -162,12 +162,12 @@ public class Music extends Algorithms<Music> {
 
     // *** Unused Method ***
     // private static byte fixKey(byte key) {
-    //     byte temp = key;
-    //     while (temp > 57)
-    //         temp -= 12;
-    //     while (temp < 33)
-    //         temp += 12;
-    //     return temp;
+    // byte temp = key;
+    // while (temp > 57)
+    // temp -= 12;
+    // while (temp < 33)
+    // temp += 12;
+    // return temp;
     // }
 
     private String getSongName() {

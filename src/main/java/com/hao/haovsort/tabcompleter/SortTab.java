@@ -2,9 +2,7 @@ package com.hao.haovsort.tabcompleter;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.hao.haovsort.sorting.utils.Algorithms;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.utils.PlayerSelector;
 
@@ -17,7 +15,6 @@ import org.bukkit.command.TabCompleter;
  */
 public class SortTab implements TabCompleter {
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<String> onTabComplete(CommandSender cs, Command cmnd, String string, String[] args) {
         // /sort <player> <type> <delay> <length> args...
@@ -25,16 +22,7 @@ public class SortTab implements TabCompleter {
             case 1:
                 return PlayerSelector.getSuggestion(args[0]);
             case 2:
-                return AlgorithmsManager.getAlgorithms().stream().map(t -> {
-                    try {
-                        Class<? extends Algorithms<?>> clazz = (Class<? extends Algorithms<?>>) t.getClass();
-                        return Algorithms.getAlgorithmName(clazz).toLowerCase();
-                    } catch (IllegalArgumentException | SecurityException e) {
-                        return null;
-                    }
-                })
-                        .filter((t) -> t.startsWith(args[1].toLowerCase()))
-                        .collect(Collectors.toList());
+                return AlgorithmsManager.getAlgorithmNames(args[1]);
             case 3:
                 if (args[2].isEmpty())
                     return Arrays.asList("<delay>");
