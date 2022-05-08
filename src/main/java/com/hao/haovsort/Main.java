@@ -6,11 +6,12 @@ import com.hao.haovsort.commands.SortCustom;
 import com.hao.haovsort.commands.SortDebug;
 import com.hao.haovsort.commands.SortDelay;
 import com.hao.haovsort.commands.StopSort;
+import com.hao.haovsort.listeners.PlayerDisconnectListener;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.utils.SongCollector;
-import com.hao.haovsort.tabcompleter.CustomSortTab;
-import com.hao.haovsort.tabcompleter.SortDelayTab;
-import com.hao.haovsort.tabcompleter.StopSortTab;
+import com.hao.haovsort.tabcompleters.CustomSortTab;
+import com.hao.haovsort.tabcompleters.SortDelayTab;
+import com.hao.haovsort.tabcompleters.StopSortTab;
 import com.hao.haovsort.utils.Configuration;
 
 import java.util.logging.Level;
@@ -65,6 +66,8 @@ public class Main extends JavaPlugin {
         sortcustom.setTabCompleter(new CustomSortTab(BREAKER));
         stopSort.setTabCompleter(new StopSortTab());
         sortdelay.setTabCompleter(new SortDelayTab());
+
+        Bukkit.getPluginManager().registerEvents(new PlayerDisconnectListener(), this);
 
         getLogger().log(Level.INFO, "plugin is enable.");
     }

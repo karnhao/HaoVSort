@@ -103,7 +103,7 @@ public class Music extends Algorithms<Music> {
 
     private void setSelectedIndexesAtTick(int tick) {
         Integer[] r = new Integer[layer_count];
-        int temp = tick - (layerWidth * (int) Math.floor(tick / layerWidth));
+        int temp = tick - (layerWidth * (int) Math.floor((tick - 1) / layerWidth)) - 1;
         for (int i = 0; i < layer_count; i++) {
             r[i] = temp;
             temp += layerWidth;

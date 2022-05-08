@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import com.hao.haovsort.tabcompleter.SortTab;
+import com.hao.haovsort.tabcompleters.SortTab;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;

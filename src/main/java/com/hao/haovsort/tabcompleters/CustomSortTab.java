@@ -1,4 +1,4 @@
-package com.hao.haovsort.tabcompleter;
+package com.hao.haovsort.tabcompleters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
