@@ -77,6 +77,18 @@ command `/sortcustom @s 10 100 random 1 ; insertion ; finish #00AA00` will displ
 There are music algorithm in this plugin. This algorithm also need [NoteblockAPI](https://www.spigotmc.org/resources/noteblockapi.19287/) to read [.nbs](https://opennbs.org/nbs) file.
 And you need to put song file in plugins/HaoVSort/songs. (file's type must be [.nbs](https://opennbs.org/nbs)).
 
+```
+/sort <player> music <delay> <length> <song> <smooth>
+```
+### Parameters
+|Parameter|Infomation|Require|
+|:-:|:-|:-:|
+|\<player\>|Player who will see this visualization|Yes|
+|\<delay\>|Delay in algorithm (no effect)|Yes|
+|\<length\>|Array size|Yes|
+|\<song\>|Song's title name or Song's file name when song has no title|Yes|
+|\<smooth\>|Determines whether play smooth or not (default is false).|Opinion
+
 ### Example
 ```
 /sort @s music 10 100 martha_speak_theme
