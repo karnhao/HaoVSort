@@ -39,7 +39,7 @@ public class Sort implements CommandExecutor {
                 throw new NullPointerException("Player not found.");
             }
             targets.forEach((p) -> Sort.invoke(p, type, delay, length, Arrays.copyOfRange(args, 4, args.length)));
-        } catch (NullPointerException | InvalidArgsException e) {
+        } catch (NullPointerException | InvalidArgsException | NumberFormatException e) {
             Util.alert(cs, e.toString());
         } catch (IndexOutOfBoundsException e) {
             Util.alert(cs, "Syntax error : /sort <player> <type> <delay> <length> [<args>]...");
@@ -57,6 +57,8 @@ public class Sort implements CommandExecutor {
         List<Player> targets = Arrays.asList(target);
         if (delay < 1)
             throw new InvalidArgsException("Delay cannot lower than 1");
+        if (length < 1)
+            throw new InvalidArgsException("length must be greater than 0");
         if (length > 761
                 || (length > Configuration.getMaxActionBarArrayLength() && Configuration.getLimitLength()))
             throw new InvalidArgsException("Data too big");
