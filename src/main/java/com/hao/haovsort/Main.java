@@ -66,7 +66,8 @@ public class Main extends JavaPlugin {
         AlgorithmsManager.setTabCompleterToCommand(sort);
         sortcustom.setTabCompleter(new CustomSortTab(BREAKER));
         stopSort.setTabCompleter(new StopSortTab());
-        sortdebug.setTabCompleter(new NothingTab());
+        if (sortdebug != null)
+            sortdebug.setTabCompleter(new NothingTab());
         sortreload.setTabCompleter(new NothingTab());
         sortdelay.setTabCompleter(new SortDelayTab());
 
