@@ -29,8 +29,6 @@ public class Quick extends Algorithms<Quick> {
                 arr[j] = temp;
             }
         }
-        setIndexes(i);
-        show();
 
         // swap arr[i+1] and arr[high] (or pivot)
         int temp = arr[i + 1];

@@ -1,11 +1,9 @@
-package com.hao.haovsort.tabcompleter;
+package com.hao.haovsort.tabcompleters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.hao.haovsort.sorting.utils.Algorithms;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.utils.PlayerSelector;
 import com.hao.haovsort.utils.Util;
@@ -18,7 +16,6 @@ public class CustomSortTab implements TabCompleter {
 
     private static String BREAKER = ";";
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<String> onTabComplete(CommandSender cs, Command cmnd, String string, String[] args) {
         // /sortcustom <player> <delay> <length> random 1 ; radix 4 ; finish #00AA00
@@ -69,22 +66,13 @@ public class CustomSortTab implements TabCompleter {
                     String[] algorithm_args = getCurrentAlgorithmArgs(format(Arrays.copyOfRange(args, 3, args.length)));
                     try {
                         List<String> r = getAlgorithmTabCompleter(name).onTabComplete(cs, cmnd, string, algorithm_args);
-                        if (r == null || r.isEmpty()) {
+                        if ((r == null || r.isEmpty()) && args[args.length - 1].isEmpty()) {
                             return Arrays.asList(BREAKER);
                         }
-                        return r;
+                        return algorithm_args.length == 0 || args[args.length - 1].isEmpty()
+                                || !algorithm_args[0].isEmpty() ? r : null;
                     } catch (NullPointerException e) {
-                        return AlgorithmsManager.getAlgorithms().stream().map(t -> {
-                            try {
-                                Class<? extends Algorithms<?>> clazz = (Class<? extends Algorithms<?>>) t.getClass();
-                                return Algorithms.getAlgorithmName(clazz).toLowerCase();
-                            } catch (IllegalArgumentException | SecurityException ex) {
-                                ex.printStackTrace();
-                                return null;
-                            }
-                        })
-                                .filter((t) -> t.startsWith(name.toLowerCase()))
-                                .collect(Collectors.toList());
+                        return AlgorithmsManager.getAlgorithmNames(name);
                     } catch (InstantiationException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -137,7 +125,7 @@ public class CustomSortTab implements TabCompleter {
         return split(Util.argsToString(args));
     }
 
-    public CustomSortTab(String breaker){
+    public CustomSortTab(String breaker) {
         CustomSortTab.BREAKER = breaker;
     }
 }

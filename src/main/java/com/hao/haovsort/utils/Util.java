@@ -1,7 +1,17 @@
 package com.hao.haovsort.utils;
 
+import java.io.IOException;
+import java.net.URL;
+import java.security.CodeSource;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import com.hao.haovsort.sorting.utils.AlgorithmsLoader;
 
 import org.bukkit.command.CommandSender;
 
@@ -47,5 +57,25 @@ public class Util {
 
     public static Integer[] createArray(int length) {
         return IntStream.range(1, length + 1).boxed().toArray(Integer[]::new);
+    }
+
+    public static final List<String> listFilesForFolder(String path) throws IOException {
+        CodeSource src = AlgorithmsLoader.class.getProtectionDomain().getCodeSource();
+        List<String> paths = new ArrayList<>();
+        if (src != null) {
+            URL jar = src.getLocation();
+            ZipInputStream zip = new ZipInputStream(jar.openStream());
+            while (true) {
+                ZipEntry e = zip.getNextEntry();
+                if (e == null)
+                    break;
+                String name = e.getName();
+                if (name.startsWith(path))
+                    paths.add(name);
+            }
+            return paths.stream().map((t) -> t.substring(path.length() + 1))
+                    .collect(Collectors.toList());
+        }
+        throw new IOException();
     }
 }

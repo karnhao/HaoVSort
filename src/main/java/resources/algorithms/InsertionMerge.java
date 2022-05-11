@@ -1,10 +1,10 @@
 package resources.algorithms;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
+import com.hao.haovsort.sorting.utils.SortingAlgorithm;
 
+@SortingAlgorithm(name = "insert_merge")
 public class InsertionMerge extends Algorithms<InsertionMerge> {
-
-    public static final String NAME = "insert_merge";
 
     private void inplaceMergeSort(Integer arr[], int l, int r) throws InterruptedException {
         if (l < r) {

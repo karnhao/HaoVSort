@@ -42,7 +42,7 @@ public class Random extends Algorithms<Random> {
 
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
-        return (args.length == 1) ? Arrays.asList("[<percentage>[0,1]]") : null;
+        return (args.length == 1 && args[0].length() == 0) ? Arrays.asList("[<percentage>[0,1]]") : null;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Random extends Algorithms<Random> {
             f = Float.parseFloat(args[0]);
         } catch (NumberFormatException e) {
             throw new InvalidArgsException("Cannot format number.");
-        } catch (IndexOutOfBoundsException ex){
+        } catch (IndexOutOfBoundsException ex) {
             throw new InvalidArgsException("Args not found");
         }
         if (f < 0 || f > 1)

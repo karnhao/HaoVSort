@@ -33,26 +33,38 @@ commands:
       usage: /<command>
       permission: haovsort.reload
       permission-message: You do not have permission to use this command.
+    sortdelay:
+      description: Set new delay to sorting algorithm player.
+      usage: /<command>
+      permission: haovsort.delay
+      permission-message: You do not have permission to use this command.
 permissions:
   haovsort.*:
     description: Give access to HaoVSort whole.
+    default: op
     children:
       haovsort.command.sort: true
       haovsort.command.sortstop: true
       haovsort.command.sortcustom: true
       haovsort.debug: true
       haovsort.reload: true
+      haovsort.command.delay: true
   haovsort.command.*:
     description: Allows player to use all command in HaoVSort plugin.
     children:
       haovsort.command.sort: true
       haovsort.command.sortstop: true
       haovsort.command.sortcustom: true
+      haovsort.command.delay: true
+    default: op
   haovsort.command.sort:
     description: Allows player to use /sort command.
     default: op
   haovsort.command.sortstop:
     description: Allows player to use /sortstop command.
+    default: op
+  haovsort.command.delay:
+    description: Allows player to use /sortdelay command.
     default: op
   haovsort.debug:
     description: Allows player to debug HaoVSort plugin.

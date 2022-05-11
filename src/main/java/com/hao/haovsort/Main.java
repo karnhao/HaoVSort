@@ -4,11 +4,15 @@ import com.hao.haovsort.commands.Reload;
 import com.hao.haovsort.commands.Sort;
 import com.hao.haovsort.commands.SortCustom;
 import com.hao.haovsort.commands.SortDebug;
+import com.hao.haovsort.commands.SortDelay;
 import com.hao.haovsort.commands.StopSort;
+import com.hao.haovsort.listeners.PlayerDisconnectListener;
 import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.utils.SongCollector;
-import com.hao.haovsort.tabcompleter.CustomSortTab;
-import com.hao.haovsort.tabcompleter.StopSortTab;
+import com.hao.haovsort.tabcompleters.CustomSortTab;
+import com.hao.haovsort.tabcompleters.NothingTab;
+import com.hao.haovsort.tabcompleters.SortDelayTab;
+import com.hao.haovsort.tabcompleters.StopSortTab;
 import com.hao.haovsort.utils.Configuration;
 
 import java.util.logging.Level;
@@ -31,17 +35,16 @@ public class Main extends JavaPlugin {
             noteBlockAPI = false;
         }
 
-        if (noteBlockAPI)
-            SongCollector.init(this);
-
         try {
+            if (noteBlockAPI)
+                SongCollector.init(this);
             AlgorithmsManager.init();
         } catch (Exception e) {
             // something wrong...
             e.printStackTrace();
 
             getLogger().log(Level.WARNING, "AlgorithmsManager cannot initialize!");
-            getLogger().log(Level.WARNING, "Plugin is disable.");
+            Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
@@ -50,6 +53,7 @@ public class Main extends JavaPlugin {
         PluginCommand sortdebug = Configuration.getDebug() ? getCommand("sortdebug") : null;
         PluginCommand sortcustom = getCommand("sortcustom");
         PluginCommand sortreload = getCommand("sortreload");
+        PluginCommand sortdelay = getCommand("sortdelay");
 
         sort.setExecutor(new Sort());
         stopSort.setExecutor(new StopSort());
@@ -57,10 +61,16 @@ public class Main extends JavaPlugin {
             sortdebug.setExecutor(new SortDebug());
         sortcustom.setExecutor(new SortCustom(BREAKER));
         sortreload.setExecutor(new Reload(this));
+        sortdelay.setExecutor(new SortDelay());
 
         AlgorithmsManager.setTabCompleterToCommand(sort);
         sortcustom.setTabCompleter(new CustomSortTab(BREAKER));
         stopSort.setTabCompleter(new StopSortTab());
+        sortdebug.setTabCompleter(new NothingTab());
+        sortreload.setTabCompleter(new NothingTab());
+        sortdelay.setTabCompleter(new SortDelayTab());
+
+        Bukkit.getPluginManager().registerEvents(new PlayerDisconnectListener(), this);
 
         getLogger().log(Level.INFO, "plugin is enable.");
     }

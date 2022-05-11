@@ -37,11 +37,11 @@ public class Music extends Algorithms<Music> {
                 .sendMessage(ChatColor.GREEN
                         + String.format("Sorting playing music : %s, %s", getSongName(), song.getAuthor())));
         long old_delay = getDelay();
+        setDelay(tick_delay);
         for (int tick = 0; tick <= song.getLength(); tick++) {
             setNoteSoundsAtTick(tick);
             setArrayAtTick(tick);
             setSelectedIndexesAtTick(tick);
-            setDelay(tick_delay);
             show();
             playSortingSound();
         }
@@ -103,7 +103,7 @@ public class Music extends Algorithms<Music> {
 
     private void setSelectedIndexesAtTick(int tick) {
         Integer[] r = new Integer[layer_count];
-        int temp = tick - (layerWidth * (int) Math.floor(tick / layerWidth));
+        int temp = tick - (layerWidth * (int) Math.floor((tick - 1) / layerWidth)) - 1;
         for (int i = 0; i < layer_count; i++) {
             r[i] = temp;
             temp += layerWidth;
@@ -124,16 +124,17 @@ public class Music extends Algorithms<Music> {
                     list.add(-1);
                     continue;
                 }
-                list.add(pitchToValue(keyToPitch(fixKey(note.getKey()))));
+                list.add(pitchToValue(NoteUtils.getPitchTransposed(note)));
             }
         });
 
         this.array = list.stream().toArray(Integer[]::new);
     }
 
-    private static float keyToPitch(byte key) {
-        return (float) Math.pow(2, (float) (key - 45) / 12);
-    }
+    // *** Unused Method ***
+    // private static float keyToPitch(float key) {
+    // return (float) Math.pow(2, (float) ((key - 45) / 12));
+    // }
 
     private int pitchToValue(float pitch) {
         return (int) Math.floor(((2 * pitch * length) - 100) / 3);
@@ -159,14 +160,15 @@ public class Music extends Algorithms<Music> {
         return InstrumentUtils.getSoundNameByInstrument(note.getInstrument());
     }
 
-    private static byte fixKey(byte key) {
-        byte temp = key;
-        while (temp > 57)
-            temp -= 12;
-        while (temp < 33)
-            temp += 12;
-        return temp;
-    }
+    // *** Unused Method ***
+    // private static byte fixKey(byte key) {
+    // byte temp = key;
+    // while (temp > 57)
+    // temp -= 12;
+    // while (temp < 33)
+    // temp += 12;
+    // return temp;
+    // }
 
     private String getSongName() {
         return getArgs()[0];

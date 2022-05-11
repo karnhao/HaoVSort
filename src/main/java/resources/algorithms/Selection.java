@@ -3,9 +3,7 @@ package resources.algorithms;
 import com.hao.haovsort.sorting.utils.Algorithms;
 
 public class Selection extends Algorithms<Selection> {
-
-    public static final String NAME = "selection";
-
+    
     @Override
     public void sort(Integer[] a) throws InterruptedException {
         int n = a.length;

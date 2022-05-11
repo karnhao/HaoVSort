@@ -1,6 +1,7 @@
 package com.hao.haovsort.sorting.utils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import com.hao.haovsort.tabcompleter.SortTab;
+import com.hao.haovsort.tabcompleters.SortTab;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -114,25 +115,48 @@ public class AlgorithmsManager {
     static TabCompleter getFinalTabCompleter() {
         // /sort <player> <type> <delay> <length> args...
         return (sender, command, alias, args) -> {
+            List<String> r = new SortTab().onTabComplete(sender, command, alias, args);
+            if (r != null && !r.isEmpty())
+                return r;
             if (args.length > 4) {
-                for (Algorithms<?> algorithm : getAlgorithms()) {
+                for (Algorithms<?> algorithm : map.values()) {
                     String name = Algorithms.getAlgorithmName((Class<? extends Algorithms<?>>) algorithm.getClass());
                     try {
                         if (name.equalsIgnoreCase(args[1])) {
-                            return algorithm.getTabCompleter().onTabComplete(sender, command, alias,
+                            // recycle r variable
+                            r = algorithm.getTabCompleter().onTabComplete(sender, command, alias,
                                     Arrays.copyOfRange(args, 4, args.length));
+                            if (r != null)
+                                return r;
                         }
                     } catch (IllegalArgumentException | SecurityException e) {
                         e.printStackTrace();
                     }
                 }
-                return null;
             }
-            return new SortTab().onTabComplete(sender, command, alias, args);
+            return Collections.emptyList();
         };
     }
 
     public static void setTabCompleterToCommand(PluginCommand command) {
         command.setTabCompleter(getFinalTabCompleter());
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<String> getAlgorithmNames(String startWith) {
+        return map.values().stream().map(t -> {
+            try {
+                Class<? extends Algorithms<?>> clazz = (Class<? extends Algorithms<?>>) t.getClass();
+                return Algorithms.getAlgorithmName(clazz).toLowerCase();
+            } catch (IllegalArgumentException | SecurityException e) {
+                return null;
+            }
+        })
+                .filter((t) -> t.startsWith(startWith.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public static List<String> getAlgorithmsName() {
+        return getAlgorithmNames("");
     }
 }
