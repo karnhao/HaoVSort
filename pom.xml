@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hao</groupId>
     <artifactId>HaoVSort</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <name>HaoVSort</name>
     <description>Bukkit plugin that visualize sorting algorithm in Minecraft.</description>
     <url>https://github.com/karnhao/HaoVSort</url>
