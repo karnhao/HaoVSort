@@ -77,7 +77,8 @@ final public class SortPlayer extends Thread {
             });
         } catch (RuntimeException stop) {
         }
-        this.players.forEach(AlgorithmsManager::cleanPlayer);
+        if (!this.isInterrupted())
+            this.players.forEach(AlgorithmsManager::cleanPlayer);
     }
 
     public void stopPlayer() {
