@@ -3,9 +3,11 @@ package com.hao.haovsort.sorting.utils;
 import java.util.Arrays;
 import java.util.List;
 
+import com.hao.haovsort.Main;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -14,7 +16,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 /**
  * เครื่องแสดง algorithms
  */
-final public class SortPlayer extends Thread {
+final public class SortPlayer extends BukkitRunnable {
 
     private Algorithms<?> algorithm;
 
@@ -51,10 +53,10 @@ final public class SortPlayer extends Thread {
     public void run() {
         try {
             Arrays.asList(getAlgorithmCommandCollectors()).forEach((acc) -> {
-                if (!this.isInterrupted()) {
+                if (!this.isCancelled()) {
                     this.array = acc.getArray();
                     acc.getCommandList().forEach((command) -> {
-                        if (!this.isInterrupted()) {
+                        if (!this.isCancelled()) {
                             try {
                                 runAlgorithm(command, command.getArgs());
                             } catch (NoSuchAlgorithmException e) {
@@ -77,7 +79,8 @@ final public class SortPlayer extends Thread {
             });
         } catch (RuntimeException stop) {
         }
-        this.players.forEach(AlgorithmsManager::cleanPlayer);
+        if (!this.isCancelled())
+            this.players.forEach(AlgorithmsManager::cleanPlayer);
     }
 
     public void stopPlayer() {
@@ -86,8 +89,7 @@ final public class SortPlayer extends Thread {
                 this.algorithm.interrupt();
                 this.algorithm.join();
             }
-            this.interrupt();
-            this.join();
+            this.cancel();
         } catch (InterruptedException e) {
         }
     }
@@ -125,5 +127,9 @@ final public class SortPlayer extends Thread {
 
     public Algorithms<?> getAlgorithms() {
         return this.algorithm;
+    }
+
+    public void visualize() {
+        this.runTaskAsynchronously(Main.getPlugin(Main.class));
     }
 }

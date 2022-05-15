@@ -68,7 +68,7 @@ public class Sort implements CommandExecutor {
                 new AlgorithmCommand("random", 8l, targets, "1"),
                 new AlgorithmCommand(type, delay, targets, args),
                 new AlgorithmCommand("finish", 8l, targets)));
-        player.start();
+        player.visualize();
         AlgorithmsManager.addPlayer(target, player);
     }
 }

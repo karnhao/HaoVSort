@@ -69,7 +69,7 @@ public class SortCustom implements CommandExecutor {
         player.setOwner(target);
         player.setCommands(new AlgorithmCommandCollector(Util.createArray(length),
                 getAlgorithmCommands(args, targets, delay)));
-        player.start();
+        player.visualize();
         AlgorithmsManager.addPlayer(target, player);
     }
 
