@@ -38,7 +38,7 @@ public class Music extends Algorithms<Music> {
                         + String.format("Sorting playing music : %s, %s", getSongName(), song.getAuthor())));
         long old_delay = getDelay();
         setDelay(tick_delay);
-        for (int tick = 0; tick <= song.getLength(); tick++) {
+        for (int tick = 0; tick <= song.getLength() + 1; tick++) {
             setNoteSoundsAtTick(tick);
             setArrayAtTick(tick);
             setSelectedIndexesAtTick(tick);
