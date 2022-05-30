@@ -12,7 +12,7 @@ public class Bead extends Algorithms<Bead> {
      * @param a integer array
      * @throws InterruptedException
      */
-    private void gravitySort(Integer[] a) throws InterruptedException {
+    private void gravitySort(Integer[] a) {
         int max = Integer.MIN_VALUE;
         for (int i = 1; i < array.length; i++) {
             if (max < array[i]) {
@@ -52,7 +52,7 @@ public class Bead extends Algorithms<Bead> {
     }
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         gravitySort(a);
     }
 }

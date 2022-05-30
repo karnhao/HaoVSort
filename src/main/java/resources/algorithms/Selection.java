@@ -5,7 +5,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 public class Selection extends Algorithms<Selection> {
     
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         int n = a.length;
         for (int i = 0; i < n - 1; i++) {
             int min_idx = i;
