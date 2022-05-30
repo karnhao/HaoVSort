@@ -59,7 +59,7 @@ public class Sort implements CommandExecutor {
             throw new InvalidArgsException("Delay cannot lower than 1");
         if (length < 1)
             throw new InvalidArgsException("length must be greater than 0");
-        if (length > 761
+        if (length > 760
                 || (length > Configuration.getMaxActionBarArrayLength() && Configuration.getLimitLength()))
             throw new InvalidArgsException("Data too big");
         player.setPlayers(targets);

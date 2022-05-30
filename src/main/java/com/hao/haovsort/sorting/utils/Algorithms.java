@@ -74,7 +74,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         if (this.isInterrupted())
             throw new InterruptedException();
         Color color;
-        ComponentBuilder cb = new ComponentBuilder();
+        ComponentBuilder cb = new ComponentBuilder("\n\n\n\n\n\n\n\n");
         for (int i = 0; i < this.getArray().length; i++) {
             if (this.getIndexes().contains(i)) {
                 cb.append("|").color(indexColor).bold(true);
@@ -86,8 +86,6 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         }
         if (this.getArray().length > Configuration.getMaxActionBarArrayLength()) {
             players.forEach((t) -> {
-                t.sendMessage("");
-
                 t.spigot().sendMessage(ChatMessageType.CHAT, cb.create());
             });
         } else {
