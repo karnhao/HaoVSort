@@ -17,7 +17,7 @@ public class Intro extends Algorithms<Intro> {
     // }
 
     // The utility function to swap two elements
-    private void swap(int i, int j) throws InterruptedException {
+    private void swap(int i, int j) {
         int temp = a[i];
         a[i] = a[j];
         a[j] = temp;
@@ -28,7 +28,7 @@ public class Intro extends Algorithms<Intro> {
 
     // To maxHeap a subtree rooted with node i which is
     // an index in a[]. heapN is size of heap
-    private void maxHeap(int i, int heapN, int begin) throws InterruptedException {
+    private void maxHeap(int i, int heapN, int begin) {
         int temp = a[begin + i - 1];
         int child;
 
@@ -54,13 +54,13 @@ public class Intro extends Algorithms<Intro> {
     }
 
     // Function to build the heap (rearranging the array)
-    private void heapify(int begin, int end, int heapN) throws InterruptedException {
+    private void heapify(int begin, int end, int heapN) {
         for (int i = (heapN) / 2; i >= 1; i--)
             maxHeap(i, heapN, begin);
     }
 
     // main function to do heapsort
-    private void heapSort(int begin, int end) throws InterruptedException {
+    private void heapSort(int begin, int end) {
         int heapN = end - begin;
 
         // Build heap (rearrange array)
@@ -78,7 +78,7 @@ public class Intro extends Algorithms<Intro> {
     }
 
     // function that implements insertion sort
-    private void insertionSort(int left, int right) throws InterruptedException {
+    private void insertionSort(int left, int right) {
 
         for (int i = left; i <= right; i++) {
             int key = a[i];
@@ -117,7 +117,7 @@ public class Intro extends Algorithms<Intro> {
     // array, and places all smaller (smaller than pivot)
     // to the left of the pivot
     // and greater elements to the right of the pivot
-    private int partition(int low, int high) throws InterruptedException {
+    private int partition(int low, int high) {
 
         // pivot
         int pivot = a[high];
@@ -143,7 +143,7 @@ public class Intro extends Algorithms<Intro> {
     // low --> Starting index,
     // high --> Ending index,
     // depthLimit --> recursion level
-    private void sortDataUtil(int begin, int end, int depthLimit) throws InterruptedException {
+    private void sortDataUtil(int begin, int end, int depthLimit) {
         if (end - begin > 16) {
             if (depthLimit == 0) {
 
@@ -178,7 +178,7 @@ public class Intro extends Algorithms<Intro> {
 
     // A utility function to begin the
     // Introsort module
-    private void sortData() throws InterruptedException {
+    private void sortData() {
 
         // Initialise the depthLimit
         // as 2*log(length(data))
@@ -189,7 +189,7 @@ public class Intro extends Algorithms<Intro> {
     }
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         this.a = a;
         // for (int i = 0; i < a.length; i++) {
         //     dataAppend(a[i]);

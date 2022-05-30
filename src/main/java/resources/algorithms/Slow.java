@@ -5,11 +5,11 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 public class Slow extends Algorithms<Slow> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         slowSort(a, 0, a.length - 1);
     }
 
-    private void slowSort(Integer a[], int i, int j) throws InterruptedException {
+    private void slowSort(Integer a[], int i, int j) {
         if (i >= j) {
             return;
         }

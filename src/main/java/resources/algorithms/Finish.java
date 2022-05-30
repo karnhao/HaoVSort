@@ -16,7 +16,7 @@ public class Finish extends Algorithms<Finish> {
     private final static List<String> SUGGESTION_COLOR = Arrays.asList("#", "#00AA00", "#FF0000");
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         setIndexColor(ChatColor.of(this.getArgs().length > 0 ? this.getArgs()[0] : "#00AA00"));
         List<Integer> intf = new ArrayList<>();
         for (int i = 0; i < a.length; i++) {

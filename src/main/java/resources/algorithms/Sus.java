@@ -10,7 +10,7 @@ public class Sus extends Algorithms<Sus> {
     private Float[] fake_pitch;
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         for (int i = 0; i < a.length; i++) {
             setPitchs(this.fake_pitch[i]);
             setIndexes(i);

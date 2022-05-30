@@ -5,7 +5,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 public class Invert extends Algorithms<Invert> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         Integer[] arr_copy = new Integer[a.length];
         for (int i = 0; i <= arr_copy.length - 1; i++) {
             arr_copy[i] = a[i];
