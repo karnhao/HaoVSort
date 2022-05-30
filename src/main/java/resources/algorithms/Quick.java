@@ -13,7 +13,7 @@ public class Quick extends Algorithms<Quick> {
      * pivot and all greater elements to right
      * of pivot
      */
-    private int partition(Integer arr[], int low, int high) throws InterruptedException {
+    private int partition(Integer arr[], int low, int high) {
         int pivot = arr[high];
         int i = (low - 1); // index of smaller element
         for (int j = low; j < high; j++) {
@@ -44,7 +44,7 @@ public class Quick extends Algorithms<Quick> {
      * low --> Starting index,
      * high --> Ending index
      */
-    private void qsort(Integer arr[], int low, int high) throws InterruptedException {
+    private void qsort(Integer arr[], int low, int high) {
         if (low < high) {
             /*
              * pi is partitioning index, arr[pi] is
@@ -59,7 +59,7 @@ public class Quick extends Algorithms<Quick> {
     }
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         qsort(a, 0, a.length - 1);
     }
 }

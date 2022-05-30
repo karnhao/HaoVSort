@@ -32,8 +32,9 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     private LinkedList<Integer> selectedIndexes = new LinkedList<>();
     private LinkedList<Float> pitchs = new LinkedList<>();
     private Long delay;
+    private boolean end = false;
 
-    public abstract void sort(Integer[] a) throws InterruptedException;
+    public abstract void sort(Integer[] a);
 
     final public Long getDelay() {
         return delay;
@@ -68,35 +69,28 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     /**
      * ใช้ใน {@link #sort(Integer[])} ไว้แสดงผล
      *
-     * @throws InterruptedException
+     * @throws StopSortException
      */
-    final protected void show() throws InterruptedException {
-        if (this.isInterrupted())
-            throw new InterruptedException();
+    final protected void show() {
+        if (this.isStopped())
+            throw new StopSortException();
         Color color;
-        ComponentBuilder cb = new ComponentBuilder();
+        boolean action_bar = !(this.getArray().length > Configuration.getMaxActionBarArrayLength());
+        ComponentBuilder cb = new ComponentBuilder(action_bar ? "" : "\n\n\n\n\n\n\n\n");
         for (int i = 0; i < this.getArray().length; i++) {
-            if (this.getIndexes().contains(i)) {
-                cb.append("|").color(indexColor).bold(true);
-            } else {
-                color = this.getArray()[i] != -1 ? Color.getHSBColor(this.colorCal(this.getArray()[i]), 1.0f, 1.0f)
-                        : Color.WHITE;
-                cb.append("|").color(ChatColor.of(color)).bold(true);
-            }
+            color = this.getArray()[i] != -1 ? Color.getHSBColor(this.colorCal(this.getArray()[i]), 1.0f, 1.0f)
+                    : Color.WHITE;
+            cb.append("|").color(this.getIndexes().contains(i) ? indexColor : ChatColor.of(color)).bold(true);
         }
-        if (this.getArray().length > Configuration.getMaxActionBarArrayLength()) {
-            players.forEach((t) -> {
-                t.sendMessage("");
+        players.forEach((t) -> {
+            t.spigot().sendMessage(action_bar ? ChatMessageType.ACTION_BAR : ChatMessageType.CHAT, cb.create());
+        });
 
-                t.spigot().sendMessage(ChatMessageType.CHAT, cb.create());
-            });
-        } else {
-            players.forEach((t) -> {
-                t.spigot().sendMessage(ChatMessageType.ACTION_BAR, cb.create());
-            });
-        }
         playSortingSound();
-        sleep(this.delay);
+        try {
+            sleep(this.delay);
+        } catch (InterruptedException e) {
+        }
     }
 
     final public static String getAlgorithmName(Class<? extends Algorithms<?>> clazz) {
@@ -186,18 +180,20 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
 
     @Override
     final public void run() {
-        try {
-            this.argsFilter(args);
-            this.init();
-            this.sort(this.array);
-        } catch (InterruptedException e) {
+        this.argsFilter(args);
+        this.init();
+        this.sort(this.array);
+        if (this.isStopped())
             throw new StopSortException();
-        }
     }
 
-    @Override
-    final public void interrupt() {
-        super.interrupt();
+    final public void wake() {
+        this.interrupt();
+    }
+
+    final public void stopAlgorithm() {
+        this.end = true;
+        this.wake();
     }
 
     /**
@@ -238,6 +234,10 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     @SuppressWarnings("unchecked")
     final protected Algorithms<T> newAlgorithm() throws InstantiationException, IllegalAccessException {
         return this.getClass().newInstance();
+    }
+
+    final public boolean isStopped() {
+        return this.end;
     }
 
 }

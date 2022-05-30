@@ -32,7 +32,7 @@ public class Music extends Algorithms<Music> {
     private boolean smooth = false;
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         getPlayers().forEach((t) -> t
                 .sendMessage(ChatColor.GREEN
                         + String.format("Sorting playing music : %s, %s", getSongName(), song.getAuthor())));

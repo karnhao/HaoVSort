@@ -22,6 +22,7 @@ final public class SortPlayer extends Thread {
     private Integer[] array;
     private AlgorithmCommandCollector[] commands;
     private Player owner;
+    private boolean end = false;
 
     public void setCommands(AlgorithmCommandCollector... acc) {
         this.commands = acc;
@@ -51,10 +52,10 @@ final public class SortPlayer extends Thread {
     public void run() {
         try {
             Arrays.asList(getAlgorithmCommandCollectors()).forEach((acc) -> {
-                if (!this.isInterrupted()) {
+                if (!end) {
                     this.array = acc.getArray();
                     acc.getCommandList().forEach((command) -> {
-                        if (!this.isInterrupted()) {
+                        if (!end) {
                             try {
                                 runAlgorithm(command, command.getArgs());
                             } catch (NoSuchAlgorithmException e) {
@@ -75,16 +76,17 @@ final public class SortPlayer extends Thread {
                     });
                 }
             });
-        } catch (RuntimeException stop) {
+        } catch (StopSortException stop) {
         }
-        if (!this.isInterrupted())
+        if (!end)
             this.players.forEach(AlgorithmsManager::cleanPlayer);
     }
 
     public void stopPlayer() {
+        end = true;
         try {
             if (this.algorithm != null) {
-                this.algorithm.interrupt();
+                this.algorithm.stopAlgorithm();
                 this.algorithm.join();
             }
             this.interrupt();

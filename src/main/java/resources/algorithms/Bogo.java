@@ -5,14 +5,14 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 public class Bogo extends Algorithms<Bogo> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         while (isSorted(a) == false) {
             shuffle(a);
         }
     }
 
     // To generate permuatation of the array
-    private void shuffle(Integer[] a) throws InterruptedException {
+    private void shuffle(Integer[] a) {
         // Math.random() returns a double positive
         // value, greater than or equal to 0.0 and
         // less than 1.0.
@@ -33,7 +33,7 @@ public class Bogo extends Algorithms<Bogo> {
     }
 
     // To check if array is sorted or not
-    private boolean isSorted(Integer[] a) throws InterruptedException {
+    private boolean isSorted(Integer[] a) {
         for (int i = 1; i < a.length; i++) {
             setPitchs(pitchCal(i, a[i - 1]));
             setIndexes(i);
