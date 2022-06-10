@@ -11,14 +11,17 @@ import org.bukkit.command.CommandSender;
 public class Wait extends Algorithms<Wait> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         Long delay;
         try {
             delay = Long.parseLong(this.getArgs()[0]);
         } catch (NumberFormatException e) {
             throw new InvalidArgsException("Cannot format " + getArgs()[0] + " as long : " + e.getMessage());
         }
-        sleep(delay);
+        try {
+            sleep(delay);
+        } catch (InterruptedException e) {
+        }
     }
 
     @Override

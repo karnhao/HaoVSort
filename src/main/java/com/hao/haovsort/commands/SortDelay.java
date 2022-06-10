@@ -42,6 +42,8 @@ public class SortDelay implements CommandExecutor {
                     });
                 });
                 player.getAlgorithms().setDelay(newDelay);
+                player.getAlgorithms().wake();
+                player.interrupt();
             });
         } catch (InvalidArgsException e) {
             sender.sendMessage(ChatColor.RED + "Invalid arguments: " + e.getMessage());

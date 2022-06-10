@@ -3,7 +3,7 @@ package resources.algorithms;
 import com.hao.haovsort.sorting.utils.Algorithms;
 
 public class Merge extends Algorithms<Merge> {
-    private void merge(Integer arr[], int l, int m, int r) throws InterruptedException {
+    private void merge(Integer arr[], int l, int m, int r) {
         // Find sizes of two subarrays to be merged
         int n1 = m - l + 1;
         int n2 = r - m;
@@ -65,7 +65,7 @@ public class Merge extends Algorithms<Merge> {
         }
     }
 
-    private void mergesort(Integer arr[], int l, int r) throws InterruptedException {
+    private void mergesort(Integer arr[], int l, int r) {
         if (l < r) {
             int m = (l + r) / 2;
             mergesort(arr, l, m);
@@ -77,7 +77,7 @@ public class Merge extends Algorithms<Merge> {
     }
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         mergesort(a, 0, a.length - 1);
     }
 }

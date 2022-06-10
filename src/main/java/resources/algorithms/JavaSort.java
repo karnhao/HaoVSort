@@ -9,11 +9,11 @@ import com.hao.haovsort.sorting.utils.SortingAlgorithm;
 public class JavaSort extends Algorithms<JavaSort> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         javasort(a, 0, a.length - 1, true);
     }
 
-    private void javasort(Integer[] a, int left, int right, boolean leftmost) throws InterruptedException {
+    private void javasort(Integer[] a, int left, int right, boolean leftmost) {
         int length = right - left + 1;
 
         // Use insertion sort on tiny arrays

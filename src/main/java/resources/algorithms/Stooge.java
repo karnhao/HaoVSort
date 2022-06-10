@@ -5,11 +5,11 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 public class Stooge extends Algorithms<Stooge> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         stoogesort(a, 0, a.length - 1);
     }
 
-    private void stoogesort(Integer arr[], int l, int h) throws InterruptedException {
+    private void stoogesort(Integer arr[], int l, int h) {
 
         // Base Case
         if (l >= h) {

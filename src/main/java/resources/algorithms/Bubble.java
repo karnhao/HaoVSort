@@ -5,7 +5,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 public class Bubble extends Algorithms<Bubble> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         int n = a.length;
         int temp;
         for (int i = 0; i < n - 1; i++) {

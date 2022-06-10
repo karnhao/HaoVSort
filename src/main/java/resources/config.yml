@@ -6,6 +6,6 @@ SortingSound :
   Name : minecraft:block.note_block.pling
   Value : 0.1
 
-# Other config (Force limit array size at 791).
+# Other config (Force limit array size at 760).
 LimitLength : false
 MaxActionBarArrayLength : 332

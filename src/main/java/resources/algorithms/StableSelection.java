@@ -5,7 +5,7 @@ import com.hao.haovsort.sorting.utils.SortingAlgorithm;
 
 @SortingAlgorithm(name = "stable_selection")
 public class StableSelection extends Algorithms<StableSelection> {
-    private void stableSelectionSort(Integer[] a, int n) throws InterruptedException {
+    private void stableSelectionSort(Integer[] a, int n) {
         // Iterate through array elements
         for (int i = 0; i < n - 1; i++) {
 
@@ -38,7 +38,7 @@ public class StableSelection extends Algorithms<StableSelection> {
     }
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         stableSelectionSort(a, a.length);
     }
 }

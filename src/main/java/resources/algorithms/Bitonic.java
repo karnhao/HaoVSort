@@ -6,11 +6,11 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 public class Bitonic extends Algorithms<Bitonic> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         bitonicSort(a, 0, a.length, 1);
     }
 
-    private void compAndSwap(Integer a[], int i, int j, int dir) throws InterruptedException {
+    private void compAndSwap(Integer a[], int i, int j, int dir) {
 
         if ((a[i] > a[j] && dir == 1)
                 || (a[i] < a[j] && dir == 0)) {
@@ -31,7 +31,7 @@ public class Bitonic extends Algorithms<Bitonic> {
      * index position low, the parameter cnt is the number
      * of elements to be sorted.
      */
-    private void bitonicMerge(Integer a[], int low, int cnt, int dir) throws InterruptedException {
+    private void bitonicMerge(Integer a[], int low, int cnt, int dir) {
 
         if (cnt > 1) {
             int i;
@@ -50,7 +50,7 @@ public class Bitonic extends Algorithms<Bitonic> {
      * orders, and then calls bitonicMerge to make them in
      * the same order
      */
-    private void bitonicSort(Integer a[], int low, int cnt, int dir) throws InterruptedException {
+    private void bitonicSort(Integer a[], int low, int cnt, int dir) {
         if (cnt > 1) {
             int k = cnt / 2;
             // sort in ascending order since dir here is 1

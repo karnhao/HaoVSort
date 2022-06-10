@@ -13,7 +13,7 @@ public class Radix extends Algorithms<Radix> {
     private Integer radix = null;
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         int n = a.length;
 
         // Find the maximum number to know number of digits
@@ -36,7 +36,7 @@ public class Radix extends Algorithms<Radix> {
 
     // A function to do counting sort of arr[] according to
     // the digit represented by exp.
-    private void countSort(Integer arr[], int n, int exp) throws InterruptedException {
+    private void countSort(Integer arr[], int n, int exp) {
         Integer output[] = new Integer[n]; // output array
         Integer count[] = new Integer[radix];
         Arrays.fill(count, 0);

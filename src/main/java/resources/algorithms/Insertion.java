@@ -5,7 +5,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 public class Insertion extends Algorithms<Insertion> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         int n = a.length;
         for (int i = 1; i < n; ++i) {
             int key = a[i];

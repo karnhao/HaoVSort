@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 public class Random extends Algorithms<Random> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         show();
         int i = a.length - 1;
         boolean loop = true;
