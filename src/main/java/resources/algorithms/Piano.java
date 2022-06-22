@@ -69,7 +69,7 @@ public class Piano extends Algorithms<Piano> {
     private void setSelectedIndexesAtTick(int tick) {
         LinkedList<Integer> list = new LinkedList<>();
         song.getLayerHashMap().values().forEach((t) -> {
-            Note note = t.getNote(tick);
+            Note note = t.getNote(tick - 1);
             if (note != null) {
                 list.add(pitchToValue(NoteUtils.getPitchTransposed(note)));
             }
@@ -91,12 +91,13 @@ public class Piano extends Algorithms<Piano> {
         this.sound = list;
     }
 
-    // private static float keyToPitch(float key) {
-    // return (float) Math.pow(2, (float) ((key - 45) / 12));
-    // }
-
+    /**
+     * calculate array index from sound's pitch.
+     * @param pitch
+     * @return 0..length-1
+     */
     private int pitchToValue(float pitch) {
-        return (int) Math.floor(((2 * pitch * this.array.length) - 100) / 3);
+        return (int) Math.floor(((2 * pitch) - 1) * (this.array.length - 1) / 3);
     }
 
     private void playSortingSound() {
