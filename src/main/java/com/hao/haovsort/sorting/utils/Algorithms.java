@@ -144,9 +144,12 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         return new LinkedList<>(Arrays.stream(n).boxed().map(this::pitchCal).collect(Collectors.toList()));
     }
 
+    final protected void setIndexes() {
+        this.selectedIndexes = new LinkedList<AlgorithmSelectedIndex>();
+    }
+
     final protected void setIndexes(Integer... indexes) {
-        this.selectedIndexes = (indexes == null) ? new LinkedList<AlgorithmSelectedIndex>()
-                : new LinkedList<AlgorithmSelectedIndex>(AlgorithmSelectedIndex.asList(indexes));
+        this.selectedIndexes = new LinkedList<AlgorithmSelectedIndex>(AlgorithmSelectedIndex.asList(indexes));
     }
 
     final protected void setIndexes(LinkedList<Integer> indexes) {
