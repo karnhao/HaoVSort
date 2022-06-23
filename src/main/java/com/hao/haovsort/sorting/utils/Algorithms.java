@@ -29,7 +29,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     private List<Player> players;
     private String[] args = {};
     private ChatColor indexColor = ChatColor.BLACK;
-    private LinkedList<Integer> selectedIndexes = new LinkedList<>();
+    private LinkedList<AlgorithmSelectedIndex> selectedIndexes = new LinkedList<>();
     private LinkedList<Float> pitchs = new LinkedList<>();
     private Long delay;
     private boolean end = false;
@@ -120,7 +120,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     final private void playSortingSound() {
         if (this.pitchs.isEmpty()) {
             this.pitchs = new LinkedList<>(
-                    this.selectedIndexes.stream().map(this::pitchCal).collect(Collectors.toList()));
+                    this.selectedIndexes.stream().map((t) -> pitchCal(t.getValue())).collect(Collectors.toList()));
         }
         pitchs.stream().filter((t) -> t != 0).forEach((p) -> {
             players.forEach(player -> player.playSound(player.getLocation(), Configuration.getSortingSoundName(),
@@ -145,16 +145,21 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     final protected void setIndexes(Integer... indexes) {
-        this.selectedIndexes = (indexes == null) ? new LinkedList<Integer>()
-                : new LinkedList<Integer>(Arrays.asList(indexes));
+        this.selectedIndexes = (indexes == null) ? new LinkedList<AlgorithmSelectedIndex>()
+                : new LinkedList<AlgorithmSelectedIndex>(AlgorithmSelectedIndex.asList(indexes));
     }
 
     final protected void setIndexes(LinkedList<Integer> indexes) {
-        this.selectedIndexes = indexes;
+        this.selectedIndexes = indexes.stream().map(AlgorithmSelectedIndex::new)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    final protected List<Integer> getIndexes() {
-        return this.selectedIndexes;
+    final protected void setIndexes(AlgorithmSelectedIndex... indexes) {
+        this.selectedIndexes = new LinkedList<>(Arrays.asList(indexes));
+    }
+
+    final protected LinkedList<Integer> getIndexes() {
+        return this.selectedIndexes.stream().map((t) -> t.getValue()).collect(Collectors.toCollection(LinkedList::new));
     }
 
     final protected void setPitchs(Float... pitchs) {
