@@ -40,7 +40,7 @@ public class Merge extends Algorithms<Merge> {
                 setIndexes(j + m + 1);
             }
             k++;
-            getIndexes().add(k);
+            getIndexesIntegers().add(k);
             show();
         }
 

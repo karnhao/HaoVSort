@@ -80,7 +80,12 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         for (int i = 0; i < this.getArray().length; i++) {
             color = this.getArray()[i] != -1 ? Color.getHSBColor(this.colorCal(this.getArray()[i]), 1.0f, 1.0f)
                     : Color.WHITE;
-            cb.append("|").color(this.getIndexes().contains(i) ? indexColor : ChatColor.of(color)).bold(true);
+            if (true) {
+
+                cb.append("|").color(this.getIndexesIntegers().contains(i) ? indexColor : ChatColor.of(color))
+                        .bold(true);
+                continue;
+            }
         }
         players.forEach((t) -> {
             t.spigot().sendMessage(action_bar ? ChatMessageType.ACTION_BAR : ChatMessageType.CHAT, cb.create());
@@ -161,8 +166,17 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         this.selectedIndexes = new LinkedList<>(Arrays.asList(indexes));
     }
 
-    final protected LinkedList<Integer> getIndexes() {
+    final protected LinkedList<Integer> getIndexesIntegers() {
         return this.selectedIndexes.stream().map((t) -> t.getValue()).collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    @Deprecated
+    final protected LinkedList<Integer> getIndexes() {
+        return getIndexesIntegers();
+    }
+
+    final protected LinkedList<AlgorithmSelectedIndex> getAlgorithmSelectedIndexs() {
+        return this.selectedIndexes;
     }
 
     final protected void setPitchs(Float... pitchs) {
