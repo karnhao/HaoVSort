@@ -28,8 +28,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     protected Integer[] array;
     private List<Player> players;
     private String[] args = {};
-    private ChatColor indexColor = ChatColor.BLACK;
-    private LinkedList<AlgorithmSelectedIndex> selectedIndexes = new LinkedList<>();
+    private AlgorithmSelectedIndexCollector selectedIndexes = new AlgorithmSelectedIndexCollector();
     private LinkedList<Float> pitchs = new LinkedList<>();
     private Long delay;
     private boolean end = false;
@@ -44,12 +43,12 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         this.delay = delay;
     }
 
-    final protected void setIndexColor(ChatColor color) {
-        this.indexColor = color;
+    final protected void setIndexColor(Color color) {
+        this.selectedIndexes.setDefaultColor(color);
     }
 
-    final protected ChatColor getIndexColor() {
-        return this.indexColor;
+    final protected Color getIndexColor() {
+        return this.selectedIndexes.getDefaultColor();
     }
 
     final protected Integer[] getArray() {
@@ -76,17 +75,32 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
             throw new StopSortException();
         Color color;
         boolean action_bar = !(this.getArray().length > Configuration.getMaxActionBarArrayLength());
-        ComponentBuilder cb = new ComponentBuilder(action_bar ? "" : "\n\n\n\n\n\n\n\n");
+        ComponentBuilder cb = new ComponentBuilder(action_bar ? "" : "\n");
         for (int i = 0; i < this.getArray().length; i++) {
             color = this.getArray()[i] != -1 ? Color.getHSBColor(this.colorCal(this.getArray()[i]), 1.0f, 1.0f)
                     : Color.WHITE;
-            if (true) {
 
-                cb.append("|").color(this.getIndexesIntegers().contains(i) ? indexColor : ChatColor.of(color))
+            AlgorithmSelectedIndex selectIndex = this.selectedIndexes.getFromValue(i);
+
+            if (selectIndex != null) {
+                // index ที่ถูกเลือก แสดงสีพิเศษ
+
+                float weight = selectIndex.getWeight();
+                selectIndex.addLifeTimeCount();
+
+                cb.append("|").color(ChatColor.of(blend(selectIndex.getIndexColor(), color, weight, 1 - weight)))
                         .bold(true);
-                continue;
+
+            } else {
+                // index สีปกติ
+                cb.append("|")
+                        .color(this.getIndexesIntegers().contains(i) ? ChatColor.of(getIndexColor())
+                                : ChatColor.of(color))
+                        .bold(true);
+
             }
         }
+        this.selectedIndexes.removeAllExpired();
         players.forEach((t) -> {
             t.spigot().sendMessage(action_bar ? ChatMessageType.ACTION_BAR : ChatMessageType.CHAT, cb.create());
         });
@@ -125,7 +139,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     final private void playSortingSound() {
         if (this.pitchs.isEmpty()) {
             this.pitchs = new LinkedList<>(
-                    this.selectedIndexes.stream().map((t) -> pitchCal(t.getValue())).collect(Collectors.toList()));
+                    this.selectedIndexes.indexes.stream().map((t) -> pitchCal(t.getValue()))
+                            .collect(Collectors.toList()));
         }
         pitchs.stream().filter((t) -> t != 0).forEach((p) -> {
             players.forEach(player -> player.playSound(player.getLocation(), Configuration.getSortingSoundName(),
@@ -149,34 +164,33 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         return new LinkedList<>(Arrays.stream(n).boxed().map(this::pitchCal).collect(Collectors.toList()));
     }
 
-    final protected void setIndexes() {
-        this.selectedIndexes = new LinkedList<AlgorithmSelectedIndex>();
+    /**
+     * Clear selectedIndexes
+     */
+    final protected void clearIndexes() {
+        this.selectedIndexes.clear();
     }
 
     final protected void setIndexes(Integer... indexes) {
-        this.selectedIndexes = new LinkedList<AlgorithmSelectedIndex>(AlgorithmSelectedIndex.asList(indexes));
+        this.selectedIndexes.addAll(AlgorithmSelectedIndex.asList(indexes));
     }
 
     final protected void setIndexes(LinkedList<Integer> indexes) {
-        this.selectedIndexes = indexes.stream().map(AlgorithmSelectedIndex::new)
-                .collect(Collectors.toCollection(LinkedList::new));
+        this.selectedIndexes.addAll(indexes.stream().map(AlgorithmSelectedIndex::new)
+                .collect(Collectors.toCollection(LinkedList::new)));
     }
 
     final protected void setIndexes(AlgorithmSelectedIndex... indexes) {
-        this.selectedIndexes = new LinkedList<>(Arrays.asList(indexes));
+        this.selectedIndexes.addAll(new LinkedList<>(Arrays.asList(indexes)));
     }
 
     final protected LinkedList<Integer> getIndexesIntegers() {
-        return this.selectedIndexes.stream().map((t) -> t.getValue()).collect(Collectors.toCollection(LinkedList::new));
+        return this.selectedIndexes.indexes.stream().map((t) -> t.getValue())
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 
-    @Deprecated
-    final protected LinkedList<Integer> getIndexes() {
-        return getIndexesIntegers();
-    }
-
-    final protected LinkedList<AlgorithmSelectedIndex> getAlgorithmSelectedIndexs() {
-        return this.selectedIndexes;
+    final protected LinkedList<AlgorithmSelectedIndex> getAlgorithmSelectedIndexes() {
+        return this.selectedIndexes.indexes;
     }
 
     final protected void setPitchs(Float... pitchs) {
@@ -260,6 +274,26 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
 
     final public boolean isStopped() {
         return this.end;
+    }
+
+    /**
+     * รวมสี 2 สีเข้าด้วยกันตามค่าน้ำหนัก
+     * <code>weight0</code> และ <code>weight1</code> ควรจะต้องรวมกันได้ 1.0 พอดี
+     * 
+     * @param c0      สี
+     * @param c1      สี
+     * @param weight0 ค่าระหว่าง 0.0 ถึง 1.0
+     * @param weight1 ค่าระหว่าง 0.0 ถึง 1.0
+     */
+    public static Color blend(Color c0, Color c1, float weight0, float weight1) {
+
+        float r = (weight0 * c0.getRed()) + (weight1 * c1.getRed());
+        float g = (weight0 * c0.getGreen()) + (weight1 * c1.getGreen());
+        float b = (weight0 * c0.getBlue()) + (weight1 * c1.getBlue());
+        float a = Math.max(c0.getAlpha(), c1.getAlpha());
+
+        return new Color(Math.min(255, (int) r), Math.min(255, (int) g), Math.min(255, (int) b), (int) a);
+
     }
 
 }

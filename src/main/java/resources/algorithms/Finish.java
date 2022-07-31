@@ -17,7 +17,7 @@ public class Finish extends Algorithms<Finish> {
 
     @Override
     public void sort(Integer[] a) {
-        setIndexColor(ChatColor.of(this.getArgs().length > 0 ? this.getArgs()[0] : "#00AA00"));
+        setIndexColor(ChatColor.of(this.getArgs().length > 0 ? this.getArgs()[0] : "#00AA00").getColor());
         List<Integer> intf = new ArrayList<>();
         for (int i = 0; i < a.length; i++) {
             setPitchs(pitchCal(a[i]));
@@ -26,7 +26,7 @@ public class Finish extends Algorithms<Finish> {
             setIndexes(b);
             show();
         }
-        setIndexes();
+        clearIndexes();
         setPitchs();
         show();
     }

@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 
 import com.hao.haovsort.Main;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
+import com.hao.haovsort.sorting.utils.AlgorithmSelectedIndex;
 import com.hao.haovsort.sorting.utils.Algorithms;
 import com.hao.haovsort.sorting.utils.SongCollector;
 import com.hao.haovsort.sorting.utils.Sound;
@@ -20,6 +21,8 @@ import com.xxmicloxx.NoteBlockAPI.utils.NoteUtils;
 import net.md_5.bungee.api.ChatColor;
 
 public class Piano extends Algorithms<Piano> {
+
+    private static final short fadedTime = 3;
 
     private Song song;
     private Integer[] old_array;
@@ -74,7 +77,7 @@ public class Piano extends Algorithms<Piano> {
                 list.add(pitchToValue(NoteUtils.getPitchTransposed(note)));
             }
         });
-        setIndexes(list);
+        setIndexes(list.stream().map((t) -> new AlgorithmSelectedIndex(t, fadedTime)).toArray(AlgorithmSelectedIndex[]::new));
     }
 
     private void setNoteSoundsAtTick(int tick) {
@@ -93,6 +96,7 @@ public class Piano extends Algorithms<Piano> {
 
     /**
      * calculate array index from sound's pitch.
+     * 
      * @param pitch
      * @return 0..length-1
      */

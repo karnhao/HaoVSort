@@ -1,6 +1,7 @@
 package resources.algorithms;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
+import com.hao.haovsort.sorting.utils.AlgorithmSelectedIndex;
 
 public class Merge extends Algorithms<Merge> {
     private void merge(Integer arr[], int l, int m, int r) {
@@ -40,7 +41,7 @@ public class Merge extends Algorithms<Merge> {
                 setIndexes(j + m + 1);
             }
             k++;
-            getIndexesIntegers().add(k);
+            getAlgorithmSelectedIndexes().add(new AlgorithmSelectedIndex(k));
             show();
         }
 
@@ -72,7 +73,7 @@ public class Merge extends Algorithms<Merge> {
             mergesort(arr, m + 1, r);
             merge(arr, l, m, r);
             setPitchs();
-            setIndexes();
+            clearIndexes();
         }
     }
 
