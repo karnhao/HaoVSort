@@ -15,6 +15,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.awt.Color;
+import java.lang.reflect.InvocationTargetException;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -149,7 +151,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     final private float colorCal(int value) {
-        return new Integer(value).floatValue() / new Integer(this.getArray().length).floatValue();
+        return (float) value / this.getArray().length;
     }
 
     final protected float pitchCal(Float min, Float max, int n) {
@@ -266,10 +268,15 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
      * @return Algorithm Thread object
      * @throws InstantiationException
      * @throws IllegalAccessException
+     * @throws SecurityException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalArgumentException
      */
     @SuppressWarnings("unchecked")
-    final protected Algorithms<T> newAlgorithm() throws InstantiationException, IllegalAccessException {
-        return this.getClass().newInstance();
+    final protected Algorithms<T> newAlgorithm() throws InstantiationException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        return this.getClass().getDeclaredConstructor().newInstance();
     }
 
     final public boolean isStopped() {
