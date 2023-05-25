@@ -58,6 +58,7 @@ public class AlgorithmSelectedIndexCollector {
             AlgorithmSelectedIndex si = this.indexes.get(i);
             if (si.getLifeTimeCount() >= si.getLifeTime()) {
                 this.indexes.remove(i);
+                i--;
             }
         }
     }

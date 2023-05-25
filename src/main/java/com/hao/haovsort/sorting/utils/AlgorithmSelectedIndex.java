@@ -1,7 +1,7 @@
 package com.hao.haovsort.sorting.utils;
 
 import java.awt.Color;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,6 +74,8 @@ public class AlgorithmSelectedIndex {
     }
 
     public static List<AlgorithmSelectedIndex> asList(Integer... a) {
-        return Arrays.asList(a).stream().map(AlgorithmSelectedIndex::new).collect(Collectors.toList());
+        List<Integer> list = new LinkedList<>();
+        for (Integer i : a) if (i != null) list.add(i);
+        return list.stream().map(AlgorithmSelectedIndex::new).collect(Collectors.toList());
     }
 }
