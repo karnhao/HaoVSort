@@ -5,7 +5,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 public class Shell extends Algorithms<Shell> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         int n = a.length;
 
         // Start with a big gap, then reduce the gap

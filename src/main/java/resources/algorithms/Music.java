@@ -32,13 +32,13 @@ public class Music extends Algorithms<Music> {
     private boolean smooth = false;
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         getPlayers().forEach((t) -> t
                 .sendMessage(ChatColor.GREEN
                         + String.format("Sorting playing music : %s, %s", getSongName(), song.getAuthor())));
         long old_delay = getDelay();
         setDelay(tick_delay);
-        for (int tick = 0; tick <= song.getLength(); tick++) {
+        for (int tick = 0; tick <= song.getLength() + 1; tick++) {
             setNoteSoundsAtTick(tick);
             setArrayAtTick(tick);
             setSelectedIndexesAtTick(tick);
@@ -71,8 +71,6 @@ public class Music extends Algorithms<Music> {
 
     @Override
     public void init() {
-        this.old_array = this.getArray();
-        this.length = this.old_array.length;
         if (getArgs().length >= 2 && getArgs()[1].equalsIgnoreCase("true"))
             this.smooth = true;
         if (!Main.getNoteBlockAPI())
@@ -81,6 +79,8 @@ public class Music extends Algorithms<Music> {
         if (song == null)
             throw new InvalidArgsException("Song not found");
         layer_count = song.getLayerHashMap().values().size();
+        this.old_array = this.getArray();
+        this.length = this.old_array.length;
         if (layer_count > length)
             throw new InvalidArgsException("Length too small");
         layerWidth = (int) Math.floor(((double) array.length) / ((double) layer_count));
@@ -131,13 +131,8 @@ public class Music extends Algorithms<Music> {
         this.array = list.stream().toArray(Integer[]::new);
     }
 
-    // *** Unused Method ***
-    // private static float keyToPitch(float key) {
-    // return (float) Math.pow(2, (float) ((key - 45) / 12));
-    // }
-
     private int pitchToValue(float pitch) {
-        return (int) Math.floor(((2 * pitch * length) - 100) / 3);
+        return (int) Math.floor(((2 * pitch * this.array.length) - 100) / 3);
     }
 
     private int tickToSection(int tick) {
@@ -160,16 +155,6 @@ public class Music extends Algorithms<Music> {
         return InstrumentUtils.getSoundNameByInstrument(note.getInstrument());
     }
 
-    // *** Unused Method ***
-    // private static byte fixKey(byte key) {
-    // byte temp = key;
-    // while (temp > 57)
-    // temp -= 12;
-    // while (temp < 33)
-    // temp += 12;
-    // return temp;
-    // }
-
     private String getSongName() {
         return getArgs()[0];
     }
@@ -179,7 +164,7 @@ public class Music extends Algorithms<Music> {
         return temp.matches("^[a-z0-9/._-]+$");
     }
 
-    private static boolean isValidSound(Sound sound) {
+    protected static boolean isValidSound(Sound sound) {
         return sound.getPitch() != 0 && isValidSoundName(sound.getName());
     }
 }

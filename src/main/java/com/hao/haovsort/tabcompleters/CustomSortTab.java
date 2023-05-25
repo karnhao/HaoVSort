@@ -1,5 +1,6 @@
 package com.hao.haovsort.tabcompleters;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,7 +74,7 @@ public class CustomSortTab implements TabCompleter {
                                 || !algorithm_args[0].isEmpty() ? r : null;
                     } catch (NullPointerException e) {
                         return AlgorithmsManager.getAlgorithmNames(name);
-                    } catch (InstantiationException | IllegalAccessException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -82,7 +83,8 @@ public class CustomSortTab implements TabCompleter {
     }
 
     private static TabCompleter getAlgorithmTabCompleter(String algorithm_name)
-            throws InstantiationException, IllegalAccessException {
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            NoSuchMethodException, SecurityException {
         return AlgorithmsManager.getAlgorithm(algorithm_name).getTabCompleter();
     }
 

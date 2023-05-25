@@ -1,9 +1,10 @@
 package resources.algorithms;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
+import com.hao.haovsort.sorting.utils.AlgorithmSelectedIndex;
 
 public class Merge extends Algorithms<Merge> {
-    private void merge(Integer arr[], int l, int m, int r) throws InterruptedException {
+    private void merge(Integer arr[], int l, int m, int r) {
         // Find sizes of two subarrays to be merged
         int n1 = m - l + 1;
         int n2 = r - m;
@@ -40,7 +41,7 @@ public class Merge extends Algorithms<Merge> {
                 setIndexes(j + m + 1);
             }
             k++;
-            getIndexes().add(k);
+            getAlgorithmSelectedIndexes().add(new AlgorithmSelectedIndex(k));
             show();
         }
 
@@ -65,19 +66,19 @@ public class Merge extends Algorithms<Merge> {
         }
     }
 
-    private void mergesort(Integer arr[], int l, int r) throws InterruptedException {
+    private void mergesort(Integer arr[], int l, int r) {
         if (l < r) {
             int m = (l + r) / 2;
             mergesort(arr, l, m);
             mergesort(arr, m + 1, r);
             merge(arr, l, m, r);
             setPitchs();
-            setIndexes();
+            clearIndexes();
         }
     }
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         mergesort(a, 0, a.length - 1);
     }
 }

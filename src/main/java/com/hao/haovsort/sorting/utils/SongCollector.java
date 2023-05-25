@@ -31,12 +31,12 @@ final public class SongCollector {
             songs.mkdirs();
             DefaultSong.save(songs);
         }
+        Bukkit.getLogger().info("Reading songs file...");
         try (Stream<Path> paths = Files.walk(Paths.get(path))) {
             paths
                     .filter(Files::isRegularFile)
                     .map((t) -> {
                         try {
-                            Bukkit.getLogger().info("Loading " + t.toFile().getName());
                             return NBSDecoder.parse(t.toFile());
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -46,6 +46,9 @@ final public class SongCollector {
                     }).filter(Objects::nonNull).forEach(SongCollector::putSong);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (OutOfMemoryError ex) {
+            ex.printStackTrace();
+            Bukkit.getLogger().warning("Please try again or use the /stop command to restart your server.");
         }
     }
 

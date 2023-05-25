@@ -6,18 +6,18 @@ import com.hao.haovsort.sorting.utils.SortingAlgorithm;
 @SortingAlgorithm(name = "insert_merge")
 public class InsertionMerge extends Algorithms<InsertionMerge> {
 
-    private void inplaceMergeSort(Integer arr[], int l, int r) throws InterruptedException {
+    private void inplaceMergeSort(Integer arr[], int l, int r) {
         if (l < r) {
             int m = (l + r) / 2;
             inplaceMergeSort(arr, l, m);
             inplaceMergeSort(arr, m + 1, r);
             inplaceMerge(arr, l, m, r);
             setPitchs();
-            setIndexes();
+            clearIndexes();
         }
     }
 
-    private void inplaceMerge(Integer arr[], int start, int mid, int end) throws InterruptedException {
+    private void inplaceMerge(Integer arr[], int start, int mid, int end) {
         int start2 = mid + 1;
 
         // If the direct merge is already sorted
@@ -58,7 +58,7 @@ public class InsertionMerge extends Algorithms<InsertionMerge> {
     }
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         inplaceMergeSort(a, 0, a.length - 1);
     }
 }

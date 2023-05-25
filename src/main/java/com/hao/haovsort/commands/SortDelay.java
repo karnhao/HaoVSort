@@ -23,7 +23,7 @@ public class SortDelay implements CommandExecutor {
         // /sortdelay <new_delay> [<player>]
 
         try {
-            if (args.length > 2)
+            if (args.length > 2 || args.length < 1)
                 throw new InvalidArgsException("Expected one or two arguments");
             List<Player> targets = args.length == 2 ? PlayerSelector.getPlayers(sender, args[1])
                     : Arrays.asList((Player) sender);
@@ -42,6 +42,8 @@ public class SortDelay implements CommandExecutor {
                     });
                 });
                 player.getAlgorithms().setDelay(newDelay);
+                player.getAlgorithms().wake();
+                player.interrupt();
             });
         } catch (InvalidArgsException e) {
             sender.sendMessage(ChatColor.RED + "Invalid arguments: " + e.getMessage());

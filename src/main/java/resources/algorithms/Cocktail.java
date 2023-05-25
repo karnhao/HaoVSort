@@ -5,7 +5,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 public class Cocktail extends Algorithms<Cocktail> {
 
     @Override
-    public void sort(Integer[] a) throws InterruptedException {
+    public void sort(Integer[] a) {
         boolean swapped = true;
         int start = 0;
         int end = a.length;
