@@ -35,12 +35,24 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     private Long delay;
     private boolean end = false;
 
+    /**
+     * Make your own Algorithms here.
+     * 
+     * Use {@code this.show()} to show the visualization to the screen. This method will make a delay based on the arguments.
+     * 
+     * 
+     * @param a array of integers.
+     */
     public abstract void sort(Integer[] a);
 
     final public Long getDelay() {
         return delay;
     }
 
+    /**
+     * Set the new delay of this algorithm.
+     * @param delay
+     */
     final public void setDelay(Long delay) {
         this.delay = delay;
     }
@@ -61,14 +73,14 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         return this.args;
     }
 
-    final public void setArgs(String... args) throws InvalidArgsException {
+    final public void setArgs(String... args) {
         if (args == null)
             return;
         this.args = args;
     }
 
     /**
-     * ใช้ใน {@link #sort(Integer[])} ไว้แสดงผล
+     * use this method in {@link #sort(Integer[])} to show the visualization.
      *
      * @throws StopSortException
      */
@@ -132,8 +144,10 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     /**
-     * Method นี้จะถูกเรียกใช้งานหลังจาก {@code argsFilter()}
-     * และก่อนที่จะเริ่มการจัดเรียง {@code sort()}
+     * You can do anything you like with this method.
+     * 
+     * This method will be call after {@code argsFilter()}
+     * and before {@code sort()}
      */
     public void init() {
     };
@@ -204,12 +218,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     /**
-     * Scale ความถี่ของคลื่นเสียงที่จะเล่นเมื่อใช้
-     * 
-     * <pre>
-     * this.show()
-     * </pre>
-     * 
+     * List of pitch that will be play at the same time as the <code>this.show()</code> method is called.
      * @return List<Float> pitchs
      */
     final protected List<Float> getPitchs() {
@@ -235,27 +244,27 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     /**
-     * รูปแบบจะเป็นแบบนี้ :
+     * Format :
      * <p>
      * {@code /sort  &lt;player&gt; &lt;type&gt; &lt;delay&gt; &lt;length&gt; args[0] args[1] args[2] ...}
      *
-     * @param sender ผู้ที่ใช้คำสั่งนี้
-     * @param args   args[0] ในที่นี้ จะเริ่มที่ args[4] ของ command หลัก
-     * @return List ข้อความที่จะถูกแนะนำมาตอนพิมพ์คำสั่ง
+     * @param sender Command sender.
+     * @param args   This args[0] will start at args[4] of the main onTabComplete.
+     * @return List of string that will be suggest when typing the command.
      */
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         return null;
     };
 
     /**
-     * ให้ throw InvalidArgsException เมื่อ Args ไม่ถูกต้อง
-     * ข้อความที่แนบมาด้วยจะแจ้งเป็น error กับผู้เล่นที่ใช้คำสั่งนี้
+     * You can throw InvalidArgsException when there are invalid arguments.
+     * You can also attach your string to an exception object and that will be show to the command sender.
      */
     protected void argsFilter(String[] args) throws InvalidArgsException {
     };
 
     /**
-     * TabCompleter ของ Algorithm นั้นๆ
+     * TabCompleter of Algorithm
      */
     public TabCompleter getTabCompleter() {
         return (CommandSender sender, Command command, String alias, String[] args) -> Algorithms.this.onTabComplete(
@@ -292,7 +301,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
      * @param weight0 ค่าระหว่าง 0.0 ถึง 1.0
      * @param weight1 ค่าระหว่าง 0.0 ถึง 1.0
      */
-    public static Color blend(Color c0, Color c1, float weight0, float weight1) {
+    final private static Color blend(Color c0, Color c1, float weight0, float weight1) {
 
         float r = (weight0 * c0.getRed()) + (weight1 * c1.getRed());
         float g = (weight0 * c0.getGreen()) + (weight1 * c1.getGreen());
