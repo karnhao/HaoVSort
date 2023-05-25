@@ -13,7 +13,7 @@ public class InsertionMerge extends Algorithms<InsertionMerge> {
             inplaceMergeSort(arr, m + 1, r);
             inplaceMerge(arr, l, m, r);
             setPitchs();
-            setIndexes();
+            clearIndexes();
         }
     }
 

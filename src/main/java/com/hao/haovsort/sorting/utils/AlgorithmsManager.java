@@ -1,5 +1,6 @@
 package com.hao.haovsort.sorting.utils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +29,8 @@ public class AlgorithmsManager {
         classes.forEach((t) -> {
             try {
                 putAlgorithms((Class<? extends Algorithms<?>>) t);
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();
             }
         });
@@ -40,11 +42,16 @@ public class AlgorithmsManager {
      * 
      * @param name
      * @return Algorithms
+     * @throws SecurityException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalArgumentException
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
     public static Algorithms<? extends Algorithms<?>> getAlgorithm(String name)
-            throws InstantiationException, IllegalAccessException {
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            NoSuchMethodException, SecurityException {
         Algorithms<? extends Algorithms<?>> algorithm = map.get(name);
         return algorithm == null ? null : algorithm.newAlgorithm();
     }
@@ -60,6 +67,9 @@ public class AlgorithmsManager {
      * SortPlayer.AlgorithmsManager(Selection.class);
      * </pre>
      * 
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * 
      * @throws InstantiationException
      * @throws SecurityException
      * @throws NoSuchFieldException
@@ -68,10 +78,11 @@ public class AlgorithmsManager {
      * 
      */
     private static void putAlgorithms(Class<? extends Algorithms<?>> algorithm)
-            throws InstantiationException, IllegalAccessException {
+            throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+            NoSuchMethodException, SecurityException {
         String name = Algorithms.getAlgorithmName(algorithm).toLowerCase();
         Bukkit.getLogger().log(Level.INFO, "Algorithm loaded : {0}", name);
-        map.put(name, algorithm.newInstance());
+        map.put(name, algorithm.getDeclaredConstructor().newInstance());
     }
 
     public static List<? extends Algorithms<?>> getAlgorithms() {

@@ -15,6 +15,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.awt.Color;
+import java.lang.reflect.InvocationTargetException;
+
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -28,28 +30,39 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     protected Integer[] array;
     private List<Player> players;
     private String[] args = {};
-    private ChatColor indexColor = ChatColor.BLACK;
-    private LinkedList<Integer> selectedIndexes = new LinkedList<>();
+    private AlgorithmSelectedIndexCollector selectedIndexes = new AlgorithmSelectedIndexCollector();
     private LinkedList<Float> pitchs = new LinkedList<>();
     private Long delay;
     private boolean end = false;
 
+    /**
+     * Make your own Algorithms here.
+     * 
+     * Use {@code this.show()} to show the visualization to the screen. This method will make a delay based on the arguments.
+     * 
+     * 
+     * @param a array of integers.
+     */
     public abstract void sort(Integer[] a);
 
     final public Long getDelay() {
         return delay;
     }
 
+    /**
+     * Set the new delay of this algorithm.
+     * @param delay
+     */
     final public void setDelay(Long delay) {
         this.delay = delay;
     }
 
-    final protected void setIndexColor(ChatColor color) {
-        this.indexColor = color;
+    final protected void setIndexColor(Color color) {
+        this.selectedIndexes.setDefaultColor(color);
     }
 
-    final protected ChatColor getIndexColor() {
-        return this.indexColor;
+    final protected Color getIndexColor() {
+        return this.selectedIndexes.getDefaultColor();
     }
 
     final protected Integer[] getArray() {
@@ -60,14 +73,14 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         return this.args;
     }
 
-    final public void setArgs(String... args) throws InvalidArgsException {
+    final public void setArgs(String... args) {
         if (args == null)
             return;
         this.args = args;
     }
 
     /**
-     * ใช้ใน {@link #sort(Integer[])} ไว้แสดงผล
+     * use this method in {@link #sort(Integer[])} to show the visualization.
      *
      * @throws StopSortException
      */
@@ -76,12 +89,32 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
             throw new StopSortException();
         Color color;
         boolean action_bar = !(this.getArray().length > Configuration.getMaxActionBarArrayLength());
-        ComponentBuilder cb = new ComponentBuilder(action_bar ? "" : "\n\n\n\n\n\n\n\n");
+        ComponentBuilder cb = new ComponentBuilder(action_bar ? "" : "\n");
         for (int i = 0; i < this.getArray().length; i++) {
             color = this.getArray()[i] != -1 ? Color.getHSBColor(this.colorCal(this.getArray()[i]), 1.0f, 1.0f)
                     : Color.WHITE;
-            cb.append("|").color(this.getIndexes().contains(i) ? indexColor : ChatColor.of(color)).bold(true);
+
+            AlgorithmSelectedIndex selectIndex = this.selectedIndexes.getFromValue(i);
+
+            if (selectIndex != null) {
+                // index ที่ถูกเลือก แสดงสีพิเศษ
+
+                float weight = selectIndex.getWeight();
+                selectIndex.addLifeTimeCount();
+
+                cb.append("|").color(ChatColor.of(blend(selectIndex.getIndexColor(), color, weight, 1 - weight)))
+                        .bold(true);
+
+            } else {
+                // index สีปกติ
+                cb.append("|")
+                        .color(this.getIndexesIntegers().contains(i) ? ChatColor.of(getIndexColor())
+                                : ChatColor.of(color))
+                        .bold(true);
+
+            }
         }
+        this.selectedIndexes.removeAllExpired();
         players.forEach((t) -> {
             t.spigot().sendMessage(action_bar ? ChatMessageType.ACTION_BAR : ChatMessageType.CHAT, cb.create());
         });
@@ -111,8 +144,10 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     /**
-     * Method นี้จะถูกเรียกใช้งานหลังจาก {@code argsFilter()}
-     * และก่อนที่จะเริ่มการจัดเรียง {@code sort()}
+     * You can do anything you like with this method.
+     * 
+     * This method will be call after {@code argsFilter()}
+     * and before {@code sort()}
      */
     public void init() {
     };
@@ -120,7 +155,8 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     final private void playSortingSound() {
         if (this.pitchs.isEmpty()) {
             this.pitchs = new LinkedList<>(
-                    this.selectedIndexes.stream().map(this::pitchCal).collect(Collectors.toList()));
+                    this.selectedIndexes.indexes.stream().map((t) -> pitchCal(t.getValue()))
+                            .collect(Collectors.toList()));
         }
         pitchs.stream().filter((t) -> t != 0).forEach((p) -> {
             players.forEach(player -> player.playSound(player.getLocation(), Configuration.getSortingSoundName(),
@@ -129,7 +165,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     final private float colorCal(int value) {
-        return new Integer(value).floatValue() / new Integer(this.getArray().length).floatValue();
+        return (float) value / this.getArray().length;
     }
 
     final protected float pitchCal(Float min, Float max, int n) {
@@ -144,17 +180,33 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         return new LinkedList<>(Arrays.stream(n).boxed().map(this::pitchCal).collect(Collectors.toList()));
     }
 
+    /**
+     * Clear selectedIndexes
+     */
+    final protected void clearIndexes() {
+        this.selectedIndexes.clear();
+    }
+
     final protected void setIndexes(Integer... indexes) {
-        this.selectedIndexes = (indexes == null) ? new LinkedList<Integer>()
-                : new LinkedList<Integer>(Arrays.asList(indexes));
+        this.selectedIndexes.addAll(AlgorithmSelectedIndex.asList(indexes));
     }
 
     final protected void setIndexes(LinkedList<Integer> indexes) {
-        this.selectedIndexes = indexes;
+        this.selectedIndexes.addAll(indexes.stream().map(AlgorithmSelectedIndex::new)
+                .collect(Collectors.toCollection(LinkedList::new)));
     }
 
-    final protected List<Integer> getIndexes() {
-        return this.selectedIndexes;
+    final protected void setIndexes(AlgorithmSelectedIndex... indexes) {
+        this.selectedIndexes.addAll(new LinkedList<>(Arrays.asList(indexes)));
+    }
+
+    final protected LinkedList<Integer> getIndexesIntegers() {
+        return this.selectedIndexes.indexes.stream().map((t) -> t.getValue())
+                .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    final protected LinkedList<AlgorithmSelectedIndex> getAlgorithmSelectedIndexes() {
+        return this.selectedIndexes.indexes;
     }
 
     final protected void setPitchs(Float... pitchs) {
@@ -166,12 +218,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     /**
-     * Scale ความถี่ของคลื่นเสียงที่จะเล่นเมื่อใช้
-     * 
-     * <pre>
-     * this.show()
-     * </pre>
-     * 
+     * List of pitch that will be play at the same time as the <code>this.show()</code> method is called.
      * @return List<Float> pitchs
      */
     final protected List<Float> getPitchs() {
@@ -197,27 +244,27 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
     }
 
     /**
-     * รูปแบบจะเป็นแบบนี้ :
+     * Format :
      * <p>
      * {@code /sort  &lt;player&gt; &lt;type&gt; &lt;delay&gt; &lt;length&gt; args[0] args[1] args[2] ...}
      *
-     * @param sender ผู้ที่ใช้คำสั่งนี้
-     * @param args   args[0] ในที่นี้ จะเริ่มที่ args[4] ของ command หลัก
-     * @return List ข้อความที่จะถูกแนะนำมาตอนพิมพ์คำสั่ง
+     * @param sender Command sender.
+     * @param args   This args[0] will start at args[4] of the main onTabComplete.
+     * @return List of string that will be suggest when typing the command.
      */
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         return null;
     };
 
     /**
-     * ให้ throw InvalidArgsException เมื่อ Args ไม่ถูกต้อง
-     * ข้อความที่แนบมาด้วยจะแจ้งเป็น error กับผู้เล่นที่ใช้คำสั่งนี้
+     * You can throw InvalidArgsException when there are invalid arguments.
+     * You can also attach your string to an exception object and that will be show to the command sender.
      */
     protected void argsFilter(String[] args) throws InvalidArgsException {
     };
 
     /**
-     * TabCompleter ของ Algorithm นั้นๆ
+     * TabCompleter of Algorithm
      */
     public TabCompleter getTabCompleter() {
         return (CommandSender sender, Command command, String alias, String[] args) -> Algorithms.this.onTabComplete(
@@ -230,14 +277,39 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
      * @return Algorithm Thread object
      * @throws InstantiationException
      * @throws IllegalAccessException
+     * @throws SecurityException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalArgumentException
      */
     @SuppressWarnings("unchecked")
-    final protected Algorithms<T> newAlgorithm() throws InstantiationException, IllegalAccessException {
-        return this.getClass().newInstance();
+    final protected Algorithms<T> newAlgorithm() throws InstantiationException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        return this.getClass().getDeclaredConstructor().newInstance();
     }
 
     final public boolean isStopped() {
         return this.end;
+    }
+
+    /**
+     * รวมสี 2 สีเข้าด้วยกันตามค่าน้ำหนัก
+     * <code>weight0</code> และ <code>weight1</code> ควรจะต้องรวมกันได้ 1.0 พอดี
+     * 
+     * @param c0      สี
+     * @param c1      สี
+     * @param weight0 ค่าระหว่าง 0.0 ถึง 1.0
+     * @param weight1 ค่าระหว่าง 0.0 ถึง 1.0
+     */
+    final private static Color blend(Color c0, Color c1, float weight0, float weight1) {
+
+        float r = (weight0 * c0.getRed()) + (weight1 * c1.getRed());
+        float g = (weight0 * c0.getGreen()) + (weight1 * c1.getGreen());
+        float b = (weight0 * c0.getBlue()) + (weight1 * c1.getBlue());
+        float a = Math.max(c0.getAlpha(), c1.getAlpha());
+
+        return new Color(Math.min(255, (int) r), Math.min(255, (int) g), Math.min(255, (int) b), (int) a);
+
     }
 
 }

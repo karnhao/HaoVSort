@@ -73,13 +73,13 @@ public class Main extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new PlayerDisconnectListener(), this);
 
-        getLogger().log(Level.INFO, "plugin is enable.");
+        getLogger().log(Level.INFO, "Plugin is enable.");
     }
 
     @Override
     public void onDisable() {
         AlgorithmsManager.stopAll();
-        getLogger().log(Level.INFO, "Bye bye~");
+        getLogger().log(Level.INFO, "Plugin is disable.");
     }
 
     public static boolean getNoteBlockAPI() {

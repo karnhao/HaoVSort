@@ -1,5 +1,6 @@
 package com.hao.haovsort.sorting.utils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -96,8 +97,8 @@ final public class SortPlayer extends Thread {
     }
 
     protected void runAlgorithm(AlgorithmCommand command, String... args)
-            throws NoSuchAlgorithmException, InvalidArgsException, InstantiationException, IllegalAccessException,
-            StopSortException {
+            throws StopSortException, InstantiationException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException, NoSuchMethodException, SecurityException, NoSuchAlgorithmException {
         Algorithms<?> algorithm = AlgorithmsManager.getAlgorithm(command.getType());
         if (algorithm == null)
             throw new NoSuchAlgorithmException(command.getType());
