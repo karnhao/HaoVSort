@@ -2,6 +2,8 @@ package resources.algorithms;
 
 import java.util.Arrays;
 
+import javax.annotation.Nonnull;
+
 import com.hao.haovsort.sorting.utils.Algorithms;
 
 public class Sus extends Algorithms<Sus> {
@@ -42,7 +44,7 @@ public class Sus extends Algorithms<Sus> {
         }).stream().map(Sus::noteCal).toArray(Float[]::new);
     }
 
-    private static float noteCal(int count) {
+    private static float noteCal(@Nonnull Integer count) {
         return count != -1 ? (float) Math.pow(2, ((float) count - 12) / 12) : 0;
     }
 }

@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.BlockCommandSender;
@@ -22,7 +20,7 @@ public class PlayerSelector {
                 .collect(Collectors.toList());
     }
 
-    public static List<Player> getPlayers(@Nonnull CommandSender sender, @Nonnull String target) {
+    public static List<Player> getPlayers(CommandSender sender, String target) {
         switch (target.toLowerCase()) {
             case "@a":
                 return Bukkit.getOnlinePlayers().stream().collect(Collectors.toList());

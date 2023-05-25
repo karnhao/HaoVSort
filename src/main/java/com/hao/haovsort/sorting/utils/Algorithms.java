@@ -172,7 +172,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         return min + (((max - min) / this.getArray().length) * n);
     }
 
-    final protected float pitchCal(int n) {
+    final protected float pitchCal(Integer n) {
         return pitchCal(0.5f, 2.0f, n);
     }
 

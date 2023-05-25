@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nonnull;
+
 public class AlgorithmSelectedIndex {
 
     private int lifeTime = 0;
@@ -12,7 +14,7 @@ public class AlgorithmSelectedIndex {
     private Color color = Color.BLACK;
     private int value;
 
-    public AlgorithmSelectedIndex(int value) {
+    public AlgorithmSelectedIndex(@Nonnull Integer value) {
         this.value = value;
     }
 

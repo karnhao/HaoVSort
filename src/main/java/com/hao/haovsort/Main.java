@@ -57,7 +57,7 @@ public class Main extends JavaPlugin {
 
         sort.setExecutor(new Sort());
         stopSort.setExecutor(new StopSort());
-        if (Configuration.getDebug())
+        if (sortdebug != null)
             sortdebug.setExecutor(new SortDebug());
         sortcustom.setExecutor(new SortCustom(BREAKER));
         sortreload.setExecutor(new Reload(this));
