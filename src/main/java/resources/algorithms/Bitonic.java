@@ -3,7 +3,7 @@ package resources.algorithms;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
 import com.hao.haovsort.sorting.utils.Algorithms;
 
-public class Bitonic extends Algorithms<Bitonic> {
+public class Bitonic extends Algorithms {
 
     @Override
     public void sort(Integer[] a) {

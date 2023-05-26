@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
 
-public class Sus extends Algorithms<Sus> {
+public class Sus extends Algorithms {
 
     private Integer[] old_array;
     private Float[] fake_pitch;

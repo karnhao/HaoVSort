@@ -8,7 +8,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 
 import org.bukkit.command.CommandSender;
 
-public class Radix extends Algorithms<Radix> {
+public class Radix extends Algorithms {
 
     private Integer radix = null;
 

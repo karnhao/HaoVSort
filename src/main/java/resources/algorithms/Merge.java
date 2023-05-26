@@ -3,7 +3,7 @@ package resources.algorithms;
 import com.hao.haovsort.sorting.utils.Algorithms;
 import com.hao.haovsort.sorting.utils.AlgorithmSelectedIndex;
 
-public class Merge extends Algorithms<Merge> {
+public class Merge extends Algorithms {
     private void merge(Integer arr[], int l, int m, int r) {
         // Find sizes of two subarrays to be merged
         int n1 = m - l + 1;

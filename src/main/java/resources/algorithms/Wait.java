@@ -8,7 +8,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 
 import org.bukkit.command.CommandSender;
 
-public class Wait extends Algorithms<Wait> {
+public class Wait extends Algorithms {
 
     @Override
     public void sort(Integer[] a) {

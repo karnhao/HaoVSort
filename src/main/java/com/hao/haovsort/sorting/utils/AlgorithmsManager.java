@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
 
 public class AlgorithmsManager {
 
-    private static HashMap<String, Algorithms<?>> map = new HashMap<>();
+    private static HashMap<String, Algorithms> map = new HashMap<>();
     private static ConcurrentHashMap<Player, SortPlayer> players = new ConcurrentHashMap<>();
 
     @SuppressWarnings("unchecked")
@@ -28,7 +28,7 @@ public class AlgorithmsManager {
         List<Class<?>> classes = loader.getAllAlgorithmsClasses();
         classes.forEach((t) -> {
             try {
-                putAlgorithms((Class<? extends Algorithms<?>>) t);
+                putAlgorithms((Class<? extends Algorithms>) t);
             } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException e) {
                 e.printStackTrace();
@@ -49,10 +49,10 @@ public class AlgorithmsManager {
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public static Algorithms<? extends Algorithms<?>> getAlgorithm(String name)
+    public static Algorithms getAlgorithm(String name)
             throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
             NoSuchMethodException, SecurityException {
-        Algorithms<? extends Algorithms<?>> algorithm = map.get(name);
+        Algorithms algorithm = map.get(name);
         return algorithm == null ? null : algorithm.newAlgorithm();
     }
 
@@ -77,7 +77,7 @@ public class AlgorithmsManager {
      * @throws IllegalArgumentException
      * 
      */
-    private static void putAlgorithms(Class<? extends Algorithms<?>> algorithm)
+    private static void putAlgorithms(Class<? extends Algorithms> algorithm)
             throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
             NoSuchMethodException, SecurityException {
         String name = Algorithms.getAlgorithmName(algorithm).toLowerCase();
@@ -85,7 +85,7 @@ public class AlgorithmsManager {
         map.put(name, algorithm.getDeclaredConstructor().newInstance());
     }
 
-    public static List<? extends Algorithms<?>> getAlgorithms() {
+    public static List<? extends Algorithms> getAlgorithms() {
         return map.values().stream().collect(Collectors.toList());
     }
 
@@ -122,7 +122,6 @@ public class AlgorithmsManager {
         });
     }
 
-    @SuppressWarnings("unchecked")
     static TabCompleter getFinalTabCompleter() {
         // /sort <player> <type> <delay> <length> args...
         return (sender, command, alias, args) -> {
@@ -130,8 +129,8 @@ public class AlgorithmsManager {
             if (r != null && !r.isEmpty())
                 return r;
             if (args.length > 4) {
-                for (Algorithms<?> algorithm : map.values()) {
-                    String name = Algorithms.getAlgorithmName((Class<? extends Algorithms<?>>) algorithm.getClass());
+                for (Algorithms algorithm : map.values()) {
+                    String name = Algorithms.getAlgorithmName((Class<? extends Algorithms>) algorithm.getClass());
                     try {
                         if (name.equalsIgnoreCase(args[1])) {
                             // recycle r variable
@@ -153,11 +152,10 @@ public class AlgorithmsManager {
         command.setTabCompleter(getFinalTabCompleter());
     }
 
-    @SuppressWarnings("unchecked")
     public static List<String> getAlgorithmNames(String startWith) {
         return map.values().stream().map(t -> {
             try {
-                Class<? extends Algorithms<?>> clazz = (Class<? extends Algorithms<?>>) t.getClass();
+                Class<? extends Algorithms> clazz = (Class<? extends Algorithms>) t.getClass();
                 return Algorithms.getAlgorithmName(clazz).toLowerCase();
             } catch (IllegalArgumentException | SecurityException e) {
                 return null;

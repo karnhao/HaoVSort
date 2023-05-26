@@ -4,7 +4,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 import com.hao.haovsort.sorting.utils.SortingAlgorithm;
 
 @SortingAlgorithm(name = "insert_merge")
-public class InsertionMerge extends Algorithms<InsertionMerge> {
+public class InsertionMerge extends Algorithms {
 
     private void inplaceMergeSort(Integer arr[], int l, int r) {
         if (l < r) {

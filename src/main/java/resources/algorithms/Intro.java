@@ -2,7 +2,7 @@ package resources.algorithms;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
 
-public class Intro extends Algorithms<Intro> {
+public class Intro extends Algorithms {
 
     // the actual data that has to be sorted
     private Integer[] a;

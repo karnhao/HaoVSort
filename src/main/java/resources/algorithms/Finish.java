@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class Finish extends Algorithms<Finish> {
+public class Finish extends Algorithms {
     private final static List<String> SUGGESTION_COLOR = Arrays.asList("#", "#00AA00", "#FF0000");
 
     @Override

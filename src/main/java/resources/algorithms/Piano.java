@@ -20,7 +20,7 @@ import com.xxmicloxx.NoteBlockAPI.utils.NoteUtils;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class Piano extends Algorithms<Piano> {
+public class Piano extends Algorithms {
 
     private static final short fadedTime = 3;
 
