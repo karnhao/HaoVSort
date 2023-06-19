@@ -6,7 +6,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 import com.hao.haovsort.sorting.utils.SortingAlgorithm;
 
 @SortingAlgorithm(name = "java")
-public class JavaSort extends Algorithms<JavaSort> {
+public class JavaSort extends Algorithms {
 
     @Override
     public void sort(Integer[] a) {

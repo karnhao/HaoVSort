@@ -25,7 +25,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
  * Thread ที่จะแสดง Algorithm
  */
 @SortingAlgorithm(name = "")
-public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
+public abstract class Algorithms extends Thread {
 
     protected Integer[] array;
     private List<Player> players;
@@ -126,7 +126,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
         }
     }
 
-    final public static String getAlgorithmName(Class<? extends Algorithms<?>> clazz) {
+    final public static String getAlgorithmName(Class<? extends Algorithms> clazz) {
         String name = clazz.getAnnotation(SortingAlgorithm.class).name();
         return name.isEmpty() ? clazz.getSimpleName() : name;
     }
@@ -282,8 +282,7 @@ public abstract class Algorithms<T extends Algorithms<T>> extends Thread {
      * @throws InvocationTargetException
      * @throws IllegalArgumentException
      */
-    @SuppressWarnings("unchecked")
-    final protected Algorithms<T> newAlgorithm() throws InstantiationException, IllegalAccessException,
+    final protected Algorithms newAlgorithm() throws InstantiationException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         return this.getClass().getDeclaredConstructor().newInstance();
     }

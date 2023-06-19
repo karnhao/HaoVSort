@@ -17,7 +17,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
  */
 final public class SortPlayer extends Thread {
 
-    private Algorithms<?> algorithm;
+    private Algorithms algorithm;
 
     private List<Player> players;
     private Integer[] array;
@@ -99,7 +99,7 @@ final public class SortPlayer extends Thread {
     protected void runAlgorithm(AlgorithmCommand command, String... args)
             throws StopSortException, InstantiationException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, NoSuchMethodException, SecurityException, NoSuchAlgorithmException {
-        Algorithms<?> algorithm = AlgorithmsManager.getAlgorithm(command.getType());
+        Algorithms algorithm = AlgorithmsManager.getAlgorithm(command.getType());
         if (algorithm == null)
             throw new NoSuchAlgorithmException(command.getType());
         this.algorithm = algorithm;
@@ -127,7 +127,7 @@ final public class SortPlayer extends Thread {
         alert(message, ChatColor.RED);
     }
 
-    public Algorithms<?> getAlgorithms() {
+    public Algorithms getAlgorithms() {
         return this.algorithm;
     }
 }

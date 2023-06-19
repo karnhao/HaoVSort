@@ -2,7 +2,7 @@ package resources.algorithms;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
 
-public class Cocktail extends Algorithms<Cocktail> {
+public class Cocktail extends Algorithms {
 
     @Override
     public void sort(Integer[] a) {

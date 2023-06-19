@@ -2,7 +2,7 @@ package resources.algorithms;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
 
-public class Shell extends Algorithms<Shell> {
+public class Shell extends Algorithms {
 
     @Override
     public void sort(Integer[] a) {

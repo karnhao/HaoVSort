@@ -8,7 +8,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 
 import org.bukkit.command.CommandSender;
 
-public class Random extends Algorithms<Random> {
+public class Random extends Algorithms {
 
     @Override
     public void sort(Integer[] a) {

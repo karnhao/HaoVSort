@@ -2,7 +2,7 @@ package resources.algorithms;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
 
-public class Quick extends Algorithms<Quick> {
+public class Quick extends Algorithms {
     // public final static String NAME = "quick";
 
     /*

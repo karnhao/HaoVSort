@@ -2,7 +2,7 @@ package resources.algorithms;
 
 import com.hao.haovsort.sorting.utils.Algorithms;
 
-public class Stooge extends Algorithms<Stooge> {
+public class Stooge extends Algorithms {
 
     @Override
     public void sort(Integer[] a) {

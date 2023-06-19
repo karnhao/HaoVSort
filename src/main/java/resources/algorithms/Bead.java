@@ -4,7 +4,7 @@ import com.hao.haovsort.sorting.utils.Algorithms;
 import com.hao.haovsort.sorting.utils.SortingAlgorithm;
 
 @SortingAlgorithm(name = "gravity")
-public class Bead extends Algorithms<Bead> {
+public class Bead extends Algorithms {
 
     /**
      * Modified code from https://github.com/w0rthy/ArrayVisualizer/blob/master/src/array/visualizer/sort/GravitySort.java

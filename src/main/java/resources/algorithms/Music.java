@@ -20,7 +20,7 @@ import org.bukkit.command.CommandSender;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class Music extends Algorithms<Music> {
+public class Music extends Algorithms {
 
     private Song song;
     private int layerWidth;
