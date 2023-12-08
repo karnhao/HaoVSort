@@ -29,9 +29,6 @@ public class HaoVSort extends JavaPlugin {
     private SongCollector songCollector;
     private AlgorithmsManager algorithmManager;
 
-    private HaoVSort() {
-    };
-
     @Override
     public void onEnable() {
         HaoVSort.instance = this;
