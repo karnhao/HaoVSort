@@ -21,24 +21,34 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin {
+public class HaoVSort extends JavaPlugin {
     private static final String BREAKER = ";";
-    private static boolean noteBlockAPI = true;
+    private static HaoVSort instance;
+    private boolean noteBlockAPI = true;
+    private Configuration configuration;
+    private SongCollector songCollector;
+    private AlgorithmsManager algorithmManager;
+
+    private HaoVSort() {
+    };
 
     @Override
     public void onEnable() {
+        HaoVSort.instance = this;
         saveDefaultConfig();
-        Configuration.setFinal(this);
-
+        configuration = new Configuration(this);
         if (!Bukkit.getPluginManager().isPluginEnabled("NoteBlockAPI")) {
             getLogger().severe("*** NoteBlockAPI is not installed or not enabled. ***");
             noteBlockAPI = false;
         }
 
         try {
-            if (noteBlockAPI)
-                SongCollector.init(this);
-            AlgorithmsManager.init();
+            if (noteBlockAPI) {
+                SongCollector songCollector = new SongCollector();
+                songCollector.init(this);
+                this.songCollector = songCollector;
+            }
+            algorithmManager.init();
         } catch (Exception e) {
             // something wrong...
             e.printStackTrace();
@@ -50,7 +60,7 @@ public class Main extends JavaPlugin {
 
         PluginCommand sort = getCommand("sort");
         PluginCommand stopSort = getCommand("sortstop");
-        PluginCommand sortdebug = Configuration.getDebug() ? getCommand("sortdebug") : null;
+        PluginCommand sortdebug = configuration.getDebug() ? getCommand("sortdebug") : null;
         PluginCommand sortcustom = getCommand("sortcustom");
         PluginCommand sortreload = getCommand("sortreload");
         PluginCommand sortdelay = getCommand("sortdelay");
@@ -63,7 +73,7 @@ public class Main extends JavaPlugin {
         sortreload.setExecutor(new Reload(this));
         sortdelay.setExecutor(new SortDelay());
 
-        AlgorithmsManager.setTabCompleterToCommand(sort);
+        algorithmManager.setTabCompleterToCommand(sort);
         sortcustom.setTabCompleter(new CustomSortTab(BREAKER));
         stopSort.setTabCompleter(new StopSortTab());
         if (sortdebug != null)
@@ -78,11 +88,35 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        AlgorithmsManager.stopAll();
+        algorithmManager.stopAll();
         getLogger().log(Level.INFO, "Plugin is disable.");
     }
 
-    public static boolean getNoteBlockAPI() {
-        return Main.noteBlockAPI;
+    public boolean getNoteBlockAPI() {
+        return this.noteBlockAPI;
+    }
+
+    public SongCollector getSongCollector() {
+        return this.songCollector;
+    }
+
+    public void setSongCollector(SongCollector songCollector) {
+        this.songCollector = songCollector;
+    }
+
+    public AlgorithmsManager getAlgorithmManager() {
+        return algorithmManager;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public static HaoVSort getInstance() {
+        return HaoVSort.instance;
     }
 }

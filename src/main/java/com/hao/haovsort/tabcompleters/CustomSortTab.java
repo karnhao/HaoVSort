@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.HaoVSort;
 import com.hao.haovsort.utils.PlayerSelector;
 import com.hao.haovsort.utils.Util;
 
@@ -50,7 +50,7 @@ public class CustomSortTab implements TabCompleter {
         // .....................................;
         switch (args.length) {
             case 1:
-                return PlayerSelector.getSuggestion(args[0]);
+                return PlayerSelector.getInstance().getSuggestion(args[0]);
             case 2:
                 if (args[1].isEmpty())
                     return Arrays.asList("<delay>");
@@ -73,7 +73,7 @@ public class CustomSortTab implements TabCompleter {
                         return algorithm_args.length == 0 || args[args.length - 1].isEmpty()
                                 || !algorithm_args[0].isEmpty() ? r : null;
                     } catch (NullPointerException e) {
-                        return AlgorithmsManager.getAlgorithmNames(name);
+                        return HaoVSort.getInstance().getAlgorithmManager().getAlgorithmNames(name);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -85,7 +85,7 @@ public class CustomSortTab implements TabCompleter {
     private static TabCompleter getAlgorithmTabCompleter(String algorithm_name)
             throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
             NoSuchMethodException, SecurityException {
-        return AlgorithmsManager.getAlgorithm(algorithm_name).getTabCompleter();
+        return HaoVSort.getInstance().getAlgorithmManager().getAlgorithm(algorithm_name).getTabCompleter();
     }
 
     private static String[] split(String str) {

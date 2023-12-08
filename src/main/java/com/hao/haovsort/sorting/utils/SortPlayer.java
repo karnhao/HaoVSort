@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.hao.haovsort.HaoVSort;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
 
 import org.bukkit.entity.Player;
@@ -80,7 +81,7 @@ final public class SortPlayer extends Thread {
         } catch (StopSortException stop) {
         }
         if (!end)
-            this.players.forEach(AlgorithmsManager::cleanPlayer);
+            this.players.forEach(HaoVSort.getInstance().getAlgorithmManager()::cleanPlayer);
     }
 
     public void stopPlayer() {
@@ -99,7 +100,7 @@ final public class SortPlayer extends Thread {
     protected void runAlgorithm(AlgorithmCommand command, String... args)
             throws StopSortException, InstantiationException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, NoSuchMethodException, SecurityException, NoSuchAlgorithmException {
-        Algorithms algorithm = AlgorithmsManager.getAlgorithm(command.getType());
+        Algorithms algorithm = HaoVSort.getInstance().getAlgorithmManager().getAlgorithm(command.getType());
         if (algorithm == null)
             throw new NoSuchAlgorithmException(command.getType());
         this.algorithm = algorithm;

@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hao.haovsort.HaoVSort;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
-import com.hao.haovsort.utils.Configuration;
 
 import org.bukkit.SoundCategory;
 import org.bukkit.command.Command;
@@ -88,7 +88,7 @@ public abstract class Algorithms extends Thread {
         if (this.isStopped())
             throw new StopSortException();
         Color color;
-        boolean action_bar = !(this.getArray().length > Configuration.getMaxActionBarArrayLength());
+        boolean action_bar = !(this.getArray().length > HaoVSort.getInstance().getConfiguration().getMaxActionBarArrayLength());
         ComponentBuilder cb = new ComponentBuilder(action_bar ? "" : "\n");
         for (int i = 0; i < this.getArray().length; i++) {
             color = this.getArray()[i] != -1 ? Color.getHSBColor(this.colorCal(this.getArray()[i]), 1.0f, 1.0f)
@@ -159,8 +159,8 @@ public abstract class Algorithms extends Thread {
                             .collect(Collectors.toList()));
         }
         pitchs.stream().filter((t) -> t != 0).forEach((p) -> {
-            players.forEach(player -> player.playSound(player.getLocation(), Configuration.getSortingSoundName(),
-                    SoundCategory.MASTER, Configuration.getSoundValue(), p));
+            players.forEach(player -> player.playSound(player.getLocation(), HaoVSort.getInstance().getConfiguration().getSortingSoundName(),
+                    SoundCategory.MASTER, HaoVSort.getInstance().getConfiguration().getSoundValue(), p));
         });
     }
 

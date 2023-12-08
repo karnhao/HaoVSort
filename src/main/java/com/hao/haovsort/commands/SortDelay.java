@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.hao.haovsort.HaoVSort;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
-import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.utils.SortPlayer;
 import com.hao.haovsort.utils.PlayerSelector;
 
@@ -25,7 +25,7 @@ public class SortDelay implements CommandExecutor {
         try {
             if (args.length > 2 || args.length < 1)
                 throw new InvalidArgsException("Expected one or two arguments");
-            List<Player> targets = args.length == 2 ? PlayerSelector.getPlayers(sender, args[1])
+            List<Player> targets = args.length == 2 ? PlayerSelector.getInstance().getPlayers(sender, args[1])
                     : Arrays.asList((Player) sender);
             if (targets == null || targets.isEmpty())
                 throw new InvalidArgsException("Player not found");
@@ -33,7 +33,7 @@ public class SortDelay implements CommandExecutor {
             if (newDelay < 1)
                 throw new InvalidArgsException("Delay cannot lower than 1");
             targets.forEach((t) -> {
-                SortPlayer player = AlgorithmsManager.getPlayer(t);
+                SortPlayer player = HaoVSort.getInstance().getAlgorithmManager().getPlayer(t);
                 if (player == null)
                     return;
                 Stream.of(player.getAlgorithmCommandCollectors()).forEach((cc) -> {

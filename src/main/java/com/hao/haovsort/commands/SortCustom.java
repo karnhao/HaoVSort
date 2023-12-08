@@ -4,12 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.hao.haovsort.HaoVSort;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
 import com.hao.haovsort.sorting.utils.AlgorithmCommand;
 import com.hao.haovsort.sorting.utils.AlgorithmCommandCollector;
-import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.utils.SortPlayer;
-import com.hao.haovsort.utils.Configuration;
 import com.hao.haovsort.utils.PlayerSelector;
 import com.hao.haovsort.utils.Util;
 
@@ -20,13 +19,13 @@ import org.bukkit.entity.Player;
 
 public class SortCustom implements CommandExecutor {
 
-    private static String BREAKER = ";";
+    private String breaker;
 
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String alias, String[] args) {
         // /sortcustom <player> <delay> <length> random 1 ; radix 4 ; finish #00AA00
         try {
-            List<Player> targets = PlayerSelector.getPlayers(cs, args[0]);
+            List<Player> targets = PlayerSelector.getInstance().getPlayers(cs, args[0]);
             Long delay = Long.parseLong(args[1]);
             Integer length = Util.getLength(args[2]);
             if (targets == null || targets.isEmpty()) {
@@ -44,18 +43,18 @@ public class SortCustom implements CommandExecutor {
         return true;
     }
 
-    private static AlgorithmCommand[] getAlgorithmCommands(String[] args, List<Player> players, Long delay) {
+    private AlgorithmCommand[] getAlgorithmCommands(String[] args, List<Player> players, Long delay) {
         String str = Util.argsToString(args);
-        return Arrays.asList(str.split(BREAKER)).stream().map((t) -> t.trim())
+        return Arrays.asList(str.split(breaker)).stream().map((t) -> t.trim())
                 .map((t) -> new AlgorithmCommand(t.split(" ")[0], delay, players,
                         Arrays.copyOfRange(t.split(" "), 1, t.split(" ").length)))
                 .collect(Collectors.toList())
-                .toArray(new AlgorithmCommand[str.split(BREAKER).length]);
+                .toArray(new AlgorithmCommand[str.split(breaker).length]);
     }
 
-    private static void invoke(Player target, Long delay, Integer length, String[] args)
+    private void invoke(Player target, Long delay, Integer length, String[] args)
             throws NullPointerException, InvalidArgsException {
-        AlgorithmsManager.cleanPlayer(target);
+        HaoVSort.getInstance().getAlgorithmManager().cleanPlayer(target);
         SortPlayer player = new SortPlayer();
         List<Player> targets = Arrays.asList(target);
         if (delay < 1)
@@ -63,17 +62,19 @@ public class SortCustom implements CommandExecutor {
         if (length < 1)
             throw new InvalidArgsException("length must be greater than 0");
         if (length > 760
-                || (length > Configuration.getMaxActionBarArrayLength() && Configuration.getLimitLength()))
+                || (HaoVSort.getInstance().getConfiguration().getLimitLength()
+                && length > HaoVSort.getInstance().getConfiguration().getMaxActionBarArrayLength()
+                ))
             throw new InvalidArgsException("Data too big");
         player.setPlayers(targets);
         player.setOwner(target);
         player.setCommands(new AlgorithmCommandCollector(Util.createArray(length),
                 getAlgorithmCommands(args, targets, delay)));
         player.start();
-        AlgorithmsManager.addPlayer(target, player);
+        HaoVSort.getInstance().getAlgorithmManager().addPlayer(target, player);
     }
 
     public SortCustom(String breaker) {
-        SortCustom.BREAKER = breaker;
+        this.breaker = breaker;
     }
 }

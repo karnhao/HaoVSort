@@ -5,10 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.hao.haovsort.Main;
+import com.hao.haovsort.HaoVSort;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
 import com.hao.haovsort.sorting.utils.Algorithms;
-import com.hao.haovsort.sorting.utils.SongCollector;
 import com.hao.haovsort.sorting.utils.Sound;
 import com.xxmicloxx.NoteBlockAPI.model.Note;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
@@ -52,7 +51,7 @@ public class Music extends Algorithms {
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         if (args.length == 1)
-            return SongCollector.getAllSongsName(args[0]);
+            return HaoVSort.getInstance().getSongCollector().getAllSongsName(args[0]);
         if (args.length == 2)
             return Arrays.asList("true", "false").stream().filter((t) -> t.startsWith(args[1].toLowerCase()))
                     .collect(Collectors.toList());
@@ -73,9 +72,9 @@ public class Music extends Algorithms {
     public void init() {
         if (getArgs().length >= 2 && getArgs()[1].equalsIgnoreCase("true"))
             this.smooth = true;
-        if (!Main.getNoteBlockAPI())
+        if (!HaoVSort.getInstance().getNoteBlockAPI())
             throw new InvalidArgsException("NoteBlock API is not available");
-        song = SongCollector.getSong(getArgs()[0]);
+        song = HaoVSort.getInstance().getSongCollector().getSong(getArgs()[0]);
         if (song == null)
             throw new InvalidArgsException("Song not found");
         layer_count = song.getLayerHashMap().values().size();

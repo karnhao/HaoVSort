@@ -3,59 +3,59 @@ package com.hao.haovsort.utils;
 import org.bukkit.plugin.Plugin;
 
 public class Configuration {
-    private static Boolean debug;
+    private Boolean debug;
 
-    private static String sound_name;
-    private static Float sound_value;
+    private String sound_name;
+    private Float sound_value;
 
-    private static Boolean limit_length;
-    private static Integer maxActionBarArrayLength;
+    private Boolean limit_length;
+    private Integer maxActionBarArrayLength;
 
-    public static void setFinal(Plugin plugin) {
-        setDebug(plugin.getConfig().getBoolean("Debug"));
-        setSortingSoundName(plugin.getConfig().getString("SortingSound.Name"));
-        setSoundValue((float) plugin.getConfig().getDouble("SortingSound.Value"));
-        setLimitLength(plugin.getConfig().getBoolean("LimitLength"));
-        setMaxActionBarArrayLength(plugin.getConfig().getInt("MaxActionBarArrayLength"));
+    public Configuration(Plugin plugin) {
+        this.setDebug(plugin.getConfig().getBoolean("Debug"));
+        this.setSortingSoundName(plugin.getConfig().getString("SortingSound.Name"));
+        this.setSoundValue((float) plugin.getConfig().getDouble("SortingSound.Value"));
+        this.setLimitLength(plugin.getConfig().getBoolean("LimitLength"));
+        this.setMaxActionBarArrayLength(plugin.getConfig().getInt("MaxActionBarArrayLength"));
     }
 
-    public static boolean getDebug() {
+    public boolean getDebug() {
         return debug;
     }
 
-    public static String getSortingSoundName() {
+    public String getSortingSoundName() {
         return sound_name;
     }
 
-    public static Float getSoundValue() {
+    public Float getSoundValue() {
         return sound_value;
     }
 
-    public static boolean getLimitLength() {
+    public boolean getLimitLength() {
         return limit_length;
     }
 
-    public static Integer getMaxActionBarArrayLength() {
+    public Integer getMaxActionBarArrayLength() {
         return maxActionBarArrayLength;
     }
 
-    private static void setDebug(Boolean bool) {
+    private void setDebug(Boolean bool) {
         debug = bool == null ? false : bool;
     }
 
-    private static void setSortingSoundName(String soundName) {
+    private void setSortingSoundName(String soundName) {
         sound_name = soundName == null ? "minecraft:block.note_block.pling" : soundName;
     }
 
-    private static void setSoundValue(Float soundValue) {
+    private void setSoundValue(Float soundValue) {
         sound_value = soundValue == null ? 0.1f : soundValue;
     }
 
-    private static void setLimitLength(Boolean limitLength) {
+    private void setLimitLength(Boolean limitLength) {
         limit_length = limitLength == null ? false : limitLength;
     }
 
-    private static void setMaxActionBarArrayLength(Integer length) {
+    private void setMaxActionBarArrayLength(Integer length) {
         maxActionBarArrayLength = length == null ? 332 : length;
     }
 }

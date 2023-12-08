@@ -12,15 +12,23 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class PlayerSelector {
-    private static final List<String> INIT = Arrays.asList("@a", "@p", "@s", "@r");
 
-    public static List<String> getSuggestion(String s) {
+    private static PlayerSelector instance;
+
+    public static PlayerSelector getInstance() {
+        if (instance == null) instance = new PlayerSelector();
+        return instance;
+    }
+
+    private final List<String> INIT = Arrays.asList("@a", "@p", "@s", "@r");
+
+    public List<String> getSuggestion(String s) {
         List<String> r = Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
         return Stream.concat(r.stream(), INIT.stream()).filter((t) -> t.toLowerCase().startsWith(s.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
-    public static List<Player> getPlayers(CommandSender sender, String target) {
+    public List<Player> getPlayers(CommandSender sender, String target) {
         switch (target.toLowerCase()) {
             case "@a":
                 return Bukkit.getOnlinePlayers().stream().collect(Collectors.toList());

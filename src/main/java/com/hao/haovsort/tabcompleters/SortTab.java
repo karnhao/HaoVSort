@@ -3,7 +3,7 @@ package com.hao.haovsort.tabcompleters;
 import java.util.Arrays;
 import java.util.List;
 
-import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.HaoVSort;
 import com.hao.haovsort.utils.PlayerSelector;
 
 import org.bukkit.command.Command;
@@ -20,9 +20,9 @@ public class SortTab implements TabCompleter {
         // /sort <player> <type> <delay> <length> args...
         switch (args.length) {
             case 1:
-                return PlayerSelector.getSuggestion(args[0]);
+                return PlayerSelector.getInstance().getSuggestion(args[0]);
             case 2:
-                return AlgorithmsManager.getAlgorithmNames(args[1]);
+                return HaoVSort.getInstance().getAlgorithmManager().getAlgorithmNames(args[1]);
             case 3:
                 if (args[2].isEmpty())
                     return Arrays.asList("<delay>");

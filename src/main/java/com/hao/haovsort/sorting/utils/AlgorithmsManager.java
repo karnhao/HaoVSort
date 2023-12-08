@@ -19,11 +19,11 @@ import org.bukkit.entity.Player;
 
 public class AlgorithmsManager {
 
-    private static HashMap<String, Algorithms> map = new HashMap<>();
-    private static ConcurrentHashMap<Player, SortPlayer> players = new ConcurrentHashMap<>();
+    private HashMap<String, Algorithms> map = new HashMap<>();
+    private ConcurrentHashMap<Player, SortPlayer> players = new ConcurrentHashMap<>();
 
     @SuppressWarnings("unchecked")
-    public static void init() throws Exception {
+    public void init() throws Exception {
         AlgorithmsLoader loader = new AlgorithmsLoader();
         List<Class<?>> classes = loader.getAllAlgorithmsClasses();
         classes.forEach((t) -> {
@@ -34,7 +34,7 @@ public class AlgorithmsManager {
                 e.printStackTrace();
             }
         });
-        AlgorithmsManager.stopAll();
+        this.stopAll();
     }
 
     /**
@@ -49,7 +49,7 @@ public class AlgorithmsManager {
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public static Algorithms getAlgorithm(String name)
+    public Algorithms getAlgorithm(String name)
             throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
             NoSuchMethodException, SecurityException {
         Algorithms algorithm = map.get(name);
@@ -77,7 +77,7 @@ public class AlgorithmsManager {
      * @throws IllegalArgumentException
      * 
      */
-    private static void putAlgorithms(Class<? extends Algorithms> algorithm)
+    private void putAlgorithms(Class<? extends Algorithms> algorithm)
             throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
             NoSuchMethodException, SecurityException {
         String name = Algorithms.getAlgorithmName(algorithm).toLowerCase();
@@ -85,23 +85,23 @@ public class AlgorithmsManager {
         map.put(name, algorithm.getDeclaredConstructor().newInstance());
     }
 
-    public static List<? extends Algorithms> getAlgorithms() {
+    public List<? extends Algorithms> getAlgorithms() {
         return map.values().stream().collect(Collectors.toList());
     }
 
-    public static void addPlayer(Player owner, SortPlayer player) {
+    public void addPlayer(Player owner, SortPlayer player) {
         players.put(owner, player);
     }
 
-    public static Map<Player, SortPlayer> getPlayers() {
+    public Map<Player, SortPlayer> getPlayers() {
         return players;
     }
 
-    public static SortPlayer getPlayer(Player owner) {
+    public SortPlayer getPlayer(Player owner) {
         return players.get(owner);
     }
 
-    public static void stopPlayer(Player owner) throws NullPointerException {
+    public void stopPlayer(Player owner) throws NullPointerException {
         if (!players.containsKey(owner)) {
             throw new NullPointerException("No sorting player was found");
         }
@@ -109,20 +109,20 @@ public class AlgorithmsManager {
         players.remove(owner);
     }
 
-    public static void cleanPlayer(Player owner) {
+    public void cleanPlayer(Player owner) {
         try {
             stopPlayer(owner);
         } catch (Exception e) {
         }
     }
 
-    public static void stopAll() {
-        AlgorithmsManager.players.values().forEach((t) -> {
+    public void stopAll() {
+        this.players.values().forEach((t) -> {
             t.stopPlayer();
         });
     }
 
-    static TabCompleter getFinalTabCompleter() {
+    private TabCompleter getFinalTabCompleter() {
         // /sort <player> <type> <delay> <length> args...
         return (sender, command, alias, args) -> {
             List<String> r = new SortTab().onTabComplete(sender, command, alias, args);
@@ -148,11 +148,11 @@ public class AlgorithmsManager {
         };
     }
 
-    public static void setTabCompleterToCommand(PluginCommand command) {
+    public void setTabCompleterToCommand(PluginCommand command) {
         command.setTabCompleter(getFinalTabCompleter());
     }
 
-    public static List<String> getAlgorithmNames(String startWith) {
+    public List<String> getAlgorithmNames(String startWith) {
         return map.values().stream().map(t -> {
             try {
                 Class<? extends Algorithms> clazz = (Class<? extends Algorithms>) t.getClass();
@@ -165,7 +165,7 @@ public class AlgorithmsManager {
                 .collect(Collectors.toList());
     }
 
-    public static List<String> getAlgorithmsName() {
+    public List<String> getAlgorithmsName() {
         return getAlgorithmNames("");
     }
 }

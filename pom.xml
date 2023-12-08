@@ -3,15 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.hao</groupId>
     <artifactId>HaoVSort</artifactId>
-    <version>1.2.1</version>
+    <version>1.3</version>
     <name>HaoVSort</name>
     <description>Bukkit plugin that visualize sorting algorithm in Minecraft.</description>
     <url>https://github.com/karnhao/HaoVSort</url>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>18</maven.compiler.source>
-        <maven.compiler.target>18</maven.compiler.target>
+        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.target>20</maven.compiler.target>
     </properties>
     <licenses>
         <license>
@@ -64,9 +64,9 @@
     </dependencies>
     <developers>
         <developer>
-            <email>karn0888422952@gmail.com</email>
+            <email>srv33605@gmail.com</email>
             <name>Mr. Sittipat Tepsutar</name>
-            <organization>Hao.Inc</organization>
+            <organization>Kasetsart University</organization>
             <timezone>
                 UTC+07:00
             </timezone>

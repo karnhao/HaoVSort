@@ -1,6 +1,6 @@
 package com.hao.haovsort.listeners;
 
-import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.HaoVSort;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,6 +10,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerDisconnectListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDisconnect(PlayerQuitEvent event) {
-        AlgorithmsManager.cleanPlayer(event.getPlayer());
+        HaoVSort.getInstance().getAlgorithmManager().cleanPlayer(event.getPlayer());
     }
 }

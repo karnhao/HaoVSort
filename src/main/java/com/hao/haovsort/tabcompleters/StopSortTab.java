@@ -14,7 +14,7 @@ public class StopSortTab implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1)
-            return PlayerSelector.getSuggestion(args[0]);
+            return PlayerSelector.getInstance().getSuggestion(args[0]);
         return Collections.<String>emptyList();
     }
 }

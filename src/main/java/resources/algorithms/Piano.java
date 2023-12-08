@@ -7,11 +7,10 @@ import java.util.List;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.CommandSender;
 
-import com.hao.haovsort.Main;
+import com.hao.haovsort.HaoVSort;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
 import com.hao.haovsort.sorting.utils.AlgorithmSelectedIndex;
 import com.hao.haovsort.sorting.utils.Algorithms;
-import com.hao.haovsort.sorting.utils.SongCollector;
 import com.hao.haovsort.sorting.utils.Sound;
 import com.xxmicloxx.NoteBlockAPI.model.Note;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
@@ -59,9 +58,9 @@ public class Piano extends Algorithms {
 
     @Override
     public void init() {
-        if (!Main.getNoteBlockAPI())
+        if (!HaoVSort.getInstance().getNoteBlockAPI())
             throw new InvalidArgsException("NoteBlock API is not available");
-        song = SongCollector.getSong(getArgs()[0]);
+        song = HaoVSort.getInstance().getSongCollector().getSong(getArgs()[0]);
         if (song == null)
             throw new InvalidArgsException("Song not found");
         this.old_array = this.getArray();
@@ -116,7 +115,7 @@ public class Piano extends Algorithms {
     @Override
     protected List<String> onTabComplete(CommandSender sender, String[] args) {
         if (args.length == 1)
-            return SongCollector.getAllSongsName(args[0]);
+            return HaoVSort.getInstance().getSongCollector().getAllSongsName(args[0]);
         return null;
     }
 

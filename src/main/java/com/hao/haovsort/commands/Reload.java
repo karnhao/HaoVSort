@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 
-import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.HaoVSort;
 import com.hao.haovsort.sorting.utils.SongCollector;
 import com.hao.haovsort.utils.Configuration;
 
@@ -23,16 +23,18 @@ public class Reload implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String alias, String[] args) {
-        AlgorithmsManager.stopAll();
+        HaoVSort.getInstance().getAlgorithmManager().stopAll();
         Bukkit.getLogger().log(Level.INFO, "Reloading config...");
         if (!new File(String.format("plugin/%s/config.yml", plugin.getName())).exists()) {
             plugin.saveDefaultConfig();
         }
         plugin.reloadConfig();
-        Configuration.setFinal(plugin);
+        HaoVSort.getInstance().setConfiguration(new Configuration(plugin));
         Bukkit.getLogger().log(Level.INFO, "Reloading songs...");
         try {
-            SongCollector.init(plugin);
+            SongCollector songCollector = new SongCollector();
+            songCollector.init(plugin);
+            HaoVSort.getInstance().setSongCollector(songCollector);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }

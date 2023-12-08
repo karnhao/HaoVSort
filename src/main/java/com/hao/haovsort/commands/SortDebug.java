@@ -3,7 +3,7 @@ package com.hao.haovsort.commands;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.hao.haovsort.sorting.utils.AlgorithmsManager;
+import com.hao.haovsort.HaoVSort;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,7 +13,7 @@ public class SortDebug implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String str, String[] args) {
-        cs.sendMessage(convertMapWithStream(AlgorithmsManager.getPlayers()));
+        cs.sendMessage(convertMapWithStream(HaoVSort.getInstance().getAlgorithmManager().getPlayers()));
         return true;
     }
 

@@ -18,24 +18,6 @@ import org.bukkit.command.CommandSender;
 import net.md_5.bungee.api.ChatColor;
 
 public class Util {
-    public static boolean isInteger(String s) {
-        return isInteger(s, 10);
-    }
-
-    public static boolean isInteger(String s, int radix) {
-        if (s.isEmpty())
-            return false;
-        for (int i = 0; i < s.length(); i++) {
-            if (i == 0 && s.charAt(i) == '-') {
-                if (s.length() == 1)
-                    return false;
-                continue;
-            }
-            if (Character.digit(s.charAt(i), radix) < 0)
-                return false;
-        }
-        return true;
-    }
 
     public static String argsToString(String[] s) {
         StringBuilder builder = new StringBuilder();

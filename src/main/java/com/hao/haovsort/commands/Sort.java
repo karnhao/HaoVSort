@@ -4,12 +4,11 @@ package com.hao.haovsort.commands;
 import java.util.Arrays;
 import java.util.List;
 
+import com.hao.haovsort.HaoVSort;
 import com.hao.haovsort.sorting.args.InvalidArgsException;
 import com.hao.haovsort.sorting.utils.AlgorithmCommand;
 import com.hao.haovsort.sorting.utils.AlgorithmCommandCollector;
-import com.hao.haovsort.sorting.utils.AlgorithmsManager;
 import com.hao.haovsort.sorting.utils.SortPlayer;
-import com.hao.haovsort.utils.Configuration;
 import com.hao.haovsort.utils.PlayerSelector;
 import com.hao.haovsort.utils.Util;
 
@@ -31,7 +30,7 @@ public class Sort implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] args) {
         try {
-            List<Player> targets = PlayerSelector.getPlayers(cs, args[0]);
+            List<Player> targets = PlayerSelector.getInstance().getPlayers(cs, args[0]);
             String type = args[1];
             Long delay = Long.parseLong(args[2]);
             Integer length = Util.getLength(args[3]);
@@ -52,7 +51,7 @@ public class Sort implements CommandExecutor {
 
     private static void invoke(Player target, String type, Long delay, Integer length, String[] args)
             throws NullPointerException, InvalidArgsException {
-        AlgorithmsManager.cleanPlayer(target);
+        HaoVSort.getInstance().getAlgorithmManager().cleanPlayer(target);
         SortPlayer player = new SortPlayer();
         List<Player> targets = Arrays.asList(target);
         if (delay < 1)
@@ -60,7 +59,9 @@ public class Sort implements CommandExecutor {
         if (length < 1)
             throw new InvalidArgsException("length must be greater than 0");
         if (length > 760
-                || (length > Configuration.getMaxActionBarArrayLength() && Configuration.getLimitLength()))
+                || (HaoVSort.getInstance().getConfiguration().getLimitLength()
+                && length > HaoVSort.getInstance().getConfiguration().getMaxActionBarArrayLength()
+                ))
             throw new InvalidArgsException("Data too big");
         player.setPlayers(targets);
         player.setOwner(target);
@@ -69,6 +70,6 @@ public class Sort implements CommandExecutor {
                 new AlgorithmCommand(type, delay, targets, args),
                 new AlgorithmCommand("finish", 8l, targets)));
         player.start();
-        AlgorithmsManager.addPlayer(target, player);
+        HaoVSort.getInstance().getAlgorithmManager().addPlayer(target, player);
     }
 }
