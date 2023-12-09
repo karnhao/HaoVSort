@@ -31,12 +31,17 @@ final public class SongCollector {
         new BukkitRunnable() {
             @Override
             public void run() {
+                Song s;
+                String name;
+                int dotIndex;
                 for (File song : songs.listFiles()) {
-                    String name = song.getName();
-                    int dotIndex = name.lastIndexOf('.');
+                    name = song.getName();
+                    dotIndex = name.lastIndexOf('.');
                     if (dotIndex == -1) continue;
-                    if (name.substring(dotIndex).equalsIgnoreCase(".nbs")) continue;
-                    putSong(NBSDecoder.parse(song));
+                    if (!name.substring(dotIndex).equalsIgnoreCase(".nbs")) continue;
+                    s = NBSDecoder.parse(song);
+                    if (s == null) continue;
+                    putSong(s);
                 }
                 Bukkit.getLogger().info("HaoVSort loading songs file finished");
             }
