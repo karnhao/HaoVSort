@@ -45,6 +45,7 @@ public class HaoVSort extends JavaPlugin {
                 songCollector.init(this);
                 this.songCollector = songCollector;
             }
+            algorithmManager = new AlgorithmsManager();
             algorithmManager.init();
         } catch (Exception e) {
             // something wrong...
@@ -85,7 +86,11 @@ public class HaoVSort extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        algorithmManager.stopAll();
+        try {
+            if (algorithmManager != null) algorithmManager.stopAll();
+        } catch (Exception e) {
+        }
+        
         getLogger().log(Level.INFO, "Plugin is disable.");
     }
 

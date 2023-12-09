@@ -3,21 +3,16 @@ package com.hao.haovsort.sorting.utils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 final public class SongCollector {
 
@@ -32,25 +27,21 @@ final public class SongCollector {
             songs.mkdirs();
             DefaultSong.save(songs);
         }
-        Bukkit.getLogger().info("Reading songs file...");
-        try (Stream<Path> paths = Files.walk(Paths.get(path))) {
-            paths
-                    .filter(Files::isRegularFile)
-                    .map((t) -> {
-                        try {
-                            return NBSDecoder.parse(t.toFile());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Bukkit.getLogger().log(Level.WARNING, "Cannot load {0}", t.toFile().getName());
-                            return null;
-                        }
-                    }).filter(Objects::nonNull).forEach(this::putSong);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (OutOfMemoryError ex) {
-            ex.printStackTrace();
-            Bukkit.getLogger().warning("Please try again or use the /stop command to restart your server.");
-        }
+        Bukkit.getLogger().info("Reading songs file asynchronously...");
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (File song : songs.listFiles()) {
+                    String name = song.getName();
+                    int dotIndex = name.lastIndexOf('.');
+                    if (dotIndex == -1) continue;
+                    if (name.substring(dotIndex).equalsIgnoreCase(".nbs")) continue;
+                    putSong(NBSDecoder.parse(song));
+                }
+                Bukkit.getLogger().info("HaoVSort loading songs file finished");
+            }
+        }.runTaskAsynchronously(plugin);
+
     }
 
     private void putSong(Song song) {
